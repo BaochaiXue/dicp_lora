@@ -31,7 +31,7 @@ python setup.py install
 cd csrc/rotary && pip install .
 cd ../layer_norm && pip install .
 cd ../xentropy && pip install .
-cd ../.. && rm -rf flash-attention
+cd ../../.. && rm -rf flash-attention
 ```
 
 ## Citation
