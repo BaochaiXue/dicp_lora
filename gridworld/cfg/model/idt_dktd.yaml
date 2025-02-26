@@ -1,0 +1,24 @@
+include: cfg/model/idt_base.yaml
+
+model: IDT
+
+# Transformer
+tf_n_embd: 32
+tf_n_layer: 4
+tf_n_head: 4
+tf_dropout: 0.1
+tf_attn_dropout: 0.1
+tf_n_inner: 128
+n_transit: 200
+low_per_high: 10
+dim_z: 8
+
+# training
+lr: 0.001
+train_batch_size: 2048
+test_batch_size: 2048
+train_source_timesteps: 1000
+train_timesteps: 100000
+num_warmup_steps: 0
+
+num_workers: 2

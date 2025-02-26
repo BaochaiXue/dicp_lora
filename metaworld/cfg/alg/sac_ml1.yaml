@@ -1,0 +1,12 @@
+alg: SAC
+policy: MlpPolicy
+source_lr: 0.0003
+buffer_size: 1000000
+learning_starts: 100
+batch_size: 128
+train_freq: 1
+gradient_steps: 10
+n_stream: 100
+n_process: 8
+total_source_timesteps: 1000000
+alg_seed: 0

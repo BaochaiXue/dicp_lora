@@ -1,0 +1,10 @@
+alg: PPO
+policy: MlpPolicy
+batch_size: 200
+n_epochs: 20
+n_steps: 100
+alg_seed: 0
+total_source_timesteps: 1000000
+n_stream: 100
+source_lr: 0.0003
+n_process: 8

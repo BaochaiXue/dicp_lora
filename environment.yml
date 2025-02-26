@@ -1,0 +1,22 @@
+name: dicp
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - tensorboard
+  - pyyaml=6.0.1
+  - pip:
+      - torch==2.3.0
+      - matplotlib==3.7.5
+      - python-dateutil==2.9.0.post0
+      - networkx==3.1
+      - einops==0.8.0
+      - numpy==1.24.4
+      - tqdm==4.66.4
+      - transformers==4.41.1
+      - accelerate==0.21.0
+      - xformers==0.0.26.post1
+      - tensorboard==2.14.0
+      - ninja==1.11.1.1
