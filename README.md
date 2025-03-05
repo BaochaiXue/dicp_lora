@@ -34,6 +34,30 @@ cd ../xentropy && pip install .
 cd ../../.. && rm -rf flash-attention
 ```
 
+## Usage
+
+### Data Collection
+
+To collect training data, run:
+```bash
+python collect_data.py -ac [algorithm config]  -ec [environment config] -t [trajectory directory]
+```
+
+### Training
+
+To train the model, run:
+```bash
+python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -l [log directory]
+```
+
+### Evaluation
+
+To evaluate a trained model, run:
+```bash
+python evaluate.py -c [checkpoint directory] -k [beam size]
+```
+
+
 ## Citation
 If you find this work useful, please cite our paper:
 ```bibtex
