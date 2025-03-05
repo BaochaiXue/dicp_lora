@@ -20,3 +20,6 @@ dependencies:
       - xformers==0.0.26.post1
       - tensorboard==2.14.0
       - ninja==1.11.1.1
+      - stable-baselines3==2.3.2
+      - h5py==3.11.0
+      - lightning==2.1.2
