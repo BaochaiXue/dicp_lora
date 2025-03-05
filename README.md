@@ -36,6 +36,8 @@ cd ../../.. && rm -rf flash-attention
 
 ## Usage
 
+The following commands demonstrate the basic usage of the code in GridWorld environments.
+
 ### Data Collection
 
 To collect training data, run:
