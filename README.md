@@ -49,7 +49,7 @@ python collect_data.py -ac [algorithm config]  -ec [environment config] -t [traj
 
 To train the model, run:
 ```bash
-python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -l [log directory]
+python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -t [trajectory directory] -l [log directory]
 ```
 
 ### Evaluation
