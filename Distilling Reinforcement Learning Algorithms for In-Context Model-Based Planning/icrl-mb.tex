@@ -1,0 +1,889 @@
+
+\documentclass{article}
+\usepackage{iclr2025_conference,times}
+
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{amssymb}
+
+\newcommand{\son}[1]{{\color{blue}{\small\bf\sf[Son: #1]}}}
+\newcommand{\lee}[1]{{\color{orange}{\small\bf\sf[Lee: #1]}}}
+\newcommand{\kim}[1]{{\color{red}{\small\bf\sf[Kim: #1]}}}
+
+\title{Distilling Reinforcement Learning Algorithms for In-Context Model-Based Planning}
+
+\author{Jaehyeon Son$^1$, Soochan Lee$^2$, Gunhee Kim$^1$
+\\
+$^1$Seoul National University, $^2$LG AI Research\\
+\texttt{sjh9876@snu.ac.kr, soochan.lee@lgresearch.ai, gunhee@snu.ac.kr}\\
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy
+\begin{document}
+
+
+\maketitle
+
+\begin{abstract}
+    Recent studies have shown that Transformers can perform in-context reinforcement learning (RL) by imitating existing RL algorithms, enabling sample-efficient adaptation to unseen tasks without parameter updates.
+    However, these models also inherit the suboptimal behaviors of the RL algorithms they imitate.
+    This issue primarily arises due to the gradual update rule employed by those algorithms.
+    Model-based planning offers a promising solution to this limitation by allowing the models to simulate potential outcomes before taking action, providing an additional mechanism to deviate from the suboptimal behavior.
+    Rather than learning a separate dynamics model, we propose Distillation for In-Context Planning (DICP), an in-context model-based RL framework where Transformers simultaneously learn environment dynamics and improve policy in-context.
+    We evaluate DICP across a range of discrete and continuous environments, including Darkroom variants and Meta-World.
+    Our results show that DICP achieves state-of-the-art performance while requiring significantly fewer environment interactions than baselines, which include both model-free counterparts and existing meta-RL methods.
+    The code is available at \href{https://github.com/jaehyeon-son/dicp}{https://github.com/jaehyeon-son/dicp}.
+\end{abstract}
+
+
+\section{Introduction}
+\label{sec:intro}
+
+% Transformer, in-context learning
+Since the introduction of Transformers \citep{TF}, their versatility in handling diverse tasks has been widely recognized across various domains \citep{GPT3, ViT, GPT4}.
+A key aspect of their success is in-context learning \citep{GPT3}, which enables models to acquire knowledge rapidly without explicit parameter updates through gradient descent.
+Recently, this capability has been explored in reinforcement learning (RL) \citep{DT, PPO, MGDT, GATO}, where acquiring skills in a sample-efficient manner is crucial.
+This line of research naturally extends to meta-RL, which focuses on leveraging prior knowledge to quickly adapt to novel tasks.
+
+% Algorithm Distillation
+In this context, \citet{AD} introduce Algorithm Distillation (AD), an in-context RL approach where Transformers sequentially model the entire learning histories of a specific RL algorithm across various tasks.
+The goal is for the models to replicate the exploration-exploitation behaviors of the source RL algorithm, enabling them to tackle novel tasks purely in-context.
+Beyond replication, \citet{AD} show that this approach can enhance sample efficiency by bypassing intermediate learning steps or distilling histories from multiple actors.
+This combination of an off-the-shelf RL algorithm with the in-context learning capability of Transformers has demonstrated strong potential for improving the adaptability of meta-RL \citep{DPT,AT,IDT,AD-eps,Headless-AD}.
+
+
+\begin{figure}[t]
+    \centering
+    \begin{minipage}[b]{0.31\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, trim={0pt 186pt 438pt 0pt}, clip]{figures/main-1.pdf}
+        \vspace{-7pt}
+        \caption*{(a) Previous approaches}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.60\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, trim={0pt 144pt 126pt 0pt}, clip]{figures/main-2.pdf}
+        \caption*{(b) Distillation for In-Context Planning (Ours)}
+    \end{minipage}
+    \caption{Comparison between previous approaches \citep{AD,DPT,IDT} and our proposed Distillation for In-Context Planning (DICP).
+    Unlike the previous approaches that directly predict actions without modeling dynamics, our approach leverages the in-context learned dynamics model for planning.
+    }
+    \label{fig:main}
+\end{figure}
+
+
+% Limitation of previous works
+However, prior in-context RL approaches have a notable limitation: they tend to replicate the suboptimal behaviors of the source algorithm.
+The source RL algorithm updates its policy gradually through gradient descent, sometimes deliberately preventing abrupt changes \citep{TRPO,PPO}.
+As a result, it may take multiple iterations to fully integrate newly discovered information, leading to repeated suboptimal actions during this process.
+Without a mechanism to deviate from the source algorithm's behavior, existing in-context RL methods \citep{AD,IDT,Headless-AD} inherit these inefficiencies.
+
+% Our approach
+To address this limitation, we introduce \emph{Distillation for In-Context Planning (DICP)}, an in-context model-based RL framework where the dynamics model is learned in-context alongside policy improvement.
+Unlike in-context policy improvement, in-context learning of the dynamics model does not inherit the suboptimal behaviors of the source algorithm, as modeling the environment's dynamics is independent of the inefficiency.
+By planning with this in-context learned dynamics model, our framework provides the agent with an additional mechanism to overcome the suboptimal behaviors of the source algorithm.
+Furthermore, simulating potential outcomes before executing actions allows for more deliberate decision-making based on predicted future returns. 
+To the best of our knowledge, ours is the first model-based approach on in-context RL using Transformers to imitate the source algorithm.
+
+% Experiment
+To demonstrate the effectiveness of our framework, we conduct experiments in both discrete and continuous environments, including Darkroom variants \citep{AD} and Meta-World benchmark suite \citep{MW}.
+The results indicate that our approach significantly surpasses both in-context model-free counterparts (\textit{e.g.}, AD \citep{AD}, DPT \citep{DPT}, and IDT \citep{IDT}) and existing meta-RL methods (\textit{e.g.}, RL$^2$ \citep{RL2}, MAML \citep{MAML}, PEARL \citep{PEARL}, MACAW \citep{MACAW}, FOCAL \citep{FOCAL},  BOReL \citep{BOReL}, MoSS \citep{MoSS}, and IDAQ \citep{IDAQ}).
+Notably, our method achieves state-of-the-art results on the Meta-World ML1 and ML10 benchmarks, while requiring significantly fewer environmental interactions compared to the baselines.
+
+
+\section{Related work}
+\label{sec:rel}
+\paragraph*{RL as sequence modeling.}
+With the advent of Transformers, which can learn from much larger datasets than what an agent can typically collect online, their application to offline RL \citep{offlineRL} has gained prominence \citep{DT, TTO, MGDT, GATO}.
+Despite these advances, \citet{AD} point out a key limitation: these approaches struggle to improve their policy in-context through trial and error.
+The primary reason is that they are designed to imitate the dataset policy, which makes them unsuitable for performing in-context RL on novel tasks.
+To address this, \citet{AD} propose Algorithm Distillation (AD), an in-context RL approach where a Transformer is trained to distill learning histories from a source RL algorithm across diverse tasks.
+Notably, AD becomes effective when the context length of Transformers exceeds the episode horizon.
+Instead of imitating the source algorithm's actions, Decision-Pretrained Transformer (DPT; \citet{DPT}) is designed to predict \emph{optimal} actions.
+In-context Decision Transformer (IDT; \citet{IDT}) implements a hierarchical approach to in-context RL, where the Transformer predicts high-level decisions that guide a sequence of actions, rather than predicting each action individually.
+In addition, \citet{Headless-AD} propose an in-context RL approach for variable action spaces, while \citet{AD-eps} synthesize learning histories by gradually denoising policies rather than directly executing a source algorithm.
+
+\paragraph*{Meta-RL.}
+Deep meta-RL began with online approaches, where RNNs are employed to learn RL algorithms that generalize across environments \citep{RL2, LtoRL}.
+In parallel, gradient-based approaches \citep{MAML, Reptile} aim to discover parameter initializations that rapidly adapt to new tasks.
+Recently, \emph{offline} meta-RL has gained attention, leveraging pre-collected meta-training datasets to address the meta-RL problem \citep{MACAW,BOReL,CORRO,IDAQ,MoSS}.
+Various methods have been explored for this problem, including gradient-based \citep{MACAW}, Bayesian \citep{BOReL}, and contrastive learning approaches \citep{CORRO}.
+Furthermore, recent in-context RL approaches \citep{AD, DPT, IDT, Headless-AD}, including our own, fall within the category of offline meta-RL.
+
+\paragraph*{Model-based meta-RL.}
+In the prior research on model-based meta-RL, 
+\cite{VariBAD,HyperX,BOReL} focus on learning to infer belief states about environment dynamics, while \citet{MoSS} aim to infer task representations.
+\citet{IDAQ} quantify uncertainty using an ensemble of meta-training dynamics when facing novel meta-test tasks.
+\citet{ReBAL,TFsearch,MAMBA} learn to construct dynamics models for planning.
+Our approach aligns with the latter category but stands out by integrating both the policy and the dynamics model within the same sequence model.
+This contrasts with prior work that either relies on separate modules for modeling dynamics \citep{ReBAL,MAMBA}, or omits a policy network while depending solely on the dynamics model \citep{TFsearch}.
+We provide a more comprehensive overview of related works in App.~\ref{sec:rel_ext}.
+
+
+\section{Problem Formulation}
+\label{sec:back}
+
+\paragraph*{POMDP.}
+We consider a partially observable Markov decision process (POMDP): $\gM = (\gS, \gA, \gO, \gT, \gR, \gamma)$.
+At each time step $t$, an agent interacts with the environment by selecting an action $a_t \in \gA$ based on the current state $s_t \in \gS$.
+The environment transitions to the next state $s_{t+1} \in \gS$ according to the transition model $\gT(s_{t+1} \mid s_t, a_t)$, and the agent receives a reward $r_t \in \gR$, determined by the reward model $\gR(r_t \mid s_t, a_t)$.
+However, the agent does not directly observe the true state $s_t$.
+Instead, it receives partial observation $o_t \in \gO$ of the state $s_t$.
+The discount factor $\gamma \in [0, 1]$ controls the relative importance of immediate versus future rewards.
+The tuple $(\gT, \gR)$ is referred to as the \emph{dynamics model} or \emph{world model}.
+The agent's \emph{history} up to time step $t$ is defined as $h_t = (o_0, a_0, r_0, \dots, o_t, a_t, r_t)$.
+The objective of RL is to find a policy that maximizes the expected cumulative reward $J = \E_{\pi,\gM} \left[ \sum_{t=0}^T \gamma^t r_t \right]$, where $T$ is the  number of interactions.
+Throughout the paper, we use the terms \emph{environment} and \emph{task} interchangeably to refer to a POMDP.
+
+\paragraph*{Meta-RL.}
+We define an \emph{algorithm} $f : \gH \times \gO \rightarrow \Delta(\gA)$, where $\gH$ is the space of histories, and $\Delta(\gA)$ represents the space of probability distributions over $\gA$.
+The objective of meta-RL is to discover an algorithm $f$ that maximizes the expected cumulative reward $J$ over a distribution of POMDPs $p(\gM)$.
+During \emph{meta-training}, the algorithm is optimized on a set of tasks sampled from $p(\gM)$, while during \emph{meta-test}, it is evaluated on another set of tasks sampled from $p(\gM)$.
+For simplicity, we refer to meta-training and meta-test as \emph{training} and \emph{test} when the context is clear.
+
+Following previous works \citep{AD, IDT}, we focus on scenarios where an offline dataset of learning histories $\gD = \{h_T^i = (o_0^i, a_0^i, r_0^i, \dots, o_T^i, a_T^i, r_T^i)\}_{i=1}^n$ is available, generated by a source algorithm $f_\textrm{source}$ for a set of meta-training tasks $\{\gM_i \sim p(\gM)\}_{i=1}^n$.
+The loss function for AD \citep{AD} is defined as
+\begin{equation}
+    \gL_{\textrm{AD}}(\theta) = - \sum_{i=1}^n \sum_{t=1}^{T} \log f_\theta(a_t^i \mid o_t^i, h_{t-1}^i),
+    \label{eq:ad}
+\end{equation}
+where $\theta$ represents a sequence model.
+Similarly, the loss functions for DPT \citep{DPT} and IDT \citep{IDT} are respectively presented in Eq.~\ref{eq:dpt}-\ref{eq:idt} in App.~\ref{sec:rel_ext}.
+
+\section{Distillation for In-Context Planning}
+\label{sec:appr}
+
+In this section, we propose \emph{Distillation for In-Context Planning (DICP)}, where the agent utilizes an in-context learned dynamics model to plan actions.
+To learn the dynamics model in-context, we introduce \emph{meta-model} $g_\theta: \gH \times \gO \times \gA \rightarrow \Delta(\sR) \times \Delta(\gO) \times \Delta(\sR)$, which shares the same sequence model $\theta$ with the algorithm $f_\theta$.
+It yields probability distributions over the spaces of reward $r_t$, next observation $o_{t+1}$, and return-to-go $R_t = \sum_{t'=t}^H r_{t'}$ based on history $h_{t-1}$, current observation $o_t$, and action $a_t$.
+$H$ represents the time step at which the episode ends.
+We optimize $\theta$ throughout the meta-training phase (Alg.~\ref{alg:train}) with following loss:
+\begin{align}
+    \gL(\theta) \hspace{-1pt}=\hspace{-1pt} \gL_{\textrm{Im}}(\theta) \hspace{-1pt}+\hspace{-1pt} \lambda \hspace{-1pt} \cdot \hspace{-1pt} \gL_{\textrm{Dyn}}(\theta),\text{ where } \gL_{\textrm{Dyn}}(\theta) \hspace{-1pt}=\hspace{-1pt} - \hspace{-1pt}\sum_{i=1}^n \sum_{t=1}^{T}  \log g_\theta(r_t, o_{t+1}, R_t | o_t, a_t, h_{t-1}).
+    \label{eq:final}
+\end{align}
+Here, $\gL_\textrm{Im}$ corresponds to one of $\gL_{\textrm{AD}}$, $\gL_{\textrm{DPT}}$, or $\gL_{\textrm{IDT}}$ (Eq.~\ref{eq:ad},~\ref{eq:dpt}-\ref{eq:idt}), and $\lambda$ is a hyperparameter that balances the imitation loss $\gL_{\textrm{Im}}$ and the dynamics loss $\gL_{\textrm{Dyn}}$.
+
+\raggedbottom
+
+\begin{figure*}[t]
+    \vspace{-13pt}
+    \begin{minipage}[t!]{0.49\textwidth}
+        \begin{algorithm}[H]
+            \caption{Meta-Training Phase}
+            \label{alg:train}
+            \begin{algorithmic}[1]
+                \STATE \textbf{Required:} task distribution $p(\gM)$, source algorithm $f_\textrm{source}$, sequence model $\theta$, context length $k$
+                \STATE $\gD \gets \{\}$
+                \FOR{$i=1 \dots n$}
+                    \STATE Sample a training task $\gM_i \sim p(\gM)$.
+                    \STATE Execute $f_\textrm{source}$ on $\gM_i$ and collect learning history $h_t^i=(o_0^i, a_0^i, r_0^i, \dots, o_T^i, a_T^i, r_T^i)$.
+                    \STATE $\gD \gets \gD \cup h_t^i$
+                \ENDFOR
+                \WHILE{not converge}
+                    \STATE Sample $k$-step segments from $\gD$.
+                    \STATE Update $\theta$ for Eq.~\ref{eq:final} with the sampled trajectory segments.
+                \ENDWHILE
+            \end{algorithmic}
+        \end{algorithm}
+        \vspace{-5.45mm}
+        \begin{algorithm}[H]
+            \caption{Meta-Test Phase}
+            \label{alg:test}
+            \begin{algorithmic}[1]
+                \STATE \textbf{Required:} task distribution $p(\gM)$, sequence model $\theta$
+                \FOR{$j=1 \dots m$}
+                    \STATE Sample a test task $\gM_j \sim p(\gM)$.
+                    \STATE $h_{-1} \gets ()$
+                    \FOR{$t=0 \dots T$}
+                        \STATE $a_t \gets \texttt{DICP}(o_t, h_{t-1}, \theta)$\label{alg:test:act}
+                        \STATE $o_{t+1}, r_t \gets$ Perform action $a_t$ on $\gM_j$.
+                        \STATE $h_t \gets (h_{t-1},o_t,a_t,r_t) $
+                    \ENDFOR
+                \ENDFOR
+            \end{algorithmic}
+        \end{algorithm}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t!]{0.49\textwidth}
+        \begin{algorithm}[H]
+            \caption{Distillation for In-Context Planning (DICP)}
+            \label{alg:icp}
+            \begin{algorithmic}[1]
+            \STATE \textbf{Input:} Current observation $o_t$, learning history $h_{t-1}$, sequence model $\theta$
+            \STATE Set beam size $K$, sample size $L$
+            \STATE $\gB \gets \{\}$ 
+            \FOR{$l=1 \dots L$}
+                \STATE $\hat{a}_t \sim f_\theta(\; \cdot \mid o_t, h_{t-1})$
+                \STATE $\hat{r}_t,\hat{o}_{t+1}, \hat{R}_t \sim g_\theta(\; \cdot \mid o_t, \hat{a}_t, h_{t-1})$\label{alg:icp:act1}
+                \STATE $\hat{h}_t \gets (h_{t-1}, o_t, \hat{a}_t, \hat{r}_t)$\label{alg:icp:dyn1}
+                \STATE $\gB \gets \gB \cup (\hat{h}_t,\hat{o}_{t+1})$
+            \ENDFOR
+            \WHILE{stopping criterion is not met}\label{alg:icp:while}
+                \STATE $\gB' \gets \{\}$
+                \FORALL{$(\hat{h}_{s-1},\hat{o}_s) \in \gB$}
+                    \FOR{$l=1 \dots L$}
+                        \STATE $\hat{a}_s \sim f_\theta(\; \cdot \mid \hat{o}_s, \hat{h}_{s-1})$\label{alg:icp:act2}
+                        \STATE $\hat{r}_s,\hat{o}_{s+1}, \hat{R}_s \sim g_\theta(\; \cdot \mid \hat{o}_s, \hat{a}_s, \hat{h}_{s-1})$\label{alg:icp:dyn2}
+                        \STATE $\hat{h}_s \gets (\hat{h}_{s-1}, \hat{o}_s, \hat{a}_s, \hat{r}_s$)
+                        \STATE $\gB' \gets \gB' \cup (\hat{h}_s,\hat{o}_{s+1})$
+                    \ENDFOR
+                \ENDFOR
+                \STATE $\gB \gets$ Top $K$ elements of $\gB'$ w.r.t. $\sum_{t'=t}^{s-1} \hat{r}_{t'} + \hat{R}_s$\label{alg:icp:topk}
+            \ENDWHILE\label{alg:icp:endwhile}
+            \STATE $(h_{t-1}, o_t, \hat{a}_t, \hat{r}_t, \dots, \hat{o}_{S+1})$ $\gets$ Top element of $\gB$ w.r.t. $\sum_{t'=t}^{S-1} \hat{r}_{t'} + \hat{R}_S$\label{alg:icp:top1}
+            \STATE \textbf{Return:} $\hat{a}_t$
+            \end{algorithmic}
+        \end{algorithm}
+    \end{minipage}
+\end{figure*}
+
+After meta-training, the sequence model $\theta$ is fixed and evaluated during the meta-test phase (Alg.~\ref{alg:test}).
+A key distinction between our method and previous in-context RL approaches \citep{AD, DPT, IDT} lies in how actions are selected (L\ref{alg:test:act}).
+Previous methods generate actions directly from the sequence model: $a_t \gets f_\theta(\; \cdot \mid o_t, h_{t-1})$.
+These approaches may replicate the inefficiencies arising from the gradual updates of gradient-based RL algorithms, as they imitate the source algorithm's behaviors.
+
+In contrast, our method employs an additional \texttt{DICP} subroutine (Alg.~\ref{alg:icp}) for action selection.
+As a planning strategy, we adopt Model Predictive Control (MPC) \citep{MB-MPC, ReBAL, GP}.
+At each time step, the agent simulates future outcomes, selects the path that maximizes predicted return, and executes the first action in that path.
+Specifically, upon receiving an observation $o_t$, the agent samples $L$ candidate actions $\{\hat{a}_t^1, \dots, \hat{a}_t^L\}$, and predicts the consequences of the actions using the dynamics model, which are the next observations $\{\hat{o}_{t+1}^1, \dots, \hat{o}_{t+1}^L\}$ and rewards $\{\hat{r}_t^1, \dots, \hat{r}_t^L\}$.
+The agent also predicts return-to-go $\{\hat{R}_t^1, \dots, \hat{R}_t^L\}$ for each candidate action to evaluate each path.
+The process repeats for future time steps, generating new candidate actions $\{\{\hat{a}_{t+1}^{1,1}, \dots, \hat{a}_{t+1}^{1,L}\}, \dots, \{\hat{a}_{t+1}^{L,1}, \dots, \hat{a}_{t+1}^{L,L}\}\}$ and corresponding consequences, until either the predefined planning horizon is reached or the episode ends.
+This process constructs a planning tree, where each path is ranked based on the predicted return.
+The overall DICP algorithm is presented in Alg.~\ref{alg:icp}, where superscripts are omitted for brevity.
+
+After building the planning tree, the agent can apply a suitable tree search algorithm that fits within computational and memory constraints.
+In our setup, we employ \emph{beam search} as it is well-suited to Transformers, where decoding, sorting, and slicing operations for respective beams are parallelizable.
+For each planning step, the top $K$ paths are selected based on the predicted return.
+As demonstrated in \S\ref{sec:exp}, when the environment provides well-structured dense rewards, a simple \emph{greedy search} combined with the in-context learned dynamics model achieves competitive performance, although beam search remains applicable in such environments.
+In Alg.~\ref{alg:icp}, greedy search is represented by skipping the while loop of L\ref{alg:icp:while}-\ref{alg:icp:endwhile}.
+
+The DICP algorithm provides a mechanism for the agent to deviate from the source algorithm's suboptimal behaviors and immediately pursue reward-maximizing actions.
+Since modeling the environment's dynamics is independent of the source algorithm's gradual update rule, the agent can leverage the in-context learned dynamics model to enhance the decision-making process.
+When the agent identifies promising transitions that contain information for achieving higher returns, the dynamics model assigns higher expected returns to prospective state-action pairs that align with this information.
+When such pairs are sampled (L\ref{alg:icp:act1} \& L\ref{alg:icp:act2}), the dynamics model assigns them higher returns (L\ref{alg:icp:dyn1} \& L\ref{alg:icp:dyn2}), encouraging further exploration toward these promising areas (L\ref{alg:icp:topk} \& L\ref{alg:icp:top1}).
+
+
+\paragraph*{Architecture.}
+We evaluate our framework using architectures from AD \citep{AD}, DPT \citep{DPT}, and IDT \citep{IDT}, incorporating modifications to include the additional loss term $\gL_{\textrm{Dyn}}$ as shown in Eq.~\ref{eq:final}.
+These modifications are illustrated in Fig.~\ref{fig:models} in App.~\ref{sec:details}.
+We refer to the resulting models as DICP-AD, DICP-DPT, and DICP-IDT.
+For DICP-AD and DICP-DPT, we append the action $a_t$ to the input sequence and train the model to predict the reward $r_t$, next observation $o_{t+1}$, and return-to-go $R_t$ conditioned on $a_t$.
+Additionally, following \citet{DPT}, we compress each $(o, a, r)$ tuple into a single token before passing it through the Transformer.
+For DICP-IDT, the model predicts the results of actions within its Decisions-to-Go module, which interacts with the environment through low-level actions.
+However, we find that the original architecture struggles to propagate reward information, as the Reviewing-Decisions module encodes only observations and actions.
+To address this, we modify the Making-Decisions module to also encode rewards.
+For completeness, we review the original contributions of \citet{DPT, IDT} in App.~\ref{sec:rel_ext}.
+
+
+\paragraph*{Distribution choice.}
+For the distribution class of $f_\theta$, we use a categorical distribution for discrete action spaces and a Gaussian distribution with diagonal covariance for continuous ones.
+For $g_\theta$, we apply the same approach, using a categorical distribution for discrete state spaces and rewards, and a Gaussian for continuous ones.
+Thus, $\gL_{\textrm{Im}}(\theta)$ and $\gL_{\textrm{Dyn}}(\theta)$ correspond to either cross-entropy loss or Gaussian negative log-likelihood, depending on the environment.
+
+
+\section{Experiments}
+\label{sec:exp}
+
+\subsection{Environments}
+
+We evaluate our DICP framework across a diverse set of environments.
+For discrete environments, we use Darkroom, Dark Key-to-Door, and Darkroom-Permuted, which are well-established benchmarks for in-context RL studies \citep{AD, DPT, IDT}.
+For continuous ones, we test on the Meta-World benchmark suite \citep{MW}.
+
+\paragraph*{Darkroom.}
+Darkroom is a 2D discrete environment where the agent should locate a goal with limited observations.
+The state space consists of a $9 \times 9$ grid, and the action space includes five actions: up, down, left, right, and stay.
+The agent earns a reward of 1 whenever reaching the goal, with 0 reward otherwise.
+The agent's observation is restricted to its current position, which makes it challenging to infer the goal's location.
+The agent always starts at the center of the grid, and the tasks are distinguished by varying goal locations, resulting in 81 distinct tasks.
+The tasks are divided into disjoint training and test sets, with a 90:10 split.
+Each episode has a horizon of 20 steps.
+
+\paragraph*{Dark Key-to-Door.}
+Dark Key-to-Door is a variation of Darkroom, where the agent should find a key before reaching the goal.
+The agent receives a reward of 1 upon finding the key and an additional reward of 1 upon reaching the goal.
+Unlike Darkroom, the agent only earns a reward from the goal once per episode, with a maximum reward of 2 per episode.
+This environment features $81 \times 81 = 6561$ distinct tasks, each defined by different key and goal locations.
+The train-test split ratio is 95:5.
+The episode horizon is extended to 50 steps.
+
+\paragraph*{Darkroom-Permuted.}
+Darkroom-Permuted is another variant of Darkroom, where the action space is randomly permuted.
+In this environment, the agent starts in a fixed corner of the grid, with the goal located in the opposite corner.
+There are $5!=120$ unique tasks, each corresponding to a different permutation of the action space.
+Since the agent is tested on novel permutations, it must explore the environment to figure out the effects of each action.
+The train-test split ratio is the same as in Darkroom.
+The episode horizon is 50 steps.
+
+\paragraph*{Meta-World.}
+Meta-World \citep{MW} is a robotic manipulation benchmark suite designed for meta-RL and multi-task RL.
+The suite includes 50 continuous control tasks and offers three distinct meta-RL benchmarks: ML1, ML10, and ML45.
+We focus on ML1, which provides 50 pre-defined seeds for both training and test for each task.
+Each seed represents a different initialization of the object, goal, and the agent.
+Although the agent receives dense rewards tailored to each specific task, its performance is evaluated based on the average success rate across test seeds, which differs from the dense reward structure.
+The episode horizon is 500 steps.
+We also report results on ML10 in App.~\ref{sec:add_exp}, where the goal is to learn from 10 training tasks and generalize to 5 test tasks.
+
+
+\begin{figure}[t]
+    \begin{center}
+        \includegraphics[width=\linewidth]{figures/curve.pdf} \\
+    \end{center}
+    \caption{Learning curves of in-context RL approaches during the meta-test phase on discrete (1st row) and continuous (2nd and 3rd rows) environments.
+    Our methods outperform model-free counterparts in both sample efficiency and overall performance.
+    Results are averaged over 5 and 3 train-test splits for discrete and continuous benchmarks, respectively.
+    We also report the mean success rate across all 50 tasks in Meta-World ML1.
+    The final performance results for all ML1 benchmarks are presented in Table~\ref{tab:results} and Table~\ref{tab:results-all}.
+    Shaded areas represent 95\% confidence intervals.
+    }
+    \label{fig:curve}
+\end{figure}
+
+\subsection{Baselines}
+
+\paragraph*{In-context RL methods.}
+We compare our approach with recent in-context model-free methods, including AD \citep{AD}, DPT \citep{DPT}, and IDT \citep{IDT}.
+We follow the evaluation protocols of previous works \citep{AD, IDT}.
+For the source algorithms, we use PPO \citep{PPO} to generate learning histories.
+We collect data using 100 actors, accumulating a total of 100K to 1M environment steps, depending on the environment.
+The context length is set to four and ten episode horizons for discrete and continuous environments, respectively.
+We evaluate DPT only in Darkroom variants because they assume the availability of optimal actions, which are not applicable in general environments.
+
+\paragraph*{Other meta-RL methods.}
+For model-free meta-RL methods, we include RL$^2$ \citep{RL2}, MAML \citep{MAML}, PEARL \citep{PEARL}, MACAW \citep{MACAW}, and FOCAL \citep{FOCAL}.
+For the model-based methods, we compare against MuZero \citep{MuZero}, BOReL \citep{BOReL}, MoSS \citep{MoSS}, and IDAQ \citep{IDAQ}.
+To ensure a fair comparison, we report IDAQ results using SAC as the source algorithm, rather than expert policies.
+The original BOReL leverages an oracle reward function, so we report results without it, leading to failure on most tasks as discussed in \citet{BOReL, IDAQ}.
+MuZero is not originally designed for meta-RL, but we include it due to its strong performance after pre-training on meta-training tasks followed by fine-tuning on meta-test tasks \citep{ProcGenMuZero}.
+Due to the challenge in reproducing meta-RL approaches, we present the results reported in the original papers, following prior works \citep{ProcGenMuZero, MoSS}.
+
+
+\subsection{Results}
+
+\begin{table}[t]
+    \caption{Meta-test success rates on Meta-World ML1.
+    The success rates are reported as percentages, averaged over 3 train-test splits with 50 test seeds.
+    The results marked with~$^*$ are taken from \citet{MW}, while the ones with $^\dag$ are from \citet{IDAQ}.
+    The results for MoSS and MuZero are  from \citet{MoSS} and \cite{ProcGenMuZero}, respectively.
+    Our approach achieve state-of-the-art performance with much fewer environment steps.
+    Results at 5K steps are presented in Table~\ref{tab:results_5k}.
+    We omit `-v2' from the task names.
+    }
+    \label{tab:results}
+    \small \centering
+    \begin{tabular}{ccccccc}
+    \toprule
+    Method & Reach & Push & Pick-Place & Sweep & Peg-Insert-Side & Max Steps\\
+    \midrule
+    RL$^2$$^*$ & \textbf{100} & 96 & 98 & -- & -- & 300M\\
+    MAML$^*$ & \textbf{100} & 94 & 80 & --  & -- & 300M\\
+    PEARL$^*$ & 68 & 44 & 28 & -- & -- & 300M\\
+    MACAW$^\dag$ & -- & -- & -- & 4 & 0 & 5K\\
+    FOCAL$^\dag$ & -- & -- & -- & 38 & 10 & 5K\\
+    \midrule
+    MuZero & \textbf{100} & \textbf{100} & \textbf{100} & -- & -- & 10M\\
+    MoSS & 86 & \textbf{100} & \textbf{100} & -- & -- & 40M\\
+    BoREL$^\dag$ & -- & -- & -- & 0 & 0 & 5K\\
+    IDAQ$^\dag$ & -- & -- & -- & 59 & 30 & 5K\\
+    \midrule
+    AD & 86 & 88 & 96 & 67 & 73 & 200K\\
+    IDT & \textbf{100} & 94 & 95 & 96 & 76 & 200K\\
+    \midrule
+    DICP-AD (Ours) & 84 & 87 & 97 & 71 & 83 & 200K\\
+    DICP-IDT (Ours) & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{87} & 200K \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+We begin by comparing our approach with model-free counterparts on the Darkroom, Dark Key-to-Door, and Darkroom-Permuted environments.
+The first row of Fig.~\ref{fig:curve} displays the learning curves for these environments.
+Under our unified configurations and implementations, the best algorithm among AD, DPT, and IDT varies according to environments.
+Nonetheless, our model-based approach consistently outperforms the model-free counterparts.
+For planning, we use beam search with a beam size of 10, considering all 5 actions at each planning step.
+The ablation study over different beam sizes are discussed in \S\ref{sec:ablation:search}.
+
+Furthermore, we evaluate our approach on Meta-World ML1 benchmarks against previous meta-RL methods, including both model-free and model-based methods.
+Table~\ref{tab:results} presents the mean success rates over the meta-test phase for \emph{Reach-v2}, \emph{Push-v2}, \emph{Pick-Place-v2}, \emph{Sweep-v2}, and \emph{Peg-Insert-Side-v2}, following previous works \citep{MW, ProcGenMuZero, MoSS, IDAQ}.
+Our method achieves state-of-the-art performance on this benchmarks, surpassing all previous meta-RL methods.
+A key highlight is that our approach reaches this performance with a maximum of only 200K environment steps, whereas most other methods require at least 10M steps.
+To ensure a fair comparison with \citet{IDAQ}, whose meta-test is conducted with only 5K environment steps, we also report the results at 5K steps in Table~\ref{tab:results_5k}.
+Our approach consistently outperforms the baselines from \citet{IDAQ} at this step count as well.
+While in-context model-free baselines \citep{AD, IDT} are also relatively sample-efficient, their performance remains suboptimal compared to our method.
+The learning curves are displayed in the second and third rows of Fig.~\ref{fig:curve}.
+For planning, we employ greedy search with a sample size of 10 at each step.
+We also report additional results on all remaining ML1 benchmarks in Table~\ref{tab:results-all} and on ML10 in Table~\ref{tab:results_ml10}, respectively.
+
+
+\section{Ablation Study}
+
+We perform an ablation study to evaluate key design choices in our approach.
+We examine the effect of model-based planning at different scales (\S\ref{sec:ablation:search}), the effect of context length on the accuracy of the in-context learned dynamics model (\S\ref{sec:ablation:context}), and the effect of different source algorithms (\S\ref{sec:ablation:source}).
+
+
+\subsection{Effect of Model-based Planning at Different Scales}
+\label{sec:ablation:search}
+
+We evaluate our approach using search algorithms at varying scales, as shown in the first row of Fig.~\ref{fig:ablation}.
+Experiments are conducted in two environments: Darkroom (discrete) and Reach-v2 (continuous).
+We use DICP-AD for Darkroom and DICP-IDT for Reach-v2, the best-performing models for each environment.
+The results demonstrate that incorporating model-based planning significantly improves performance compared to baselines that train the dynamics model but do not use it for planning.
+While increasing the beam size or sample size improves performance, the gains plateau after a size of 10.
+When the dynamics model is not used for planning, the performance is comparable to that of model-free baselines.
+
+\begin{figure}[t!]
+    \begin{center}
+        \includegraphics[width=\linewidth]{figures/ablation.pdf} \\
+    \end{center}
+    \caption{
+    First row: The effect of model-based planning at different scales.
+    We present learning curves with varying beam sizes $K$ and sample sizes $L$.
+    For the case labeled ``No planning,'' the dynamics model is not utilized for planning, while the meta-model is still trained.
+    The dashed vertical line marks the time step when planning begins, coinciding with the point where the context is fully filled.
+    Second row: The effect of context lengths on the accuracy of the in-context learned dynamics model.
+    Results are averaged over 3 train-test splits.
+    }
+    \label{fig:ablation}
+\end{figure}
+
+\subsection{Effect of Context Lengths on Accuracy of the Dynamics Model}
+\label{sec:ablation:context}
+
+We investigate the effect of context length on the accuracy of the in-context learned dynamics model.
+Our hypothesis is that extending the context length enables the model to capture more information about the environment, improving prediction accuracy.
+To verify this, we evaluate the test loss by forwarding the learning histories of the source algorithm on \emph{meta-test} tasks into the meta-trained DICP-IDT on Reach-v2.
+The test loss is measured as the mean squared error between the predicted and actual rewards and observations.
+The models are trained with a context length of 1000, and the loss is calculated by averaging across every 10 positions within the context.
+The results in the second row of Fig.~\ref{fig:ablation} support our hypothesis: longer context lengths yield more accurate predictions for both observations and rewards.
+Given that the effectiveness of model-based planning heavily depends on the dynamics model's bias \citep{MBPO, M3PO}, our framework benefits from longer context lengths.
+Furthermore, as in-context model-free RL methods have also been shown to improve with extended context lengths \citep{AD}, our combined framework gains substantial advantages from using longer context lengths.
+
+
+
+\subsection{Effect of Different Source Algorithms}
+\label{sec:ablation:source}
+
+Our framework is agnostic to the choice of the source algorithm, as are previous model-free approaches \citep{AD, DPT, IDT}.
+To empirically verify this, we train IDT and DICP-IDT with SAC \citep{SAC} as the source algorithm.
+As shown in Table~\ref{tab:ablation-source}, our method continues to outperform model-free counterpart.
+These results demonstrate that our approach is robust to the choice of source algorithm, outperforming model-free baselines regardless of which source algorithm is used.
+It is worth noting that since our SAC configuration is not specifically tuned for these tasks, the overall performance may be underestimated.
+The hyperparameters for SAC are detailed in App.~\ref{sec:details}.
+
+
+\begin{table}[t!]
+    \caption{Meta-test success rates of in-context RL approaches using SAC as the source algorithm.
+    Our approach outperforms original model-free IDT.
+    The results are averaged over 3 train-test splits.
+    }
+    \label{tab:ablation-source}
+    \small \centering
+    \begin{tabular}{ccccccc}
+    \toprule
+    Method & Reach & Push & Pick-Place & Sweep & Peg-Insert-Side\\
+    \midrule
+    IDT & \textbf{85} & 65 & 17 & \textbf{4} & 1\\
+    DICP-IDT (Ours) & \textbf{85} & \textbf{69} & \textbf{20} & 3 & \textbf{3}\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Conclusion}
+\label{sec:conc}
+
+We introduced an in-context model-based RL framework that leverages Transformers to not only learn dynamics models but also improve policies in-context.
+By incorporating model-based planning, our approach effectively addresses the limitations of previous in-context model-free RL methods, which often replicate the suboptimal behavior of the source algorithms.
+Our framework demonstrated superior performance across various discrete and continuous environments, establishing in-context RL as one of the most effective meta-RL approaches.
+
+One limitation of our approach is the additional computational cost incurred during action selection compared to model-free methods.
+However, this trade-off aligns with the broader trend of leveraging increased inference-time computation to maximize the reasoning capabilities of Transformers \citep{GPT3, COT}.
+Future work could explore adaptive planning strategies that dynamically adjust the planning scale based on context.
+Another promising direction is incorporating expert demonstrations to accelerate learning.
+Additionally, investigating offline dataset construction strategies to enable our method to adapt to changing dynamics would be a meaningful research direction \citep{MCL-TF, MCL-SB, MCL-Survey}.
+Finally, exploring more advanced or efficient sequence models could further enhance in-context RL.
+
+\subsubsection*{Reproducibility Statement}
+
+We are committed to ensuring the full reproducibility of our research.
+Our open-sourced code enables easy replication of all experiments, and all datasets used in our experiments can be generated using our code.
+Detailed configurations are provided in both the code and App.~\ref{sec:details}.
+We hope this resource serves as a valuable reference for the research community, particularly for newcomers, by providing a unified implementation of in-context RL methods.
+
+
+\subsubsection*{Acknowledgments}
+
+We thank Jaekyeom Kim, Yeda Song, Jinuk Kim, Fatemeh Pesaran zadeh, Wonkwang Lee, Dongwook Lee, and the anonymous reviewers for their thoughtful feedback.
+This work was partly supported by Samsung Advanced Institute of Technology,
+Institute of Information \& Communications Technology Planning \& Evaluation (IITP) grant funded by the Korea government (MSIT) (No.~RS-2022-II220156, Fundamental research on continual meta-learning for quality enhancement of casual videos and their 3D metaverse transformation; No.~RS-2019-II191082, SW StarLab; No.~RS-2021-II211343, Artificial Intelligence Graduate School Program (Seoul National University)),
+and Korea Radio Promotion Association (Development of Intelligent Docent Service for Information-Disadvantaged Groups).
+Gunhee Kim is the corresponding author.
+
+
+\bibliography{icrl-mb}
+\bibliographystyle{iclr2025_conference}
+
+\newpage
+\appendix
+
+\section{Implementation Details}
+\label{sec:details}
+
+\subsection{Source Algorithms}
+
+For the source algorithms \citep{PPO, SAC}, we use the implementation of Stable Baselines 3 \citep{SB3}.
+The hyperparamter settings are detailed in Table~\ref{tab:hyp-ppo}-\ref{tab:hyp-sac}.
+Unless otherwise specified, most hyperparameters are set to default values.
+
+\begin{table}[h]
+    \caption{Hyperparamters for the source PPO algorithm.
+    }
+    \label{tab:hyp-ppo}
+    \small \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    Hyperparmater & Darkroom & Dark Key-to-Door & Darkroom-Permuted & Meta-World\\
+    \midrule
+    learning\_rate & 3e-4 & 3e-4 & 3e-4 & 3e-4\\
+    n\_steps & 20 & 50 & 50 & 100\\
+    batch\_size & 50 & 100 & 50 & 200\\
+    n\_epochs & 20 & 10 & 20 & 20\\
+    $\gamma$ & 0.99 & 0.99 & 0.99 & 0.99\\
+    \midrule
+    total\_timesteps & 100K & 100K & 100K & 1M\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[h]
+    \caption{Hyperparamters for the source SAC algorithm.
+    }
+    \label{tab:hyp-sac}
+    \small \centering
+    \begin{tabular}{cc}
+    \toprule
+    Hyperparmater & Meta-World\\
+    \midrule
+    learning\_rate & 3e-4\\
+    learning\_starts & 100\\
+    batch\_size & 128\\
+    train\_freq & 10\\
+    gradient\_steps & 1\\
+    buffer\_size & 1M\\
+    $\gamma$ & 0.99\\
+    \midrule
+    total\_timesteps & 1M\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+
+\subsection{Transformers}
+We implement Transformers using the open-source TinyLlama \citep{TinyLlama}.
+The hyperparameters are provided in Table~\ref{tab:hyp-tf}, along with additional parameters specific to IDT.
+
+\begin{table}[h]
+    \caption{Hyperparamters for Transformers.
+    All three Transformer modules in IDT share the same set of hyperparameters.
+    }
+    \label{tab:hyp-tf}
+    \small \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    Hyperparmater & AD/DPT (disc.) & IDT (disc.) & AD (cont.) & IDT (cont.)\\
+    \midrule
+    n\_layer & 4 & 4 & 4 & 4\\
+    n\_head & 4 & 4 & 8 & 4\\
+    n\_embed & 32 & 32 & 64 & 32\\
+    intermediate\_size & 128 & 128 & 256 & 128\\
+    dropout & 0.1 & 0.1 & 0.1 & 0.1\\
+    attention\_dropout & 0.1 & 0.1 & 0.1 & 0.1\\
+    optimizer & AdamW & AdamW & AdamW & AdamW\\
+    scheduler & cosine decay & cosine decay & cosine decay & cosine decay\\
+    learning\_rate (at start) & 1e-2 & 1e-3 & 1e-2 & 1e-3\\
+    $\beta_1$ & 0.9 & 0.9 & 0.9 & 0.9\\
+    $\beta_2$ & 0.99 & 0.99 & 0.99 & 0.99\\
+    weight\_decay & 0.01 & 0.01 & 0.01 & 0.01\\
+    $\lambda$ & 1 & 1 & 1 & 1\\
+    \midrule
+    n\_actions per high-level decision & -- & 10 & -- & 10 \\
+    dim\_z & -- & 8 & -- &8\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+    \begin{center}
+    \begin{minipage}{0.35\textwidth}
+        \begin{center}
+        \includegraphics[width=\textwidth, trim={412pt 372pt 4pt 6pt}, clip]{figures/architecture-1.pdf} \\
+        \caption*{(a) DICP-AD}
+        \vspace{0.30cm}
+        \includegraphics[width=\textwidth, trim={413pt 6pt 6pt 372pt}, clip]{figures/architecture-1.pdf}
+        \caption*{(b) DICP-DPT}
+        \end{center}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.64\textwidth}
+        \begin{center}
+            \includegraphics[width=\textwidth, trim={84pt 84pt 0pt 0pt}, clip]{figures/architecture-2.pdf}
+        % \vspace{0.50cm}
+        \caption*{(c) DICP-IDT}
+        \end{center}
+    \end{minipage}
+    \end{center}
+    \caption{Model-based adaptation of in-context RL methods for DICP.
+    The notations are defined as follows: $z$: high-level decisions, $R$: return-to-go, $k$: the number of transitions within the context, $c$: the number of low-level actions guided by a single high-level decision, and $R'$: relabeled return-to-go, following \citep{IDT}.
+    Newly introduced components are highlighted in blue.
+    }
+    \label{fig:models}
+\end{figure}
+
+\subsection{Environments}
+
+In the ML1 benchmarks, we observe that using shorter horizons for the source algorithm accelerates the learning of in-context RL methods.
+Specifically, we terminate the source algorithm after 100 steps, as opposed to the original 500-step horizon provided by Meta-World.
+To minimize train-test discrepancies, we also meta-test the in-context RL methods using 100-step horizons.
+Even under these less favorable conditions, in-context RL methods still outperform the baselines, as shown in Fig.~\ref{fig:curve} and Table~\ref{tab:results}.
+
+\begin{table}[t]
+    \caption{Hyperparamters for planning.
+    }
+    \label{tab:hyp-plan}
+    \small \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    Hyperparmater & Darkroom & Dark Key-to-Door & Darkroom-Permuted & Meta-World\\
+    \midrule
+    planning horizon & 8 & 16 & 16 & 1\\
+    beam size ($K$) & 10 & 10 & 10 & --\\
+    sample size ($L$) & 5 & 5 & 5 & 10\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[b]
+    \caption{FLOPs per action selection.}
+    \label{tab:flops}
+    \small \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    Method & Darkroom & Dark Key-to-Door & Darkroom-Permuted & Meta-World\\
+    \midrule
+    AD & 6M & 20M & 20M & 709M \\
+    DPT & 6M & 20M & 20M & 709M \\
+    IDT & 8M & 8M & 8M & 3M \\
+    \midrule
+    DICP-AD & 2G & 18G & 18G & 8G \\
+    DICP-DPT & 2G & 18G & 18G & 8G \\
+    DICP-IDT & 147M & 147M & 147M & 15M \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Planning}
+
+We find that predicting only the immediate reward, rather than both the immediate reward and the return-to-go, is sufficient to outperform baselines.
+Summation of predicted immediate rewards up to the current step can serve as a myopic proxy for the total return of a planning path.
+In Darkroom variants, the binary nature of rewards often leads to different beam paths achieving the same cumulative reward during planning.
+When such ties arise, we break them by following the model's preference during action generation.
+This approach allows the agent to behave like a model-free counterpart when the goal or key is distant, while benefiting from model-based planning when the dynamics model can confidently predict rewards over shorter horizons.
+In Meta-World, the dense, human-designed reward structure further improves the effectiveness of this myopic return estimation.
+Since the rewards are designed to guide the agent toward the goal by greedily following reward increases, ranking planning paths based on immediate rewards often sufficient to improve in-context RL approaches.
+Hyperparamters for planning are detailed in Table~\ref{tab:hyp-plan}.
+
+\begin{table}[h]
+    \caption{Results on all benchmarks of Meta-World ML1.
+    We omit the rows for the 5 tasks reported in Table~\ref{tab:results}, while they are still included in the mean calculation.
+    }
+    \label{tab:results-all}
+    \small \centering
+    \begin{tabular}{ccccc}
+    \toprule
+    Task & AD & IDT & DICP-AD (Ours) & DICP-IDT (Ours)\\
+    \midrule
+    Assembly & 0 & 2 & \textbf{28} & 4\\
+    Basketball & 50 & 54 & 48 & \textbf{66}\\
+    Bin-Picking & 2 & \textbf{6} & 0 & \textbf{6}\\
+    Box-Close & 34 & 32 & \textbf{44} & 38\\
+    Button-Press-Topdown & 98 & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Button-Press-Topdown-Wall & 98 & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Button-Press & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Button-Press-Wall & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Coffee-Button & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Coffee-Pull & 88 & 78 & 42 & \textbf{90}\\
+    Coffee-Push & 98 & \textbf{100} & 92 & \textbf{100}\\
+    Dial-Turn & 76 & 76 & 30 & \textbf{94}\\
+    Disassemble & 0 & 0 & 0 & 0\\
+    Door-Close & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Door-Lock & 98 & \textbf{100} & 88 & 98\\
+    Door-Open & 78 & 14 & \textbf{90} & 80\\
+    Door-Unlock & 78 & 72 & 74 & \textbf{82}\\
+    Hand-Insert & 84 & 70 & \textbf{86} & 68\\
+    Drawer-Close & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Drawer-Open & 26 & 46 & 62 & \textbf{90}\\
+    Faucet-Open & \textbf{100} & \textbf{100} & 96 & 98\\
+    Faucet-Close & \textbf{100} & \textbf{100} & 86 & \textbf{100}\\
+    Hammer & 8 & 22 & \textbf{52} & 10\\
+    Handle-Press-Side & \textbf{100} & \textbf{100} & 94 & \textbf{100}\\
+    Handle-Press & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Handle-Pull-Side & 36 & \textbf{100} & 82 & \textbf{100}\\
+    Handle-Pull & 56 & 66 & 74 & \textbf{78}\\
+    Lever-Pull & 96 & 96 & \textbf{100} & 98\\
+    Pick-Place-Wall & 6 & 66 & 6 & \textbf{70}\\
+    Pick-Out-Of-Hole & 36 & \textbf{98} & 2 & 86\\
+    Plate-Slide & 92 & \textbf{96} & 94 & 90\\
+    Plate-Slide-Side & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Plate-Slide-Back & 92 & \textbf{98} & 88 & 86\\
+    Plate-Slide-Back-Side & 94 & \textbf{100} & \textbf{100} & 96\\
+    Peg-Unplug-Side & 86 & \textbf{100} & 38 & 98\\
+    Soccer & 94 & 96 & 92 & \textbf{100}\\
+    Stick-Push & \textbf{2} & 0 & 0 & \textbf{2}\\
+    Stick-Pull & 2 & 14 & 0 & \textbf{50}\\
+    Push-Wall & 86 & 94 & 92 & \textbf{100}\\
+    Push-Back & 0 & 0 & 0 & 0\\
+    Reach-Wall & \textbf{100} & 98 & 94 & \textbf{100}\\
+    Shelf-Place & 0 & \textbf{68} & 0 & 62\\
+    Sweep-Into & 86 & 86 & \textbf{88} & \textbf{88}\\
+    Window-Open & \textbf{100} & \textbf{100} & \textbf{100} & \textbf{100}\\
+    Window-Close & \textbf{100} & \textbf{100} & 88 & 98\\
+    \midrule
+    Mean & 68 & 75 & 69 & \textbf{80}\\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+While model-based planning requires additional computation, the cost is negligible.
+Specifically, our method does not increase the number of training parameters compared to model-free counterparts, and the primary difference lies in the increased number of Transformer inferences per action selection.
+As shown in Table~\ref{tab:flops}, the maximum computation per action selection is approximately 18 GFLOPs in our experiment.
+Given that modern GPUs can process hundreds of TFLOPs per second, the computational expense is minimal in practice while the performance gains are substantial, making the trade-off highly favorable in our framework.
+The difference becomes even less significant when using architectures like IDT, which are specifically designed to handle longer sequences efficiently.
+
+
+\section{Additional Experiments}
+\label{sec:add_exp}
+
+We conducted experiments across all 50 environments of Meta-World ML1, using PPO \citep{PPO} as the source algorithm with the same hyperparameters as those used in Table~\ref{tab:results}. 
+Each method is evaluated with 20K environment steps during the meta-test phase.
+As shown in Table~\ref{tab:results-all}, our method outperforms model-free counterparts.
+The mean learning curve is displayed in Fig.~\ref{fig:curve}.
+It is noteworthy that since our configuration for the source algorithm is not tuned for every task, the results may not fully reflect the full potential of in-context RL methods, including ours.
+
+
+
+
+\begin{table}[h]
+    \caption{Meta-test success rates with 5K environment steps on 5 benchmarks of ML1.
+    The results marked with~$^\dag$ are taken from \citet{IDAQ}.
+    Our approach consistently outperforms all the baselines at 5K steps as well.
+    }
+    \label{tab:results_5k}
+    \small \centering
+    \begin{tabular}{cccc}
+    \toprule
+    Method & Sweep & Peg-Insert-Side & Steps\\
+    \midrule
+    MACAW$^\dag$ & 4 & 0 & 5K\\
+    FOCAL$^\dag$ & 38 & 10 & 5K\\
+    \midrule
+    BoREL$^\dag$ & 0 & 0 & 5K\\
+    IDAQ$^\dag$ & 59 & 30 & 5K\\
+    \midrule
+    IDT & 71 & 41 & 5K\\
+    \midrule
+    DICP-IDT (Ours) & \textbf{87} & \textbf{45} & 5K \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+Furthermore, we also conducted experiments on ML10 from Meta-World, a benchmark designed to evaluate the generalization ability of meta-RL methods using ten predefined training tasks and five test tasks.
+The results, presented in Table~\ref{tab:results_ml10}, demonstrate that our approach surpasses the model-free counterpart and achieves state-of-the-art performance on this benchmark with significantly fewer environment steps than the baselines.
+Notably, our method does not rely on expert demonstrations or task descriptions for the test tasks.
+
+\begin{table}[h]
+    \caption{Meta-test success rates on Meta-World ML10.
+    The success rates are reported as percentages, averaged over 3 different seeds.
+    The results marked with~$^*$ are taken from \citet{MW}.
+    }
+    \label{tab:results_ml10}
+    \small \centering
+    \begin{tabular}{ccc}
+    \toprule
+    Method & Success Rate & Steps\\
+    \midrule
+    PEARL$^*$ & 13.0 & 350M \\
+    MAML$^*$ & 31.6 & 350M \\
+    RL$^2$$^*$ & 35.8 & 350M \\
+    \midrule
+    IDT & 36.7 & 500K\\
+    \midrule
+    DICP-IDT (Ours) & \textbf{46.9} & 500K \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Extended Related Work}
+\label{sec:rel_ext}
+
+\paragraph*{DPT.}
+Decision-Pretrained Transformer (DPT; \citet{DPT}) is an in-context RL approach that meta-trains (or pre-trains) Transformers to predict \emph{optimal} actions based on contextual trajectories.
+Consequently, DPT requires access to the optimal actions during training.
+The authors suggest several sources for gathering the meta-training dataset, including (i) randomly sampled trajectories directly from the environment, (ii) trajectories generated by a source RL algorithm, and (iii) trajectories of an expert policy.
+In this work, we concentrate on the second source to minimize reliance on direct access to environment dynamics and expert policies.
+While the authors also discuss deploying DPT when offline datasets of the \emph{meta-test} tasks are available, our focus is on scenarios where only offline datasets for \emph{meta-train} tasks are available for a fair comparison.
+In this scheme, the loss function of DPT is defined as 
+\begin{equation}
+    \gL_{\textrm{DPT}}(\theta) = - \sum_{i=1}^n \sum_{t=1}^{T} \log f_\theta(a_t^\star \mid o_t^i, h_{t-1}^i),
+    \label{eq:dpt}
+  \end{equation}
+where $a_t^\star$ denotes the optimal action on the true state $s_t$.
+
+
+\paragraph*{IDT.}
+In-Context Decision Transformer (IDT; \citet{IDT}) addresses the high computational costs of previous in-context RL methods, particularly when handling long-horizon tasks.
+IDT restructures the decision-making process to predict high-level decisions instead of individual actions.
+These high-level decisions then guide multiple action steps in a separate module, dividing the Transformer used in the earlier approach \citep{AD} into modules with shorter sequences.
+The architecture of IDT consists of three modules:
+(i) the Making-Decisions module predicts high-level decisions,
+(ii) the Decisions-to-Go module decodes these high-level decisions into low-level actions, and
+(iii) the Reviewing-Decisions module encodes the resulting low-level actions back into high-level decisions.
+The loss function for IDT is structured similarly to that of AD, while the loss can be divided across the three modules: 
+\begin{align}
+    \gL_{\textrm{IDT}}(\theta) &= - \sum_{i=1}^n \sum_{t=1}^{T} \log f_\theta (a_t^i \mid o_t^i, h_{t-1}^i) \nonumber \\
+    &= - \sum_{i=1}^n \sum_{t=1}^{T} \left[
+    \log f_\theta(a_t^i \mid z_t, o_t^i) +
+    \log f_\theta(z_t \mid o_t^i, \hat{z}_{t-1}) + 
+    \log f_\theta(\hat{z}_{t-1} \mid h_{t-1}^i) \right], 
+    \label{eq:idt}
+\end{align}
+where $z_t$ is a high-level decision and $\hat{z}_{t-1}$ is an encoded context by the Reviewing-Decisions module.
+
+\paragraph*{TTO.}
+TTO \citep{TTO} is an offline RL approach that imitates the policy of the offline dataset, while simultaneously learning a dynamics model to facilitate planning to improve upon that policy.
+Our approach is similar to this in that we also use model-based planning to improve upon offline datasets.
+However, our framework focuses on improving a distilled algorithm rather than a specific policy.
+This distinction makes our problem setting more general and challenging compared to single-task RL like TTO, since our agent should learn the dynamics model primarily in-context when encountering novel tasks.
+
+\paragraph*{Model-based RL.}
+Model-based RL has gained significant attention due to its ability to improve sample efficiency by utilizing a dynamics model to generate simulated experiences \citep{WM, SimPLe, MBPO, MuZero, EfficientZero, DreamerV3}.
+Some approaches further incorporate planning with search algorithms, such as MCTS \citep{MuZero,Reanalyse,EfficientZero} or beam search \citep{TTO}, to explore the planning space effectively.
+However, a key challenge in model-based RL is managing the balance between sample efficiency and model bias, as errors in the learned dynamics model can lead to suboptimal decision-making \citep{MBPO}.
+
+\paragraph*{Model-based Meta-RL.}
+Previous approaches have explored model-based approach to meta-RL \citep{GP, AdMRL, M3PO, densityEst}.
+\citet{MB-MPO} aim to overcome the limitations of model-based RL \citep{MBPO} by incorporating a meta-model.
+\citet{ReBAL} improve upon model-free meta-RL methods \citep{RL2, MAML} to adapt shifting dynamics.
+\citet{ProcGenMuZero} focus on zero-shot generalization, adapting MuZero \citep{MuZero} to meta-RL.
+More recently, \citet{MAMBA} introduce a model-based meta-RL approach that combines a meta-RL method \citep{VariBAD} with a model-based RL method \citep{DreamerV3}.
+
+\end{document}
