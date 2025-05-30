@@ -32,7 +32,7 @@ if _PeftLoraLinear is None:
         linear layer while keeping the original weights frozen.
         """
 
-        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True):
+        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True, **kwargs):
             super().__init__(in_features, out_features, bias=bias)
             self.r = r
             if r > 0:
@@ -68,6 +68,7 @@ class LoRALinear(_PeftLoraLinear):
         lora_alpha: float = 1.0,
         lora_dropout: float = 0.0,
         bias: bool = True,
+        adapter_name: str = "default",
     ) -> None:
         super().__init__(
             in_features,
@@ -76,5 +77,6 @@ class LoRALinear(_PeftLoraLinear):
             lora_alpha=lora_alpha,
             lora_dropout=lora_dropout,
             bias=bias,
+            adapter_name=adapter_name,
         )
 
