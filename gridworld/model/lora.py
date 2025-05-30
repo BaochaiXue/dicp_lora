@@ -9,11 +9,12 @@ except Exception:  # pragma: no cover - PEFT may be unavailable
     PeftLoRALinear = None
 
 if PeftLoRALinear is not None:
+
     class LoRALinear(PeftLoRALinear):
         """LoRA linear layer using the HuggingFace PEFT implementation."""
 
         def __init__(
-            self,d
+            self,
             in_features: int,
             out_features: int,
             r: int = 0,
@@ -29,7 +30,9 @@ if PeftLoRALinear is not None:
                 lora_dropout=lora_dropout,
                 bias=bias,
             )
+
 else:
+
     class LoRALinear(nn.Linear):
         """Fallback LoRA linear layer if PEFT is unavailable."""
 
