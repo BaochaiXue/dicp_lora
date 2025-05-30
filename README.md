@@ -64,8 +64,10 @@ lora_dropout: 0.1
 ```
 
 These values freeze the base attention weights while training only the added
-LoRA adapters. The training scripts automatically detect these options and
-optimize only the trainable parameters.
+LoRA adapters. When the `peft` package is installed, the models use
+Hugging Face's `LoraLinear` layer; otherwise a lightweight fallback
+implementation is used. The training scripts automatically detect these
+options and optimize only the trainable parameters.
 
 ### Evaluation
 
