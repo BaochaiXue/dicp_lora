@@ -32,7 +32,7 @@ if _PeftLoraLinear is None:
         linear layer while keeping the original weights frozen.
         """
 
-        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True):
+        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True, **kwargs):
             super().__init__(in_features, out_features, bias=bias)
             self.r = r
             if r > 0:
@@ -68,13 +68,27 @@ class LoRALinear(_PeftLoraLinear):
         lora_alpha: float = 1.0,
         lora_dropout: float = 0.0,
         bias: bool = True,
+        adapter_name: str = "default",
     ) -> None:
-        super().__init__(
-            in_features,
-            out_features,
+        # ``peft`` has changed the ``LoraLinear`` constructor multiple times
+        # so we inspect the parent signature to see whether ``adapter_name`` is
+        # expected.  Passing it conditionally avoids ``TypeError`` on older
+        # releases while still working on 0.11+.
+        import inspect
+
+        parent_init = super().__init__
+        params = inspect.signature(parent_init).parameters
+
+        kwargs = dict(
+            in_features=in_features,
+            out_features=out_features,
             r=r,
             lora_alpha=lora_alpha,
             lora_dropout=lora_dropout,
             bias=bias,
         )
+        if "adapter_name" in params:
+            kwargs["adapter_name"] = adapter_name
+
+        parent_init(**kwargs)
 

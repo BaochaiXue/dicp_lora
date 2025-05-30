@@ -24,7 +24,7 @@ if _PeftLoraLinear is None:
     class _PeftLoraLinear(nn.Linear):
         """Minimal implementation used when ``peft`` is missing."""
 
-        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True):
+        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True, **kwargs):
             super().__init__(in_features, out_features, bias=bias)
             self.r = r
             if r > 0:
@@ -60,13 +60,25 @@ class LoRALinear(_PeftLoraLinear):
         lora_alpha: float = 1.0,
         lora_dropout: float = 0.0,
         bias: bool = True,
+        adapter_name: str = "default",
     ) -> None:
-        super().__init__(
-            in_features,
-            out_features,
+        # Detect whether the parent class accepts ``adapter_name`` to maintain
+        # compatibility with different PEFT versions.
+        import inspect
+
+        parent_init = super().__init__
+        params = inspect.signature(parent_init).parameters
+
+        kwargs = dict(
+            in_features=in_features,
+            out_features=out_features,
             r=r,
             lora_alpha=lora_alpha,
             lora_dropout=lora_dropout,
             bias=bias,
         )
+        if "adapter_name" in params:
+            kwargs["adapter_name"] = adapter_name
+
+        parent_init(**kwargs)
 
