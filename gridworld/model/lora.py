@@ -13,7 +13,7 @@ if PeftLoRALinear is not None:
         """LoRA linear layer using the HuggingFace PEFT implementation."""
 
         def __init__(
-            self,
+            self,d
             in_features: int,
             out_features: int,
             r: int = 0,
