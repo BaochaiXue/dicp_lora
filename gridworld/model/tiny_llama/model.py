@@ -10,6 +10,7 @@ from xformers.ops import SwiGLU
 
 from .config import Config
 from .fused_rotary_embedding import apply_rotary_emb_func
+from ..lora import LoRALinear
 
 from torch.nn.attention import sdpa_kernel, SDPBackend
 
@@ -37,6 +38,9 @@ class Transformer(nn.Module):
             intermediate_size=config['tf_n_inner'],
             flash_attn=config['flash_attn'],
         )
+        self.config.lora_r = config.get('lora_r', 0)
+        self.config.lora_alpha = config.get('lora_alpha', 1.0)
+        self.config.lora_dropout = config.get('lora_dropout', 0.0)
         self.device = config['device']
         self.blocks = nn.ModuleList(Block(self.config) for _ in range(config['tf_n_layer']))
         self.rope_cache_fp16 = self.build_rope_cache(device=self.device, dtype=torch.float16)
@@ -122,8 +126,26 @@ class CausalSelfAttention(nn.Module):
     def __init__(self, config: Config) -> None:
         super().__init__()
         shape = (config.n_head + 2 * config.n_query_groups) * config.head_size
-        self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
-        self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        if getattr(config, "lora_r", 0) > 0:
+            self.attn = LoRALinear(
+                config.n_embd,
+                shape,
+                r=getattr(config, "lora_r", 0),
+                lora_alpha=getattr(config, "lora_alpha", 1.0),
+                lora_dropout=getattr(config, "lora_dropout", 0.0),
+                bias=config.bias,
+            )
+            self.proj = LoRALinear(
+                config.n_embd,
+                config.n_embd,
+                r=getattr(config, "lora_r", 0),
+                lora_alpha=getattr(config, "lora_alpha", 1.0),
+                lora_dropout=getattr(config, "lora_dropout", 0.0),
+                bias=config.bias,
+            )
+        else:
+            self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
+            self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
 
         self.config = config
 

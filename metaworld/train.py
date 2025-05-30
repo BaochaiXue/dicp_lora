@@ -124,6 +124,10 @@ if __name__ == '__main__':
     # Define model
     model_name = config['model']
     model = MODEL[model_name](config).to(device)
+    if config.get('lora_r', 0) > 0:
+        print(
+            f"LoRA enabled (r={config['lora_r']}, alpha={config['lora_alpha']}, dropout={config['lora_dropout']})"
+        )
 
     # Get datasets and dataloaders
     load_start_time = datetime.now()
@@ -148,7 +152,12 @@ if __name__ == '__main__':
     print(f'Elapsed time: {load_end_time - load_start_time}')
 
     # Define optimizer and scheduler
-    optimizer = AdamW(model.parameters(), lr=config['lr'], betas=(config['beta1'], config['beta2']), weight_decay=config['weight_decay'])
+    optimizer = AdamW(
+        filter(lambda p: p.requires_grad, model.parameters()),
+        lr=config['lr'],
+        betas=(config['beta1'], config['beta2']),
+        weight_decay=config['weight_decay']
+    )
     lr_sched = get_cosine_schedule_with_warmup(optimizer, config['num_warmup_steps'], config['train_timesteps'])
     step = 0
     
