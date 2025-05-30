@@ -52,6 +52,21 @@ To train the model, run:
 python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -t [trajectory directory] -l [log directory]
 ```
 
+### LoRA Fine-Tuning
+
+To enable LoRA fine-tuning, set the `lora_r`, `lora_alpha`, and `lora_dropout`
+fields in the chosen model YAML. For example:
+
+```yaml
+lora_r: 8
+lora_alpha: 16
+lora_dropout: 0.1
+```
+
+These values freeze the base attention weights while training only the added
+LoRA adapters. The training scripts automatically detect these options and
+optimize only the trainable parameters.
+
 ### Evaluation
 
 To evaluate a trained model, run:

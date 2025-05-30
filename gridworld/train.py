@@ -180,6 +180,10 @@ if __name__ == "__main__":
     # Define model
     model_name = config["model"]
     model = MODEL[model_name](config)
+    if config.get("lora_r", 0) > 0:
+        print(
+            f"LoRA enabled (r={config['lora_r']}, alpha={config['lora_alpha']}, dropout={config['lora_dropout']})"
+        )
 
     # Get datasets and dataloaders
     load_start_time = datetime.now()
@@ -240,7 +244,7 @@ if __name__ == "__main__":
 
     # Define optimizer and scheduler
     optimizer = AdamW(
-        model.parameters(),
+        filter(lambda p: p.requires_grad, model.parameters()),
         lr=config["lr"],
         betas=(config["beta1"], config["beta2"]),
         weight_decay=config["weight_decay"],
