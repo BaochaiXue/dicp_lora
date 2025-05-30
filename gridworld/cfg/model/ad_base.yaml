@@ -4,9 +4,9 @@ dynamics_strength: 1.0
 # training
 label_smoothing: 0.0
 flash_attn: True
-lora_r: 0
-lora_alpha: 1.0
-lora_dropout: 0.0
+lora_r: 8
+lora_alpha: 16.0
+lora_dropout: 0.1
 ## optimizer
 beta1: 0.9
 beta2: 0.99
