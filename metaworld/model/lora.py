@@ -1,17 +1,56 @@
 import torch
 import torch.nn as nn
 
-from peft.tuners.lora import LoraLinear
+"""Utility wrapper around the LoRA linear layer.
+
+This repository originally relied on ``peft.tuners.lora.LoraLinear``.  Recent
+``peft`` releases renamed the class to ``Linear`` and some environments might
+not provide ``peft`` at all.  We therefore try to import whichever variant is
+available and fall back to a minimal implementation if none is found.
+"""
+
+try:
+    from peft.tuners.lora import LoraLinear as _PeftLoraLinear
+except Exception:
+    try:
+        from peft.tuners.lora import Linear as _PeftLoraLinear
+    except Exception:
+        _PeftLoraLinear = None
+
+import math
 
 
-class LoRALinear(LoraLinear):
-    """Thin wrapper around ``peft.tuners.lora.LoraLinear``.
+if _PeftLoraLinear is None:
+    class _PeftLoraLinear(nn.Linear):
+        """Minimal implementation used when ``peft`` is missing."""
 
-    The previous version of this repository provided a minimal fallback
-    implementation when ``peft`` was unavailable. The fallback added
-    complexity and behaved differently from the official implementation, so it
-    has been removed in favor of always depending on ``peft``.
-    """
+        def __init__(self, in_features, out_features, r=0, lora_alpha=1.0, lora_dropout=0.0, bias=True):
+            super().__init__(in_features, out_features, bias=bias)
+            self.r = r
+            if r > 0:
+                self.lora_A = nn.Linear(in_features, r, bias=False)
+                self.lora_B = nn.Linear(r, out_features, bias=False)
+                self.scaling = lora_alpha / r
+                self.lora_dropout = nn.Dropout(p=lora_dropout)
+                nn.init.kaiming_uniform_(self.lora_A.weight, a=math.sqrt(5))
+                nn.init.zeros_(self.lora_B.weight)
+                self.weight.requires_grad = False
+            else:
+                self.lora_A = None
+                self.lora_B = None
+                self.scaling = 0.0
+                self.lora_dropout = nn.Identity()
+
+        def forward(self, x: torch.Tensor) -> torch.Tensor:
+            result = super().forward(x)
+            if self.r > 0:
+                update = self.lora_B(self.lora_A(self.lora_dropout(x))) * self.scaling
+                result = result + update
+            return result
+
+
+class LoRALinear(_PeftLoraLinear):
+    """Compatibility wrapper used throughout the repository."""
 
     def __init__(
         self,
