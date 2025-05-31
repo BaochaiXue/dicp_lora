@@ -84,6 +84,13 @@ def parse_arguments():
     parser.add_argument(
         "--disable-tqdm", "-d", required=False, default=False, action="store_true"
     )
+    parser.add_argument(
+        "--lora-config",
+        "-lc",
+        required=False,
+        default="",
+        help="LoRA config file",
+    )
 
     args = parser.parse_args()
     return args
@@ -97,6 +104,8 @@ if __name__ == "__main__":
     config = get_config(args.env_config)
     config.update(get_config(args.alg_config))
     config.update(get_config(args.model_config))
+    if args.lora_config:
+        config.update(get_config(args.lora_config))
 
     # Override options
     for option in args.override.split("|"):
@@ -180,6 +189,21 @@ if __name__ == "__main__":
     # Define model
     model_name = config["model"]
     model = MODEL[model_name](config)
+
+    if config.get("use_lora", False):
+        from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+        lora_cfg = LoraConfig(
+            r=config["lora"]["r"],
+            lora_alpha=config["lora"]["alpha"],
+            lora_dropout=config["lora"]["dropout"],
+            bias=config["lora"]["bias"],
+            target_modules=config["lora"]["target_modules"],
+            task_type=config["lora"]["task_type"],
+        )
+        model = get_peft_model(model, lora_cfg)
+        if config.get("kbit", None) is not None:
+            model = prepare_model_for_kbit_training(model)
+        model.print_trainable_parameters()
 
     # Get datasets and dataloaders
     load_start_time = datetime.now()
@@ -471,6 +495,8 @@ if __name__ == "__main__":
                     },
                     new_ckpt_path,
                 )
+                if config.get("use_lora", False):
+                    model.save_pretrained(path.join(config["log_dir"], f"lora-{step}"))
                 print(f"\nCheckpoint saved to {new_ckpt_path}")
 
             if step >= config["train_timesteps"]:
