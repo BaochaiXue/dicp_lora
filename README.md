@@ -49,7 +49,21 @@ python collect_data.py -ac [algorithm config]  -ec [environment config] -t [traj
 
 To train the model, run:
 ```bash
-python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -t [trajectory directory] -l [log directory]
+python train.py -ac [algorithm config] \
+                -ec [environment config] \
+                -mc [model config] \
+                -t [trajectory directory] \
+                -l [log directory]
+```
+
+To enable LoRA fine-tuning, supply the `--lora-config` option with the provided
+configuration:
+
+```bash
+python train.py --alg-config ./cfg/alg/ppo_dr.yaml \
+                --env-config ./cfg/env/darkroom.yaml \
+                --model-config ./cfg/model/ad_dr.yaml \
+                --lora-config ./cfg/lora/default.yaml
 ```
 
 ### Evaluation
