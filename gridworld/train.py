@@ -180,6 +180,10 @@ if __name__ == "__main__":
     # Define model
     model_name = config["model"]
     model = MODEL[model_name](config)
+    if config.get("use_lora", False):
+        trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total = sum(p.numel() for p in model.parameters())
+        print(f"LoRA enabled: trainable params {trainable}/{total}")
 
     # Get datasets and dataloaders
     load_start_time = datetime.now()
