@@ -59,6 +59,18 @@ python train.py -ac [algorithm config]  -ec [environment config] -mc [model conf
                --lora-config gridworld/cfg/lora/default.yaml
 ```
 
+#### LoRA fine-tuning
+
+If you wish to fine-tune using LoRA adapters (requires [PEFT](https://github.com/huggingface/peft)), provide a LoRA configuration file via `--lora-config`. A sample configuration is located at `gridworld/cfg/lora/default.yaml`.
+
+```bash
+python train.py -ac [algorithm config] \
+                -ec [environment config] \
+                -mc [model config] \
+                -lc gridworld/cfg/lora/default.yaml \
+                -t [trajectory directory] -l [log directory]
+```
+
 ### Evaluation
 
 To evaluate a trained model, run:

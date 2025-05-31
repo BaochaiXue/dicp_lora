@@ -6,3 +6,4 @@ lora:
   bias: "none"
   target_modules: ["attn.attn", "attn.proj"]
   task_type: "FEATURE_EXTRACTION"
+
