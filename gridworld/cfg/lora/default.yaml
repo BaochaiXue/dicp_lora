@@ -4,6 +4,5 @@ lora:
   alpha: 32
   dropout: 0.05
   bias: "none"
-  # target inner linear layers inside CausalSelfAttention
   target_modules: ["attn.attn", "attn.proj"]
   task_type: "CAUSAL_LM"
