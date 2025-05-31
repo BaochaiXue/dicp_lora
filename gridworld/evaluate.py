@@ -12,6 +12,11 @@ import os.path as path
 
 from env import SAMPLE_ENVIRONMENT, make_env
 from model import MODEL
+
+try:
+    from peft import PeftModel
+except ImportError:
+    PeftModel = None
 from stable_baselines3.common.vec_env import SubprocVecEnv
 import numpy as np
 
@@ -42,10 +47,17 @@ if __name__ == '__main__':
         raise ValueError('No checkpoint found')
 
     model_name = config['model']
-    
-    model = MODEL[model_name](config).to(device)
-    
-    model.load_state_dict(ckpt['model'])
+
+    if config.get('use_lora', False) and PeftModel is not None:
+        base_model = MODEL[model_name](config).to(device)
+        base_model.load_state_dict(ckpt['model'])
+        lora_dirs = sorted(glob(path.join(args.ckpt_dir, 'lora-*')))
+        peft_dir = lora_dirs[-1] if lora_dirs else args.ckpt_dir
+        lora_model = PeftModel.from_pretrained(base_model, peft_model_id=peft_dir)
+        model = lora_model.merge_and_unload()
+    else:
+        model = MODEL[model_name](config).to(device)
+        model.load_state_dict(ckpt['model'])
     model.eval()
 
     env_name = config['env']

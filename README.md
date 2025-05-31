@@ -49,7 +49,14 @@ python collect_data.py -ac [algorithm config]  -ec [environment config] -t [traj
 
 To train the model, run:
 ```bash
-python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -t [trajectory directory] -l [log directory]
+python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] \
+               -t [trajectory directory] -l [log directory]
+```
+
+To enable LoRA fine-tuning, provide the optional `--lora-config` argument:
+```bash
+python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] \
+               --lora-config gridworld/cfg/lora/default.yaml
 ```
 
 ### Evaluation
