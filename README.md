@@ -51,6 +51,11 @@ To train the model, run:
 ```bash
 python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] -t [trajectory directory] -l [log directory]
 ```
+To enable LoRA fine-tuning, pass the optional `--lora-config` flag with the provided configuration:
+```bash
+python train.py -ac [algorithm config]  -ec [environment config] -mc [model config] \
+                --lora-config ./cfg/lora/default.yaml
+```
 
 ### Evaluation
 
