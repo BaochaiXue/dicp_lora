@@ -7,6 +7,9 @@ import torch.nn as nn
 # from flash_attn import flash_attn_func
 from lightning_utilities.core.imports import RequirementCache
 from xformers.ops import SwiGLU
+import peft  # noqa: F401
+
+from .lora import LoRALinear
 
 from .config import Config
 from .fused_rotary_embedding import apply_rotary_emb_func
@@ -37,6 +40,11 @@ class Transformer(nn.Module):
             intermediate_size=config['tf_n_inner'],
             flash_attn=config['flash_attn'],
         )
+        # LoRA parameters
+        self.config.use_lora = config.get('use_lora', False)
+        self.config.lora_r = config.get('lora_r', 0)
+        self.config.lora_alpha = config.get('lora_alpha', 1)
+        self.config.lora_dropout = config.get('lora_dropout', 0.0)
         self.device = config['device']
         self.blocks = nn.ModuleList(Block(self.config) for _ in range(config['tf_n_layer']))
         self.rope_cache_fp16 = self.build_rope_cache(device=self.device, dtype=torch.float16)
@@ -122,8 +130,26 @@ class CausalSelfAttention(nn.Module):
     def __init__(self, config: Config) -> None:
         super().__init__()
         shape = (config.n_head + 2 * config.n_query_groups) * config.head_size
-        self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
-        self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        if config.use_lora and config.lora_r > 0:
+            self.attn = LoRALinear(
+                config.n_embd,
+                shape,
+                bias=config.bias,
+                r=config.lora_r,
+                lora_alpha=config.lora_alpha,
+                lora_dropout=config.lora_dropout,
+            )
+            self.proj = LoRALinear(
+                config.n_embd,
+                config.n_embd,
+                bias=config.bias,
+                r=config.lora_r,
+                lora_alpha=config.lora_alpha,
+                lora_dropout=config.lora_dropout,
+            )
+        else:
+            self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
+            self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
 
         self.config = config
 

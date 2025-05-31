@@ -34,6 +34,16 @@ cd ../xentropy && pip install .
 cd ../../.. && rm -rf flash-attention
 ```
 
+### LoRA Fine-Tuning
+
+For low-rank adaptation we rely on [PEFT](https://github.com/huggingface/peft). Install it with
+
+```bash
+pip install peft==0.15.2
+```
+
+Enable LoRA by setting `use_lora: true` in the chosen model YAML file and adjust `lora_r`, `lora_alpha` and `lora_dropout` as needed. During training the script will report the number of trainable parameters.
+
 ## Usage
 
 The following commands demonstrate the basic usage of the code in GridWorld environments.

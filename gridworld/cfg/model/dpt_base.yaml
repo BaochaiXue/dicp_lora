@@ -17,3 +17,9 @@ ckpt_interval: 10000
 num_workers: 4
 
 train_n_stream: 100
+
+# LoRA settings
+use_lora: false
+lora_r: 0
+lora_alpha: 1
+lora_dropout: 0.0

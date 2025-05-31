@@ -3,6 +3,12 @@ dynamics_strength: 1.0
 
 # training
 train_n_stream: 100
+
+# LoRA settings
+use_lora: false
+lora_r: 0
+lora_alpha: 1
+lora_dropout: 0.0
 label_smoothing: 0.0
 flash_attn: True
 ## optimizer
