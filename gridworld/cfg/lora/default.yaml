@@ -4,5 +4,5 @@ lora:
   alpha: 32
   dropout: 0.05
   bias: "none"
-  target_modules: ["attn", "proj"]
+  target_modules: ["attn.attn", "attn.proj"]
   task_type: "CAUSAL_LM"
