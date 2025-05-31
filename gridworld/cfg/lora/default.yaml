@@ -5,4 +5,5 @@ lora:
   dropout: 0.05
   bias: "none"
   target_modules: ["attn.attn", "attn.proj"]
-  task_type: "CAUSAL_LM"
+  task_type: "FEATURE_EXTRACTION"
+

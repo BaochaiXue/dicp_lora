@@ -50,6 +50,7 @@ if __name__ == '__main__':
 
     if config.get('use_lora', False) and PeftModel is not None:
         base_model = MODEL[model_name](config).to(device)
+        base_model.load_state_dict(ckpt['model'])
         lora_dirs = sorted(glob(path.join(args.ckpt_dir, 'lora-*')))
         peft_dir = lora_dirs[-1] if lora_dirs else args.ckpt_dir
         lora_model = PeftModel.from_pretrained(base_model, peft_model_id=peft_dir)
