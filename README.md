@@ -64,6 +64,7 @@ python train.py --alg-config ./cfg/alg/ppo_dr.yaml \
                 --env-config ./cfg/env/darkroom.yaml \
                 --model-config ./cfg/model/ad_dr.yaml \
                 --lora-config ./cfg/lora/default.yaml
+
 ```
 
 ### Evaluation
