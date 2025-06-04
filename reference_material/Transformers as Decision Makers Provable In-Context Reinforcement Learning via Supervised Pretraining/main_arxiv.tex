@@ -1,0 +1,90 @@
+\documentclass[10pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[round,compress]{natbib}
+\usepackage{parskip}
+
+
+\input{preamble.tex}
+\input{notation.tex}
+\input{math_commands.tex}
+
+
+\title{Transformers as Decision Makers: Provable In-Context Reinforcement Learning via Supervised Pretraining}
+
+\date{\today}
+\author{
+  Licong Lin\thanks{UC Berkeley. Email: \texttt{liconglin@berkeley.edu}}\hspace{.35em}
+  \and
+  Yu Bai\thanks{Salesforce AI Research. Email: \texttt{yu.bai@salesforce.com}}\hspace{.35em}\footnotemark[4]
+  \and
+  Song Mei\thanks{UC Berkeley. Email: \texttt{songmei@berkeley.edu}}\hspace{.35em}\thanks{Equal contribution.}
+}
+
+\def\shownotes{0}  %set 1 to show author notes
+\ifnum\shownotes=1
+\newcommand{\authnote}[2]{{\scriptsize $\ll$\textsf{#1 notes: #2}$\gg$}}
+\else
+\newcommand{\authnote}[2]{}
+\fi
+\newcommand{\yub}[1]{{\color{red}\authnote{Yu}{#1}}}
+\newcommand{\cfn}[1]
+{{\color{blue}\authnote{Song}{#1}}}
+\newcommand{\lc}[1]{{\color{blue}\authnote{Licong}{#1}}}
+\newcommand{\todo}[1]{{\color{blue}$\ll$\textsf{\footnotesize TODO:
+      {#1}$\gg$}}}
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\begin{document}
+
+\maketitle
+
+
+\input{Sections_arxiv/abstract_arxiv.tex}
+% \input{Sections/plans.tex}
+\input{Sections_arxiv/intro_arxiv.tex}
+
+\input{Sections_arxiv/related-work_arxiv.tex}
+
+\input{Sections_arxiv/prelim_arxiv.tex}
+
+\input{Sections_arxiv/transformer-arch_arxiv.tex}
+\input{Sections_arxiv/supervised-pretraining_arxiv.tex}
+\input{Sections_arxiv/ICRL_arxiv.tex}
+\input{Sections_arxiv/experiments_arxiv.tex}
+\input{Sections_arxiv/conclusion_arxiv.tex}
+
+\input{Sections_arxiv/acknowledgement_arxiv}
+% \clearpage
+\bibliography{references}
+\bibliographystyle{plainnat}
+
+
+\clearpage
+\appendix 
+\tableofcontents
+\clearpage
+
+
+% \input{Sections/app-clipped-transformer.tex}
+
+\input{Sections_arxiv/limitation}
+\input{Sections_arxiv/app-experimental-details_arxiv.tex}
+
+\input{Sections_arxiv/app-tech-prelim_arxiv.tex}
+
+\input{Sections_arxiv/app-supervised-pretraining_arxiv.tex}
+\input{Sections_arxiv/app-linucb_arxiv.tex}
+\input{Sections_arxiv/app-TS_arxiv.tex}
+%\input{Sections/app-TS-bernoulli.tex}    %new, don't add!
+\input{Sections_arxiv/app-mdp_arxiv.tex}
+
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,207 @@
+\section{Framework for In-Context Reinforcement Learning}\label{sec:framework}
+
+% \yub{should this section be actually our contribution instead of prelim? (since we subsume AD and DPT) If so, we can remove ``prelim'' in title, and attract more attention to this section.}
+
+% \paragraph{Decision making environment} 
+
+
+Let $\cM$ be the space of decision-making environments, where each environment $\inst \in \cM$ shares the same number of rounds $\totlen$ and state-action-reward spaces $\{ \statesp_t,  \actionsp_t, \rewardsp_t \}_{t \in [\totlen]}$. Each $\inst = \{\transmodel_\inst^{t-1}, \rewmodel_\inst^t \}_{t \in [\totlen]}$ has its own transition model $\transmodel_\inst^t: \statesp_{t} \times \actionsp_{t} \to \Delta(\statesp_{t+1})$ (with $\statesp_0$, $\actionsp_0 = \{ \emptyset \}$ so $\transmodel_\inst^0(\cdot) \in \Delta(\statesp_1)$ gives the initial state distribution) and reward functions $\rewmodel_\inst^{t}: \statesp_{t} \times \actionsp_{t} \to \Delta(\rewardsp_t)$. We equip $\cM$ with a distribution $\prior \in \Delta(\cM)$, the environment prior. While this setting is general, we later give concrete examples taking $\cM$ as $\totlen$ rounds of bandits or $K$ episodes of $H$-step MDPs with $\totlen = K H$. 
+
+\paragraph{Distributions of offline trajectories} We denote a partial interaction trajectory, consisting of observed state-action-reward tuples, by $\dset_t=\{(\state_1,\action_1,\reward_1),\ldots,(\state_t,\action_t,\reward_t)\} \in \trajsp_t = \prod_{s \le t} (\statesp_s \times \actionsp_s \times \rewardsp_s)$ and write $\dset = \dset_{\totlen}$ for short. An algorithm $\sAlg$ maps a partial trajectory $\dset_{t-1} \in \trajsp_{t-1}$ and state $\state_t \in \statesp_t$ to a distribution over the actions $\sAlg(\cdot | \dset_{t-1}, \state_t) \in \Delta(\actionsp_t)$. Given an environment $\inst$ and algorithm $\sAlg$, the distribution over a full trajectory $\dset_\totlen$ is fully specified: 
+\begin{align*}
+\textstyle \P_{\inst}^{\sAlg}(\dset_\totlen) =
+\prod_{t=1}^{\totlen}\transmodel_{\inst}^{t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \sAlg(\action_t|\dset_{t-1},\state_t)\rewmodel_{\inst}^t(\reward_t|\state_t,\action_t).
+\end{align*}
+% \lc{introduce $\transmodel^0_\inst$ ($\state_1\sim\init$).} \sm{I added a parathesis in the paragraph above}
+In supervised pretraining, we use a \textit{context algorithm} $\sAlg_0$ (which we also refer to as the offline algorithm) to collect the offline trajectories $\dset_\totlen$. For each trajectory $\dset_\totlen$, we also assume access to expert actions $\eaction = ( \eaction_t \in \actionsp_t )_{t \in \totlen} \sim \sAlg_{\shortexp}(\cdot | \dset_\totlen, \inst)$, sampled from an expert algorithm $\sAlg_{\shortexp}: \trajsp_\totlen \times \inst \to \prod_{t \in [\totlen]} \Delta(\actionsp_t)$. This expert could omnisciently observe the full trajectory $\dset_\totlen$ and environment $\inst$ to recommend actions. Let $\adset_\totlen = \dset_\totlen \cup \{ \eaction \}$ be the augmented trajectory. Then we have
+\begin{align*}
+\textstyle \P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_{\shortexp}^t (\eaction_t|\dset_{\totlen},\inst).
+\end{align*}
+We denote $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ as the joint distribution of $(\inst,\adset_\totlen)$ where $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\shortexp}_{\inst}$, and $\P^{\sAlg_0}_{\prior}$ as the joint distribution of $(\inst,\dset_\totlen)$ where $\inst \sim \prior$ and $\dset_\totlen \sim \P^{\sAlg_0}_{\inst}$. 
+
+% When the actions $\eaction = \{ \eaction_t \in \actionsp_t \}_{t \in \totlen} \sim \prod_{t = 1}^T \sAlg_\Par^t( \cdot | \trajsp_{t-1}, \state_t)$ are sampled from algorithms of transformers $\sAlg_\Par$, we write $\P^{\sAlg_0,\sAlg_\Par}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_\Par^t (\eaction_t|\trajsp_{t-1}, \state_t )$. We further denote $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$ to be the joint distribution of $(\inst,\adset_\totlen)$ when $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\Par}_{\inst}$, and define $\P^{\sAlg_0}_{\prior}$ and $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ similarly. 
+
+
+\paragraph{Three special cases of expert algorithms} We consider three special cases of the expert algorithm $\sAlg_{\shortexp}$, corresponding to three supervised pretraining setups:
+\begin{itemize}[leftmargin=1.5em]
+\item[(a)] {\it Algorithm distillation \citep{laskin2022context}. } The algorithm depends only on the partial trajectory $\dset_{t-1}$ and current state $\state_t$: $\sAlg_{\shortexp}^t(\cdot|\dset_{\totlen},\inst) = \sAlg_{\shortexp}^t(\cdot|\dset_{t-1},\state_t)$. For example, $\sAlg_{\shortexp}$ could be a bandit algorithm like the Uniform Confidence Bound (UCB). 
+\item[(b)] {\it Decision pretrained transformer (DPT) \citep{lee2023supervised}. } The algorithm depends on the environment $\inst$ and the current state $s_t$: $\sAlg_{\shortexp}^t(\cdot|\dset_\totlen, \inst) = \sAlg_{\shortexp}^t(\cdot|s_t, \inst)$. For example,  $\sAlg_{\shortexp}$ could output the optimal action $\action^*_t$ in state $\state_t$ for environment $\inst$. 
+\item[(c)]{\it Approximate DPT. } The algorithm depends on the full trajectory $\dset_{\totlen}$ but not the environment $\inst$: $\sAlg_{\shortexp}^t(\cdot|\dset_\totlen, \inst) =\sAlg_{\shortexp}^t(\cdot|\dset_\totlen)$. For example, $\sAlg_{\shortexp}$ could estimate the optimal action $\widehat \action^*_t$ from the entire trajectory $\dset_\totlen$. 
+\end{itemize}  
+For any expert algorithm $\sAlg_{\shortexp}$, we define its reduced algorithm where the $t$-th step is $$\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t) := \E_\prior^{\sAlg_0}[\sAlg_{\shortexp}^t(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t].$$ The expectation on the right is over $\P_{\prior}^{\sAlg_0} ( \dset_\totlen, \inst |\dset_{t-1},\state_t) =\prior(\inst) \cdot \P_\inst^{\sAlg_0}(\dset_\totlen) / \P_\inst^{\sAlg_0}(\dset_{t-1},\state_t).$ Note that the reduced expert algorithm $\osAlg_{\shortexp}$ generally depends on the context algorithm $\sAlg_0$. However, for cases (a) and (b), $\osAlg_{\shortexp}$ is independent of the context algorithm $\sAlg_0$. Furthermore, in case (a), we have $\osAlg_{\shortexp}^t = \sAlg_{\shortexp}^t$. 
+
+% When $\inst$ is generated from the prior distribution $\prior$, we denote the joint distribution of $(\inst,\dset_\totlen,\eaction)$  as $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$. We define $\P^{\sAlg_0}_{\prior}(\inst,\dset_\totlen)$, $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}(\inst,\dset_\totlen,\eaction)$ in a similar way. We use the same notation for the joint distribution and its marginal distribution when there is no confusion, for example, $\P_\prior^{\sAlg_0,\sAlg_\Par}(\dset_\totlen,\eaction)$ denotes the marginal distribution of  $(\dset_\totlen,\eaction)$ in the distribution $\P_\prior^{\sAlg_0,\sAlg_\Par}(\inst,\dset_\totlen,\eaction)$. 
+
+
+% In addition, if the expert algorithm coincides with the algorithm used to collect the trajectory $\sAlg_{\shortexp}=\sAlg_0$, we may simply set $\eaction_t=\action_t$ to avoid sampling twice. 
+
+\begin{comment}
+\sm{I will start from here.}
+
+\subsection{General framework}
+Suppose the data collected for pretraining have the following form:
+\begin{itemize}[leftmargin=1.5em]
+\item   Sample a problem instance $\inst\sim\prior$. The learner does not observe $\inst$. 
+\item Sample an interaction trajectory $D=\{(\state_1,\action_1,\reward_1),\ldots,(\state_\totlen,\action_\totlen,\reward_\totlen)\}$ with $\inst$ from context algorithm $\sAlg_0$. Concretely, $\state_i\in\statesp_t,\action_i\in\actionsp_t$ are the state and action selected at time $t$, where the state space $\statesp_t$ and action space $\actionsp_t$ are determined by $\inst$. $\reward_t$ is the observed reward   at time $t$ given $(\state_t,\action_t)$. 
+
+Denote the distribution of the trajectory by $\P^{\sAlg_0}_{\inst}(\cdot)$. 
+$\state_1$ is generated from $\P_{\inst,0}(\cdot)$. For each step $t\geq1$, given the history $\dset_{t-1}=\{(\state_1,\action_1,\reward_1),\ldots,(\state_{t-1},\action_{t-1},\reward_{t-1})\}$ and $\state_t$, the action $\action_t$ is sampled from the policy $\P^{\sAlg_0}_{\inst,t}(\cdot|\dset_{t-1},\state_t)=:\sAlg_0(\cdot|\dset_{t-1},\state_t)$. Given the action $\action_i$, we then  observe the reward $\reward_t\sim\P^r_{\inst,t}(\cdot|\state_t,\action_t
+)$ and the next state $\state_{t+1}$ is  generated following the transition
+$\P^s_{\inst,t}(\cdot|\state_t,\action_t)$. To sum up, we have (denoting $\P^s_{\inst,0}(\state_1|\state_0,\action_0)\defeq \P_{\inst,0}(\state_1)$)
+\begin{align*}
+\P_{\inst}^{\sAlg_0}(\dset_\totlen) =
+\prod_{t=1}^{\totlen}\P^s_{\inst,t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \P_{\inst,t}^{\sAlg_0}(\action_t|\dset_{t-1},\state_t)\P^r_{\inst,t}(\reward_t|\state_t,\action_t).
+% \P_{\inst,0}(\state_1) \Big[\prod_{t=1}^{\totlen-1}\P_{\inst,t}^{\sAlg_0}(\action_t|\dset_{t-1},\state_t)\P_{\inst,t}(\reward_t|\state_t,\action_t)\P_{\inst,t}(\state_{t+1}|\state_{t},\action_t)\Big]\P_{\inst,\totlen}^{\sAlg_0}(\action_\totlen|\dset_{\totlen-1},\state_\totlen)\P_{\inst,\totlen}(\reward_\totlen|\state_\totlen,\action_\totlen).
+\end{align*}
+\item In addition to the interaction trajectory, at each step $t\geq 1$, an action $\eaction_t\in\actionsp_t$ is also generated from an expert algorithm (policy) $\sAlg_{\shortexp}$ with probability $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)$. Some special cases we consider are 
+\begin{itemize}
+\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|\dset_{t-1},\state_t)=:\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t)$, where the policy only depends  on the  trajectory  up to time $t$. As an example, this contains online RL/bandit algorithms such as UCB.
+\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|s_t, \inst)=:\sAlg_{\shortexp}(\cdot|s_t, \inst)$. As an example, this can implement the (ground truth) optimal action $\action^*_t$ at state $s_t$ in in $M$.
+\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|\dset_\totlen)=:\sAlg_{\shortexp}(\cdot|\dset_\totlen)$. As an example, this can implement the approximated (ground truth) optimal action $\widehat\action^*_t$ estimated from  the whole trajectory.
+\end{itemize}  
+Denote the dataset containing the trajectory and the addtional actions by $\adset_\totlen$. Then
+\begin{align*}
+\P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \P^{\sAlg_{\shortexp}}_{\inst,t}(\eaction_t|\dset_{\totlen},\inst).
+\end{align*}
+In addition, if the expert algorithm coincides with the algorithm used to collect the trajectory $\sAlg_{\shortexp}=\sAlg_0$, we may simply set $\eaction_t=\action_t$ to avoid sampling twice. 
+\end{itemize}
+
+
+
+\paragraph{Posterior averaging} 
+For the second and the third case, we also define~\yub{important}
+\begin{align*}
+\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t):=\E[\sAlg_{\shortexp}(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t], 
+\end{align*}
+where the expectation on the right hand side is taken over the posterior distribution
+\begin{align*}
+\P(\dset_\totlen,\inst|\dset_{t-1},\state_t) \; \propto_M \;
+\prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)\cdot\P_\inst^{\sAlg_0}(\dset_\totlen|\dset_{t-1},\state_t).
+\end{align*}
+
+\paragraph{Additional notation}
+We use $\eaction=(\eaction_1,\ldots,\eaction_\totlen)$ to denote the additional actions selected following $\sAlg_{\Par}(\cdot|\dset_{t-1},\state_t)$ (or $\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t)$) for $t\in[\totlen]$.
+Given a problem instance $\inst$, let $\P^{\sAlg_0,\sAlg_\Par}_{\inst}$ denotes the joint distribution of the offline trajectory $\dset_\totlen$ and the actions selected $\eaction$.   If in addition $\inst$ is generated from the prior distribution $\prior$, we denote the joint distribution of $(\inst,\dset_\totlen,\eaction)$  as $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$. We define $\P^{\sAlg_0}_{\prior}(\inst,\dset_\totlen)$, $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}(\inst,\dset_\totlen,\eaction)$ in a similar way. We use the same notation for the joint distribution and its marginal distribution when there is no confusion, for example, $\P_\prior^{\sAlg_0,\sAlg_\Par}(\dset_\totlen,\eaction)$ denotes the marginal distribution of  $(\dset_\totlen,\eaction)$ in the distribution $\P_\prior^{\sAlg_0,\sAlg_\Par}(\inst,\dset_\totlen,\eaction)$.  In all the results we assume the small probability $\delta<1/2$. \lc{this condition implies $\log(2/\delta)=O(\log(1/\delta))$.}
+
+\end{comment}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \subsection{MDPs}
+
+% \yub{Old framework below.}
+
+% Data collection protocol for sampling a pretraining dataset $\Db$:
+% \begin{itemize}
+% \item Receive MDP instance $M\sim \Lambda$. The learner does not observe $M$.
+% \item Sample interaction history (in-context dataset) $D = (\tau^1, \dots, \tau^T)$ from some distribution $\P^{\Alg_0}_M(D)$, where each $\tau^t=(s^t_1,a^t_1,r^t_1,\dots,s^t_H,a^t_H,r^t_H)$ is a trajectory from the MDP. This distribution admits the decomposition
+% \begin{align*}
+%     & \P^{\Alg_0}_M(D) = \prod_{t=1}^T \P_M(\tau^t) \paren{ \prod_{h=1}^H \Alg_0(a^t_h | s^t_h; \tau^t_{1:h-1}, D^{1:t-1}) }, \quad {\rm where} \\
+%     & \P_M(\tau^t) = \prod_{h=1}^H \P_{M,h}(s^t_h|s^t_{h-1}, a^t_{h-1}) \RR_{M,h}(r^t_h | s^t_h, a^t_h).
+% \end{align*}
+% In typical cases where $\Alg_0$ predetermines a \emph{policy} $\pi^t\in\Pi$ before the $t$-th episode starts, we have (assuming $\pi^t$ is a Markov policy)
+% \begin{align*}
+%     \Alg_0(a^t_h | s^t_h; \tau^t_{1:h-1}, D^{1:t-1}) = \sum_{\pi^t\in\Pi} \Alg_0(\pi^t|D^{1:t-1}) \pi^t_h(a_h^t|s_h^t).
+% \end{align*}
+
+% \item Receive an ``expert action'' $\ab^t_h$ for each $(t,h)\in[T]\times[H]$:
+% \begin{itemize}
+%     \item (Option 1: Imitation) $\ab^t_h=(\ae_h)^t \sim \AlgE(\cdot | s^t_h; \tau^t_{1:h-1}, D^{1:t-1})$ from some expert algorithm $\AlgE$. A notable special case is $\Alg_0=\AlgE$ (on-policy case), where we can set $(\ae_h)^t=a_h^t$ for all $t\in[T]$ to avoid sampling twice. This was considered in the AD approach~\citep{laskin2022context}.
+%     \item (Option 2: Optimal action) $\ab^t_h=a^{\star,t}_h\sim \pi^\star_{M,h}(\cdot|s_h^t)$ for the current MDP instance $M$. This was considered in the DPT approach~\citep{lee2023supervised}.
+%     \item (Option 3: Approximate optimal action)~\yub{TBA}
+% \end{itemize}
+% Let $\Db\defeq(D, \sets{\ab^t_h}_{t,h\in[T]\times[H]})$ denote the interaction history augmented with the expert actions.
+% \end{itemize}
+
+% \begin{algorithm}[H]
+% \caption{Supervised pretraining by MLE}
+% \label{alg:mle-rl}
+% \begin{algorithmic}[1]
+% \REQUIRE Pretraining dataset $\Db^{(1:n)}$. MDP algorithm class $\sets{\pi_\btheta:\btheta\in\Theta}$.
+% \STATE Solve the following MLE problem~\yub{no dependence on partial trajectory $\tau^t_{1:h-1}$}
+% \begin{align*}
+%     \hat{\btheta} = \argmax_{\btheta\in\Theta} \sum_{t=1}^T \sum_{h=1}^H \log \pi_\btheta(\ab_h^t | s_h^t; D^{1:t-1}).
+% \end{align*}
+% \ENSURE MDP algorithm $\hat{\btheta}$.
+% \end{algorithmic}
+% \end{algorithm}
+
+% \paragraph{Results for imitation}
+% Same as bandit case, since typical RL algorithms and our transformer constructions admit same protocols (which only use $D^{1:t-1}$ but not $\tau^t_{1:h-1}$).
+
+% \yub{Copied from bandit}
+
+% \begin{lemma}[Imitation; general case]
+%     Under Option 1 (imitation), suppose there exists $\btheta^\star\in\Theta$ such that
+%     \begin{align}
+%     \label{eqn:pie-approximation}
+%         \log\frac{\pi^E(\ae_t|o_t; D_{1:t-1})}{\pi_{\btheta^\star}(\ae_t|o_t; D_{1:t-1})} \le \eps
+%     \end{align}
+%     almost surely (under the above interaction protocol) for all $t\in[T]$. Then with probability at least $1-\delta$,~\cref{alg:mle-bandit} achieves
+%     \begin{align*}
+%         \E_{M\sim \Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{ \sum_{t=1}^T \HelDs\paren{ \pi_{\hat{\btheta}}(\cdot|o_t, D_{1:t-1}), \pi^E(\cdot|o_t, D_{1:t-1})} } \le \eps T + \cO\paren{ \log\paren{ \abs{\Theta} / \delta } }.
+%     \end{align*}
+% \end{lemma}
+
+% \yub{We only need one-sided approximation, and only on $\ae_t$ (instead of all actions) in~\cref{eqn:pie-approximation}. Not really useful though.}
+% \yub{Question: Can we weaken~\cref{eqn:pie-approximation} to some in-expectation version?}
+
+
+% \paragraph{Results for fitting optimal actions}
+% The theoretically optimal action can be recast as sampled from the following PS-full algorithm $\piPSf_\Lambda$. However, typically we only consider $\piPS_\Lambda$ (e.g. in RL theory).
+% \begin{align*}
+%     \piPSf_\Lambda(\cdot|s_h^t; \tau^t_{1:h-1}, D^{1:t-1}) &\defeq \E_{M\sim\Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{\pi^\star_{M,h}(\cdot|s_h^t) \mid \tau^t_{1:h-1}, D^{1:t-1}}, \\
+%     \piPS_\Lambda(\cdot|s_h^t; D^{1:t-1}) &\defeq \E_{M\sim\Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{\pi^\star_{M,h}(\cdot|s_h^t) \mid D^{1:t-1}},
+% \end{align*}
+
+% \begin{lemma}[Bayesian approximation; general case]
+%     Under Option 2 (optimal action), suppose there exists $\btheta^\star\in\Theta$ such that
+%     \begin{align*}
+%         \log\frac{\piPS_\Lambda(a^\star_t|s_h^t; D^{1:t-1})}{\pi_{\btheta^\star}(a^\star_t|s_h^t; D^{1:t-1})} \le \eps
+%     \end{align*}
+%     almost surely (under the above interaction protocol) for all $t\in[T]$. Then with probability at least $1-\delta$,~\cref{alg:mle-bandit} achieves
+%     \begin{align*}
+%         \E_{M\sim \Lambda, \tau\sim\P^{\Alg_0}_M}\brac{ \sum_{t=1}^T \sum_{h=1}^H \HelDs\paren{ \pi_{\hat{\btheta}}(\cdot|s_h^t; D^{1:t-1}), \piPS_\Lambda(\cdot|s_h^t; D^{1:t-1})} } \le \eps T H + \cO\paren{ \log\paren{ \abs{\Theta} / \delta } }.
+%     \end{align*}
+% \end{lemma}
+
+% % {\color{red} Question: Need to bound both of the following terms
+% % \begin{align*}
+% %     \log\frac{\piPSf_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}{\piPS_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})} ~~~{\rm and}~~~
+% %     \log\frac{\piPS_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}{\pi_{\btheta^\star}(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}
+% % \end{align*}
+% % under the above interaction protocol.
+% % }

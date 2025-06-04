@@ -1,0 +1,181 @@
+\section{Statistical analysis of supervised pretraining}\label{sec:supervised-pretraining}
+%That is, for each environment $\inst^\ith \sim_{iid} \prior$, an offline trajectory $\dset^\ith_\totlen$ is collected from the interaction of $\inst^\ith$ with $\sAlg_0$, augmented by expert actions $\eaction^\ith$ generated from $\sAlg_{\shortexp}$. Given a class of algorithms $\{ \sAlg_\Par \in \cup_{t \in [\totlen]} \{ (\trajsp_{t-1} \times \cS_t) \to \Delta(\actionsp_t) \}, ~\Par\in\Parspace\}$, supervised pretraining amounts to maximize the log-likelihood 
+
+In supervised pretraining, we are given $\Numobs$ i.i.d offline trajectories $\{\dset^\ith_\totlen =  (\state^\ith_1,\action^\ith_1, \reward^\ith_1, \ldots, \state^\ith_\totlen, \allowbreak \action^\ith_\totlen, \allowbreak\reward^\ith_\totlen) \}_{i=1}^\Numobs \sim_{iid} \P_\prior^{\sAlg_0}$ from the interaction of $\inst^\ith \sim_{iid} \prior$ with an offline algorithm $\sAlg_0$. Given an expert algorithm $\sAlg_{\shortexp}$, we augment each trajectory $\dset_{\totlen}^i$ by $\{ \eaction_t^i \sim_{iid} \sAlg_{\shortexp}( \cdot |\dset_{t-1}^i, \state_t^i)\}_{t \in [\totlen]}$. Supervised pretraining maximizes the log-likelihood over the algorithm class $\{ \sAlg_\Par\}_{\Par\in\Parspace}$
+\begin{align}
+\EstPar=\argmax_{\Par\in\Parspace}  \frac{1}{\Numobs}\sum_{i=1}^\Numobs\sum_{t=1}^\totlen\log \sAlg_\Par(\eaction^\ith_{t}|\dset_{t-1}^\ith,\state^\ith_t). \label{eq:general_mle}
+\end{align}
+This section discusses the statistical properties of the algorithm learned via supervised pretraining. 
+
+% When $\sAlg_\Par$ is specified by a transformer, this objective function coincides with the cross-entropy loss used to train transformers in supervised learning tasks. 
+% where $\sAlg_\Par(\eaction^\ith_{t}|\dset_{t-1}^\ith,\state_t)$ denotes the probability of algorithm $\sAlg_\Par$ selects the action $\eaction^\ith_t$ given the historical trajectory $\dset_{t-1}^\ith$ and current state $\state^\ith_t$. 
+
+
+
+\subsection{Main result}
+
+% \yub{to be organized.}
+
+% In this work, we will also apply the following standard concentration inequality (see e.g. Lemma A.4 in~\cite{foster2021statistical}).
+% \begin{lemma}\label{lm:exp_concen}
+%     For any sequence of random variables $(X_t)_{t\leq T}$ adapted to a filtration $\{\cF_{t}\}_{t=1}^T$, we have with probability at least $1-\delta$ that
+%     \begin{align*}
+%         \sum_{s=1}^t X_s\leq \sum_{s=1}^t\log\E[\exp(X_s)\mid\cF_{s-1}]+\log(1/\delta),~~~\text{for all } t\in[T].
+%     \end{align*}
+% \end{lemma}
+
+Our main result demonstrates that the algorithm maximizing the supervised pretraining loss will imitate $\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t) = \E_{\inst\sim \prior,  \dset_{\totlen} \sim \sAlg_0}[\sAlg_{\shortexp}^t(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t]$, the conditional expectation of the expert algorithm $\sAlg_{\shortexp}$ given the observed trajectory. The imitation error bound will scale with the covering number of the algorithm class and a  distribution ratio factor, defined as follows.
+
+\begin{definition}[Covering number]\label{def:cover_number_general} For a class of algorithms $\{\sAlg_\Par,\Par\in\Parspace\}$, 
+we say $\Parspace_0 \subseteq\Parspace$ is an  $\rho$-cover of $\Parspace$, if $\Parspace_0$ is a finite set such that for any $\Par\in\Parspace$, there exists $\Par_0\in\Parspace_0$ such that 
+\[
+\|\log \sAlg_{\Par_0}(\cdot|\dset_{t-1},\state_t)-\log \sAlg_{\Par}(\cdot|\dset_{t-1},\state_t)\|_{\infty}\leq\rho,~~~ \text{for all } \dset_{t-1},\state_t, t\in[\totlen].
+\]
+The covering number $\cN_{\Parspace}(\rho)$ is the minimal cardinality of $\Parspace_0$ such that $\Parspace_0$ is a $\rho$-cover of $\Parspace$.
+\end{definition}
+
+%\yub{Define covering number as sum of $t\in[T]$, then $T$ disappears in MLE rate?}
+
+
+
+% \begin{lemma}[General guarantee for supervised pretraining]\label{lm:general_imit}
+% Suppose Assumption~\ref{asp:realizability} holds. Then  the solution to~Eq.~\eqref{eq:general_mle} achieves
+% \begin{align*}
+% \E_{\dset_\totlen\sim \P^{\sAlg_0}_\prior}\brac{ \sum_{t=1}^\totlen \HelDs\paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )} } \le c\frac{\totlen \log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \totlen\geneps.
+% \end{align*}
+% with probability at least $1-\delta$ for some universal constant $c>0$.
+% \end{lemma}
+% See the proof in Section~\ref{sec:pf_lm:general_imit}. 
+
+
+
+\begin{definition}[Distribution ratio]\label{def:dist_ratio}
+\label{def:distribution-ratio}
+We define the distribution ratio of two algorithms $\sAlg_1,\sAlg_2$ by
+\begin{align*}\distratio_{\sAlg_1,\sAlg_2}
+:=
+\E_{\inst\sim\prior,\dset_\totlen\sim\P_\inst^{\sAlg_1}}
+\Big[\prod_{s=1}^{\totlen}\frac{\sAlg_1(\action_s|\dset_{s-1},\state_s)}{\sAlg_2(\action_s|\dset_{s-1},\state_s)}\Big] = 1 + \chi^2\Big( \P_\prior^{\sAlg_1};\P_\prior^{\sAlg_2} \Big).
+\end{align*}
+\end{definition}
+
+% \yub{This is chi-squared distance between the full trajectory under $\sAlg_1$ and $\sAlg_2$.}
+
+Our main result requires the realizability assumption of algorithm class $\{ \sAlg_\Par\}_{\Par \in \Parspace}$ with respect to the conditional expectation of the expert algorithm. 
+
+\begin{assumption}[Approximate realizability]
+\label{asp:realizability}
+% \lc{I think this includes both imitation and Bayes learning (PSfull). (Note that PS $=$ PSfull in bandit; later need another lemma  PS learning in MDPs).}
+There exists $\TruePar\in\Parspace$ and $\geneps > 0$ such that for all $t\in[\totlen]$, 
+\begin{align}
+\label{eqn:plc_approx_general}
+\log\E_{\inst \sim \prior, \adset_\totlen \sim \P_{\inst}^{\sAlg_0,\sAlg_\shortexp}}\Big[\frac{\osAlg_{\shortexp}(\eaction_t|\dset_{t-1},\state_t )}{\sAlg_\TruePar(\eaction_t|\dset_{t-1},\state_t )}\Big] \le \geneps. 
+\end{align}
+% where $\adset_\totlen$ follows the distribution  $\P_{\inst}^{\sAlg_0,\sAlg_\shortexp}$ with $\inst\sim\prior$. 
+\end{assumption}
+% It can be verified that a sufficient condition for Assumption~\ref{asp:realizability} is 
+% \begin{align}\label{asp:realizability_suff}
+% \log\frac{\osAlg_{\shortexp}(\eaction_t|\dset_{t-1},\state_t )}{\sAlg_\TruePar(\eaction_t|\dset_{t-1},\state_t )}\leq\geneps
+% \end{align} almost surely over $\adset_\totlen\sim\P_{\inst}^{\sAlg_0,\sAlg_\shortexp},\inst\sim\prior$.  
+
+% Let $\dset_\totlen=(\state_1,\action_1,\reward_1,\ldots,\state_\totlen,\action_\totlen,\reward_\totlen)$ denote a trajectory obtained by rolling out an algorithm $\sAlg$ in a problem instance $\inst$.  
+% We define the (instance-dependent) expected cumulative reward\lc{maybe a different name?}
+% \begin{align*}
+% \textstyle \totreward_{\inst,\sAlg}(\totlen)
+% :=\E_{\action\sim\sAlg}[\sum_{t=1}^\totlen \reward_t],
+% \end{align*} where  the expectation is over the  states $\state_{t}\sim\P^s_{\inst,t}(\cdot|\state_{t-1},\action_{t-1})$, actions  $\action_t\sim\sAlg(\cdot|\dset_{t-1},\state_t)$ and rewards $\reward_t\sim\P^r_{\inst,t}(\cdot|\state_t,\action_t)$ for $t\in[\totlen]$.  
+
+We aim to bound the performance gap between $\sAlg_{\EstPar}$ and $\sAlg_\shortexp$ in terms of expected cumulative rewards, where the expected cumulative reward is defined as 
+\begin{align*}
+\textstyle \totreward_{\prior,\sAlg}(\totlen)
+:= \E_{\inst\sim\prior}\big[\totreward_{\inst,\sAlg}(\totlen) \big],~~~~~~~~~ \totreward_{\inst,\sAlg}(\totlen) = \E_{\dset_{\totlen} \sim\P^{\sAlg}_\inst}[\sum_{t=1}^\totlen \reward_t].
+\end{align*}
+An intermediate step of the result is controlling the expected Hellinger distance between two algorithms, where for distributions $p, q$, we have $\HelDs(p, q) = \int (\,\sqrt{p(x)} - \sqrt{q(x)} \,)^2 d x$. 
+
+\begin{theorem}[Performance gap between expected cumulative rewards]\label{thm:diff_reward} Let Assumption~\ref{asp:realizability} hold and let $\EstPar$ be a solution to Eq.~\eqref{eq:general_mle}. Take $\distratio = \distratio_{\osAlg_\shortexp,\sAlg_0}$ as defined in Definition~\ref{def:dist_ratio}, and $\cN_{\Parspace} = \cN_{\Parspace}((\Numobs\totlen)^{-2})$  as defined in Definition~\ref{def:cover_number_general}. Then for some universal constant $c>0$, with probability at least $1-\delta$, we have 
+%\lc{I still prefer the old version in statistical-proof.tex.}~
+%\yub{$\geneps$ in separate sqrt?}
+\begin{align}\label{eqn:Hellinger-bound-main-theorem}
+&~ \E_{\dset_\totlen\sim \P^{\sAlg_\shortexp}_\prior}\Big[ \sum_{t=1}^\totlen \HelD \paren{  \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ),\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )} \Big] 
+\le c {\totlen} \sqrt{\distratio}
+\bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot 
+ \totlen/\delta } }{n}} +  \sqrt{\geneps}\bigg).
+\end{align} 
+Further assume that $|\reward_t| \leq 1$ almost surely. Then with probability at least $1-\delta$, the difference of the expected cumulative rewards between $\sAlg_\EstPar$ and $\osAlg_\shortexp$ satisfies
+\begin{align}\label{eqn:reward-bound-main-theorem}
+\Big|\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\osAlg_\shortexp}(\totlen)\Big|
+&\leq 
+c \totlen^2 \sqrt{\distratio} \bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot 
+ \totlen/\delta } }{n}} +  \sqrt{\geneps}\bigg).
+\end{align}
+\end{theorem}
+
+The proof of Theorem~\ref{thm:diff_reward} is contained in Section~\ref{sec:pf_thm:diff_reward}.
+
+We remark that when the expectation on the left-hand-side of (\ref{eqn:Hellinger-bound-main-theorem}) is with respect to the measure $\P_\prior^{\sAlg_0}$, standard MLE analysis will provide a bound without the distribution ratio factor $\distratio = \distratio_{\osAlg_\shortexp,\sAlg_0}$ in the right-hand side. The distribution ratio factor arises from the distribution shift between trajectories generated by the expert algorithm $\sAlg_\shortexp$ versus the context algorithm $\sAlg_0$.  In addition, it should be noted that the result in Theorem~\ref{thm:diff_reward} holds generally provided Assumption~\ref{asp:realizability} is satisfied, which does not require that the algorithm class is induced by transformers.
+
+% \sm{Can we provide an example in which reward maximization supervision is not the correct objective? }
+
+% \yub{update statement to hellinger + total reward.} \yub{Strengthen the result to subsume the fast rate case when $C\approx 1$.} \sm{Discuss the distribution ratio. } \sm{Discuss the reward maximization pretraining objective. }
+
+
+
+% \yub{Corollary: 1. AD; 2. DPT (comment on approximate DPT, or give another corollary box).}
+
+
+\subsection{Implications in special cases}
+
+\paragraph{Algorithm Distillation} When we set $\sAlg_\shortexp = \sAlg_0$, the supervised pretraining approach corresponds to the Algorithm Distillation method introduced in \cite{laskin2022context}. In this case, it suffices to set $\eaction^\ith = \action^\ith$ for every pretraining trajectory, eliminating the need to sample additional expert actions. The conditional expectation of the expert algorithm is given by $\osAlg_\shortexp = \sAlg_0$, and the distribution ratio $\distratio_{\sAlg_\shortexp,\sAlg_0}=1$. Under these conditions, Theorem~\ref{thm:diff_reward} ensures that $\sAlg_\EstPar$ imitates $\sAlg_0$ with a reward difference bounded by
+\begin{align*}
+\Big|\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_0}(\totlen)\Big|
+&\leq c \totlen^2 \Big( \sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot \totlen/\delta } }{n} } + \sqrt{\geneps} \Big). 
+\end{align*}
+If the context algorithm $\sAlg_0$ does not perform well, we cannot expect the learned algorithm $\sAlg_\EstPar$ to have good performance, regardless of the number of offline trajectories. 
+% For good performance of the learned algorithm $\sAlg_\EstPar$, it is crucial to have pretraining data generated by a high-quality context algorithm $\sAlg_0$. 
+
+% The algorithm distillation approach studied in~\cite{laskin2022context} corresponds to the case when $\sAlg_\shortexp=\sAlg_0$. Under this setting, we have the distribution ratio $\distratio_{\sAlg_\shortexp,\sAlg_0}=1$ and Lemma~\ref{thm:diff_reward} provides the guarantee \begin{align*}
+% |\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_\shortexp}(\totlen)|
+% &\leq 
+% c \genrewardb\cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}((\Numobs\totlen)^{-2}) \totlen/\delta } }{n} + \geneps}
+% \end{align*}
+% with probability at least $1-\delta$.  
+
+\paragraph{Decision Pretrained Transformer} When we set $\sAlg_\shortexp^t = \sAlg_\shortexp^t(\state_t,\inst)=\action^*_t$ to be the optimal action at time $t$, the supervised pretraining approach corresponds to Decision-Pretrained Transformers (DPT) proposed in \cite{lee2023supervised}. In this case, the conditional expectation of the expert algorithm $\osAlg_\shortexp(\cdot|\dset_{t-1},\state_t)=\E[\sAlg_{\shortexp}(\cdot|\state_t,\inst)|\dset_{t-1},\state_t]=\sAlg_{\TS}(\cdot|\dset_{t-1},\state_t)$ is the Thompson sampling algorithm \citep[Theorem 1]{lee2023supervised}, which samples from the posterior distribution of the optimal action $\action^*_t$ given by $\P(a^*_t(\inst) |\dset_{t-1},\state_t)\propto \prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)$. This implies that learning from optimal actions effectively learns to imitate Thompson sampling. Furthermore, the context algorithm is not required to perform well for the learned algorithm to be consistent with Thompson sampling. However, a high-quality context algorithm $\sAlg_0$ may help reduce the distribution ratio $\distratio$, thereby learning Thompson sampling with fewer samples. 
+
+
+% The decision-pretrained transformer in~\cite{lee2023supervised} corresponds to the case  where the expert $\sAlg_\shortexp=\sAlg_\shortexp(\state_t,\inst)=\action^*_t$ gives the optimal action at time $t$. Therefore, the expert policy $\sAlg_\shortexp(\cdot|\dset_{t-1},\state_t)=\E[\sAlg_{\shortexp}(\cdot|\state_t,\inst)|\dset_{t-1},\state_t]=\sAlg_{\TS}(\cdot|\dset_{t-1},\state_t)$ equals the policy of Thompson sampling (i.e., the distribution of the optimal action $\action^*_t$  under the posterior $\P(\inst|\dset_{t-1},\state_t)\propto \prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)$). This implies that learning from the optimal actions is effectively learning to imitate the Thompson sampling algorithm.
+
+
+
+\paragraph{Approximate DPT} In practical scenarios, the learner may not have access to the optimal action $\action^*_t$ of the environment $\inst$ during pretraining. Instead, they might rely on an estimated optimal action $\widehat\action_t^* \sim \sAlg_{\shortexp}^t(\cdot | \dset_\totlen)$, derived from the entire trajectory $\dset_\totlen$. We can offer a guarantee analogous to Theorem~\ref{thm:diff_reward}, provided the distribution of the estimated action closely aligns with its posterior distribution: 
+\begin{align}\E_{\dset_\totlen\sim\P_{\prior}^{\sAlg_0}}\KL{\sAlg_{\shortexp}^t(\cdot | \dset_\totlen)}{\P_{\TS,t}(\cdot|\dset_\totlen)}\leq\appeps,~~~ \forall t \in [\totlen]. 
+\label{eq:app_opt_cond}
+\end{align}
+Here, $\P_{\TS,t}(\cdot|\dset_\totlen)$ represents the posterior distribution of the optimal action $\action^*_t=\action^*_t(\inst)$ at time $t$, given the observation $\dset_\totlen$, where $(\inst, \dset_\totlen) \sim \P_\prior^{\sAlg_0}$. 
+
+% Note that in practice the learner may not know the optimal action $\action^*_t$ during pretraining, and may use an estimated optimal action $\widehat\action_t^*=\widehat\action^*_t(\dset_\totlen)$ as a surrogate. It can be shown that a similar guarantee as in Lemma~\ref{thm:diff_reward} can be established if the approximation error \begin{align}\E_{\dset_\totlen\sim\P_{\prior}^{\sAlg_0}}\KL{\widehat\action^*_t}{\P_{\TS,t}(\cdot|\dset_\totlen)}\leq\appeps
+% \label{eq:app_opt_cond}
+% \end{align} for all $t\in[\totlen]$ and some small $\appeps>0$, where $\P_{\TS,t}$ is the distribution of the optimal action $\action^*_t$ under the posterior $\inst|\dset_\totlen$. Note that  the error term $\appeps$  characterizes  the distance between the approximated optimal action $\widehat\action^*_t$ and the best guess we have about $\action^*_t$ given $\dset_\totlen$. \lc{Should put the result to appendix later}
+
+\begin{proposition}\label{prop:app_opt_diff_reward} Let Assumption~\ref{asp:realizability} hold and let $\EstPar$ be the solution to Eq.~\eqref{eq:general_mle}. Take $\distratio = \distratio_{\sAlg_\TS,\sAlg_0}$ as defined in Definition~\ref{def:dist_ratio}, and $\cN_{\Parspace} = \cN_{\Parspace}((\Numobs\totlen)^{-2})$  as defined in Definition~\ref{def:cover_number_general}. Assume that for each trajectory, an estimated optimal action is provided $\widehat\action_t^* \sim \sAlg_{\shortexp}^t(\cdot | \dset_\totlen)$ at each time $t\in[\totlen]$ satisfying Eq.~\eqref{eq:app_opt_cond}. 
+% Then for some universal constant $c>0$, with probability at least $1-\delta$, we have
+% \begin{align*}
+% &~  \E_{\dset_\totlen\sim \P^{\sAlg_\TS}_\prior} \Big[ \sum_{t=1}^\totlen \HelD \paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\TS}(\cdot|\dset_{t-1},\state_t )} \Big] \\
+% \le&~ c{\totlen} \sqrt{\distratio}
+% \sqrt{\frac{\log \cN_{\Parspace} +\log(\totlen/\delta)}{n}+\geneps+\appeps}. 
+% \end{align*}
+% with probability at least $1-\delta$ for some universal constant $c>0$. 
+Assume that the rewards $|\reward_t|\leq 1$  almost surely. Then for some universal constant $c>0$, with probability at least $1-\delta$, the difference of the expected cumulative rewards between $\sAlg_\EstPar$ and $\sAlg_\TS$ satisfies 
+\begin{align*}
+|\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_\TS}(\totlen)|
+&\leq 
+c \sqrt{\distratio}\cdot\totlen^2 \Big( \sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot \totlen/\delta } }{n} } + \sqrt{\geneps} + \sqrt{\appeps} \Big). 
+\end{align*}
+\end{proposition}
+The proof of Proposition~\ref{prop:app_opt_diff_reward} is contained in Appendix~\ref{app:proof-prop-diff-reward-app-opt}. 
+
+
+
+
+% Next, we choose the class of algorithms $\{\sAlg_\Par,\Par\in\Parspace\}$ to be algorithms induced by transformers. We show that such classes of algorithms has the potential to imitate state-up-the-art algorithms in  bandits and Markov Decision Processes (MDPs) settings. As a consequence, the algorithms we derived from transformers also have benign regret guarantee
+

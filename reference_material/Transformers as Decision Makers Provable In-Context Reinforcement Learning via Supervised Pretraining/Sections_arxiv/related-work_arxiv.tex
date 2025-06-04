@@ -1,0 +1,38 @@
+\subsection{Related work}\label{sec:related-work}
+
+\paragraph{Meta-learning and meta-reinforcement learning} In-context reinforcement learning can be cast into the framework of meta-learning and meta-reinforcement learning \citep{schmidhuber1987evolutionary, schmidhuber1992learning, bengio1990learning, naik1992meta, ishii2002control, schaul2010metalearning, thrun2012learning}. More recently, a line of work focuses on meta-learn certain shared structures such as the dynamics of the shared tasks \citep{fu2016one, nagabandi2018learning}, a task context identifier \citep{rakelly2019efficient, humplik2019meta, zintgraf2019varibad}, exploration strategies \citep{gupta2018meta}, or the initialization of the network policy \citep{finn2017model, hochreiter2001learning, nichol2018first, rothfuss2018promp}. Theories for this last approach of model-agnostic meta-learning have been explored by \cite{wang2020global}. 
+
+Our work focuses on a more agnostic approach to learning the learning algorithm itself \citep{wang2016learning, duan2016rl, dorfman2021offline, mitchell2021offline, li2020focal, pong2022offline, laskin2022context, lee2023supervised}. Among these works, \cite{wang2016learning, duan2016rl} focus on the online meta-RL setting with the training objective to be the total reward. Furthermore, \cite{dorfman2021offline, mitchell2021offline, li2020focal, pong2022offline} focus on offline meta-RL, but their training objectives differ from the cross entropy loss used here, requiring explicit handling of distribution shift. The supervised pretraining approach we consider is most similar to the algorithm distillation methods of \cite{laskin2022context} and the decision-pretrained transformers of \cite{lee2023supervised}. We provide quantitative sample complexity guarantees and transformer constructions absent from previous work. 
+
+
+\paragraph{In-context learning}
+
+The in-context learning (ICL) capability of pretrained transformers has gained significant attention since being demonstrated on GPT-3 \cite{brown2020language}. Recent work investigates why and how pretrained transformers perform ICL \citep{garg2022can, li2023transformers, von2023transformers, akyurek2022learning, xie2021explanation, bai2023transformers, 
+zhang2023trained, ahn2023transformers, raventos2023pretraining}. In particular, \cite{xie2021explanation} propose a Bayesian framework explaining how ICL works. \cite{garg2022can} show transformers can be trained from scratch to perform ICL of simple function classes.  \cite{von2023transformers, akyurek2022learning, bai2023transformers} demonstrate transformers can implement in-context learning algorithms via in-context gradient descent, with \cite{bai2023transformers} showing transformers can perform in-context algorithm selection. \cite{zhang2023trained} studied training dynamics of a single attention layer for in-context learning of linear functions. Our work focuses on the related but distinct capability of in-context decision-making for pretrained transformers. 
+
+\paragraph{Transformers for decision making} Besides the ICRL approach, recent work has proposed goal-conditioned supervised learning (GCSL) for using transformers to make decisions \citep{chen2021decision, janner2021offline, lee2022multi, reed2022generalist, brohan2022rt, shafiullah2022behavior, yang2023foundation}. In particular, Decision Transformer (DT) \citep{chen2021decision, janner2021offline} uses transformers to autoregressively model action sequences from offline data, conditioned on the achieved return. During inference, one queries the model with a desired high return. Limitations and modifications of GCSL have been studied in \cite{yang2022dichotomy, paster2022you, vstrupl2022upside, brandfonbrener2022does}. A key distinction between GCSL and ICRL is that GCSL treats the transformer as a policy, whereas ICRL treats it as an algorithm for improving the policy based on observed trajectories. 
+
+
+
+\paragraph{Expressivity of transformers} The transformer architecture, introduced by \cite{vaswani2017attention}, has revolutionized natural language processing and is used in most recently developed large language models like BERT and GPT \citep{devlin2018bert, brown2020language}. The expressivity of transformers has been extensively studied~\citep{yun2019transformers, perez2019turing, hron2020infinite,yao2021self, bhattamishra2020computational, zhang2022unveiling, liu2022transformers, wei2022statistically, fu2023can, bai2023transformers, akyurek2022learning, von2023transformers}. Deep neural networks such as ResNets and transformers have been shown to efficiently approximate various algorithms, including automata \citep{liu2022transformers}, Turing machines \citep{wei2022statistically}, variational inference \citep{mei2023deep}, and gradient descent \citep{bai2023transformers, akyurek2022learning, von2023transformers}. Our work provides efficient transformer constructions that implement accelerated gradient descent and matrix square root algorithms, complementing existing expressivity results. 
+
+
+
+
+
+\paragraph{Statistical theories of imitation learning} Our generalization error analysis adapts classical analysis of maximum-likelihood estimator \citep{geer2000empirical}. The error compounding analysis for imitation learning appeared in early works \citep{ross2011reduction, ross2010efficient}. More recent theoretical analyses of imitation learning also appear in \cite{rajaraman2020toward, rajaraman2021provably, rashidinejad2021bridging}. 
+
+
+
+% \sm{Add} \lc{add "throughout the proof, we assume the small probability $\delta_0,\delta<1/2$" to somewhere in the paper.}
+
+
+
+% \begin{itemize}
+% \item Meta-learning: \cite{schmidhuber1987evolutionary, schmidhuber1992learning, bengio1990learning, naik1992meta, ishii2002control, schaul2010metalearning, thrun2012learning}. Reward maximization Meta-RL: \cite{wang2016learning}, \cite{duan2016rl}. Hyperparameter Meta-RL: \cite{hochreiter2001learning}, \cite{finn2017model}, \cite{nichol2018first}. Offline meta-RL \cite{dorfman2021offline}, \cite{mitchell2021offline}, \cite{li2020focal}, \cite{pong2022offline}. AD: \cite{laskin2022context}, DPT: \cite{lee2023supervised}. 
+
+% \item ICL: \cite{brown2020language}, \cite{garg2022can}, \cite{von2023transformers}, \cite{li2023transformers}, \cite{akyurek2022learning}, \cite{xie2021explanation}. \cite{bai2023transformers}, \cite{zhang2023trained}, \cite{ahn2023transformers}, \cite{xie2021explanation}. 
+
+% \item Transformers for DM: \cite{chen2021decision}, \cite{janner2021offline}, \cite{lee2022multi}, \cite{reed2022generalist}, \cite{brohan2022rt}, \cite{shafiullah2022behavior}. \cite{yang2023foundation}, \cite{yang2022dichotomy}, \cite{brandfonbrener2022does}. 
+% \item Imitation learning: \cite{rajaraman2020toward, rashidinejad2021bridging}. Meta-RL theory \cite{wang2020global}. \sm{More imitation learning literature? }
+% \end{itemize}

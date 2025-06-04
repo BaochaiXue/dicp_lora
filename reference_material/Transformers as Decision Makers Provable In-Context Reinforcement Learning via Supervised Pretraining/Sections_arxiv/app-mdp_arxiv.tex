@@ -1,0 +1,901 @@
+\section{Learning in-context RL in markov decision processes}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Throughout this section, we use $c>0$ to denote universal constants whose values may vary from line to line.
+Moreover, for notational simplicity, we use $\conO(\cdot)$ to hide universal constants,  $\tcO(\cdot)$ to hide poly-logarithmic terms in $(\horizon,\Numepi,\Numst,\Numact,1/\temp)$. 
+
+
+This section is organized as follows. Section~\ref{sec:tf_embed_mdp} discusses the embedding and extraction formats of transformers for Markov decision processes. Section~\ref{sec:example_ucbvi} describes the UCB-VI and the soft UCB-VI algorithms.  We prove Theorem~\ref{thm:approx_ucbvi} in Section~\ref{sec:pf_approx_ucbvi} and prove Theorem~\ref{thm:ucbvi_icrl-main} in Section~\ref{sec:pf_thm:ucbvi_icrl-main}. 
+
+
+
+% A finite-horizon tabular MDP is specified by $\inst=(\statesp,\actionsp, \horizon, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\init)$, with $\horizon$ being the time horizon, $\statesp$ the state space of size $\Numst$, $\actionsp$ the action space of size $\Numact$, and $\init\in\Delta(\statesp)$ defining the initial state distribution. At each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp \to \Delta(\statesp)$ denotes the state transition dynamics and $\rewardfun_h:\statesp \times \actionsp \to [0,1]$ gives the reward function. A policy $\plc:=\{\plc_h:(\statesp \times\actionsp \times \R)^{h-1}\times\statesp \to\Delta(\actionsp)\}_{h \in [\horizon]}$ maps history and state to a distribution over actions. The value of policy $\pi$ interacting with environment $\inst$ is defined as the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \rewardfun_h (\state_h,\action_h)]$. A policy $\optplc$ is said to be optimal if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
+% %We use $\plcset$ to denote all possible deterministic policies,  and let $\Delta(\plcset)$ be either the set of all  policies or the set of all  distributions over the  deterministic policies. $\optplc$ is said to be an optimal policy if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
+
+
+% We let the context algorithm $\sAlg_0$ interact with an MDP instance $\inst$ to generate $\Numepi$ episodes, each consisting of $\horizon$ horizon sequences $ (\state_{k,h},\action_{k,h},\reward_{k,h})_{k \in [\Numepi], h \in [\horizon]}$. These can be reindexed into a single trajectory $\dset_{\totlen} = \{ (\state_t,\action_t,\reward_t) \}_{t \in [\totlen]}$ with $t=H(k-1)+h$ and $\totlen=\Numepi\horizon$. The Bayes regret of any algorithm $\sAlg$ gives $\E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg}(\totlen)]$.
+
+
+
+
+
+
+
+
+\subsection{Embedding and extraction mappings}\label{sec:tf_embed_mdp}
+
+To embed MDP problems into transformers, we consider an embedding similar to that for linear bandits. For each episode $k\in[\Numepi]$, we construct $2\horizon+1$ tokens. Concretely, for each $t\in[\totlen]$ in the $k$-th episode, we write  $t=\horizon(k-1)+h$  and construct two tokens
+\[
+\begin{aligned}
+\bh_{2(t-1)+k}=
+\left[
+\begin{array}{cc}
+     \bzero_{\Numact+1} \\
+     \hdashline 
+     \state_{k,h}\\  
+      \hdashline 
+    \bzero_{\Numact}\\  
+    \hdashline  
+    \bzero\\
+    \posv_{2(t-1)+k}
+\end{array}\right]
+=:
+\begin{bmatrix}
+     \bh_{2(t-1)+k}^{\parta} \\  \bh_{2(t-1)+k}^{\partb}\\  \bh_{2(t-1)+k}^{\partc}\\   \bh_{2(t-1)+k}^{\partd}\\
+\end{bmatrix},~~
+\bh_{2t-1+k}=
+\left[
+\begin{array}{cc}
+     \action_{k,h} \\
+      \reward_{k,h}\\  
+      \hdashline 
+      \bzero_{\Numst}\\ 
+      \hdashline 
+      \bzero_{\Numact}\\ 
+     \hdashline  
+      \bzero\\ 
+      \posv_{2t-1+k}
+\end{array}\right]=:
+\begin{bmatrix}
+    \bh_{2t-1+k}^{\parta} \\  \bh_{2t-1+k}^{\partb}\\   \bh_{2t-1+k}^{\partc}\\   \bh_{2t-1+k}^{\partd}
+\end{bmatrix},
+\end{aligned}
+\]
+where  $\state_{k,h},\action_{k,h}$ are represented using one-hot embedding (we let $\state_{k,\horizon+1}=\bzero_\Numst$), $\bh^\partc_{2(t-1)+k}$ is used to store the (unnormalized)  policy at time  $t$ given current state $\state_{k,h}$, $\bzero$ in $\bh^\partd$ denotes an additional zero vector. At the end of each episode $k$, we add an empty token 
+$$
+\bh_{(2\horizon+1)k}=\bh^{\emp}_{k}:=\begin{bmatrix}
+    \bzero &\posv_{(2\horizon+1)k}
+\end{bmatrix}^\top
+$$ to store intermediate calculations. We also include in the tokens  the positional embedding $\posv_i:=(k,h,v_i,i,i^2,1)^\top$ for $i\in[2\totlen+\Numepi]$, where $\oddeven_i:=\bone_{\{\bh_i^\parta=\bzero\}}$  denote the tokens that do not embed actions and rewards.    In addition, we define  the token matrix $\bH_t:=\begin{bmatrix}
+    \bh_1,\ldots,\bh_{2t-1+k}
+\end{bmatrix}\in\R^{D\times (2t-1+k)}$ for all $t\in[\totlen]$.
+
+
+
+
+\paragraph{Offline pretraining} 
+Similar to the bandit setting, during
+pretraining the transformer $\TF_\tfpar$ takes in   $\bH_\totlen^\pre:=\bH_\totlen$ as the input token matrix, and generates $\bH_\totlen^\post:=\TF_\tfpar(\bH_\totlen^\pre)$ as the output. For each time $t\in[\totlen]$, we define the  induced policy  $\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2(t-1)+k})}{\|\exp(\bh^{\post,\partc}_{2(t-1)+k})\|_1}\in\Delta^\Numact$, whose $i$-th entry is the probability of selecting the $i$-th action (denoted by the  one-hot vector $\be_i$) given $(\dset_{t-1},\state_t)$. We then find the transformer $\esttfpar\in\tfparspace$ by solving Eq.~\eqref{eq:general_mle}. 
+
+\paragraph{Rollout}
+At each time $t\in[\totlen]$, given the  current state $\state_t$ and  previous data $\dset_{t-1}$, we first construct the token matrix $\bH^{\pre}_{\roll,t}\in\R^{D\times 2(t-1)+k}$ that consists of tokens up to the first token for time $t$.   The transformer then takes $\bH^{\pre}_{\roll,t}$ as the input  and generates $\bH^{\post}_{\roll,t}=\TF_\tfpar(\bH^{\pre}_{\roll,t})$. Next,  the agent selects an action $\action_t\in\actionsp$ following  the induced  policy $\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2(t-1)+k})}{\|\exp(\bh^{\post,\partc}_{2(t-1)+k})\|_1}\in\Delta^\Numact$ and observes the reward $\reward_t$ and next state $\state_{t+1}$ ($\state_{t+1}\sim\init$ if $t$ is the last time step in an episode).
+
+
+
+
+
+\paragraph{Embedding and extraction mappings}
+To integrate the above construction into our general framework in Section~\ref{sec:framework}, for $t=(k-1)\horizon+h$,  we have the embedding vectors $$\embedmap(\state_t):=\bh_{2(t-1)+k},~~~\embedmap(\action_t,\reward_t):=\bh_{2t-1+k}.$$  For $N\geq 1$, write $$\lceil(N+1)/2\rceil=(k_N-1)\horizon+h_N$$ for some $h_N\in[\horizon]$, and define the  concatenation operator 
+\begin{align*}
+\cat(\bh_1, \ldots, \bh_N): = [\bh_1, \ldots,\bh_{2\horizon},\bh_{1}^{\emp}, \bh_{2\horizon+1},\ldots,\bh_{4\horizon},\bh_2^\emp,\bh_{4\horizon+1},\ldots, \bh_N]\in\R^{N+k_N-1},
+\end{align*}
+where we insert an empty token $\bh_k^\emp$ (i.e., a token with $\bh^{\{\parta,\partb,\partc\}}=\bzero$) at the end of  each episode $k$. 
+
+In this case, we have the input token matrix  $$\bH=\bH^\pre_{\roll,t}: = \cat(\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)) \in \R^{D \times [2(t-1)+k]},$$ the output token matrix $\bar{\bH}=\bH^\post_{\roll,t}$, and the linear extraction map $\extractmap$  satisfies $$\extractmap\cdot\bar{\bh}_{-1}=\extractmap\cdot\bar{\bh}^\post_{2(t-1)+k}=\bh^{\post,\partc}_{2(t-1)+k}.$$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% Our general framework also includes Markov decision processes (MDPs).   Consider a finite-horizon tabular MDP specified by $\inst=(\statesp,\actionsp, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\horizon,\init)$, where $\horizon$ is the problem horizon, $\statesp$ is the state space, $\actionsp$ is the action space. We denote the number of states and actions by $\Numst,\Numact$, respectively.  At each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp\mapsto\Delta(\statesp)$ is the transition function, $\rewardfun_h:\statesp\times\actionsp\mapsto[0,1]$ is the reward function. The process ends after $\horizon$ steps, and $\init\in\Delta(\statesp)$ specifies the distribution of the initial state.
+
+
+% A finite-horizon tabular MDP is specified by $\inst=(\statesp,\actionsp, \horizon, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\init)$, where $\horizon$ is the time horizon, $\statesp$ is the state space of size $\Numst$, $\actionsp$ is the action space of size $\Numact$, and $\init\in\Delta(\statesp)$ is the initial state distribution. For each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp \to \Delta(\statesp)$ represents the state transition dynamics and $\rewardfun_h:\statesp \times \actionsp \to [0,1]$ is the reward function. A policy $\plc:=\{\plc_h:(\statesp \times\actionsp \times \R)^{h-1}\times\statesp \to\Delta(\actionsp)\}_{h \in [\horizon]}$ maps the history and state to a distribution over actions.  policy $\pi$ in environment $\inst$ is the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \rewardfun_h (\state_h,\action_h)]$. A policy $\optplc$ is optimal if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$.
+
+% The context algorithm $\sAlg_0$ interacts with an MDP instance $\inst$ to generate $\Numepi$ episodes, with each consisting of $\horizon$ horizon sequences $(\state_{k,h},\action_{k,h},\reward_{k,h})_{k \in [\Numepi], h \in [\horizon]}$. These sequences can be combined into a single trajectory $\dset_{\totlen} = \{ (\state_t,\action_t,\reward_t) \}_{t \in [\totlen]}$ where $t=H(k-1)+h$ and $\totlen=\Numepi\horizon$. We define the Bayes regret of any algorithm $\sAlg$ as as $\E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg}(\totlen)]$.
+
+
+%  We assume the trajectory is collected through the interaction of the MDP instance $\inst$ with an algorithm $\sAlg$, which specifies the probabilities $\sAlg(\cdot|\dset_{t-1},\state_t)\in\Delta(\actionsp)$ for $t\in[\totlen]$. Suppose $\totlen=\Numepi\horizon$. We may view the whole interaction trajectory of length $\totlen$ as $\Numepi$ episodes from the finite-horizon MDP. 
+% For any $t\in[\totlen]$, write $t=H(k-1)+h$ for some $k,h\geq 1$ and denote $\state_t,\action_t,\reward_t$ by $\state_{k,h},\action_{k,h},\reward_{k,h}$, respectively.  For an MDP instance $\inst$, a policy $\plc:=\{\plc_h:(\statesp\times\actionsp\times\R)^{h-1}\times\statesp\mapsto\Delta(\actionsp)\}$ is a collection of $\horizon$ functions.  The value of a policy is defined as the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \reward(\state_h,\action_h)]$. We use $\plcset$ to denote all possible deterministic policies,  and let $\Delta(\plcset)$ be either the set of all  policies or the set of all  distributions over the  deterministic policies. $\optplc$ is said to be an optimal policy if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
+
+
+
+
+
+
+
+\subsection{UCB-VI and soft UCB-VI}\label{sec:example_ucbvi}
+We show that transformers with the embedding in Section~\ref{sec:tf_embed_mdp}  can approximately implement the  UCB-VI algorithm in~\cite{azar2017minimax}. Namely, UCB-VI implements the following steps:
+
+for each episode $k\in[\Numepi]$ and each step $h=\horizon,\ldots,1$
+\begin{enumerate}
+    \item Compute the estimated transition matrix $\tresttransit_h(\state'|\state,\action):=   \frac{\Numvi_h(\state,\action,\state')}{\Numvi_h(\state,\action)\vee 1}$,  where $\Numvi_h(\state,\action,\state')$ denotes the number of times the state-action-next-state tuple $(\state,\action,\state')$ has been visited in the first $k-1$ episodes, and $\Numvi_h(\state,\action)=\sum_{\state'}\Numvi_h(\state,\action,\state')$ (we assume $\Numvi_\horizon(\state,\action,\state')=0$ and let $\Numvi_\horizon(\state,\action)$  be the number of times $(\state,\action)$ is visited at timestep $\horizon$).
+    \item Calculate the estimated Q-function \begin{align*}
+\trestQfun_h(\state,\action)=\min\{\horizon,\reward_h(\state,\action)+\bonus_h(\state,\action)+\sum_{\state'\in\statesp}\tresttransit_h(\state'\mid\state,\action)\trestVfun_{h+1}(\state')\},\end{align*}
+where the bonus $\bonus_h(\state,\action)=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{\Numvi_h(\state,\action)\vee1}}$,  $\trestVfun_{\horizon+1}(\state):=0$ for all $\state\in\statesp$ and $\trestVfun_h(\state):=\max_{\action\in\actionsp}\trestQfun_h(\state,\action)$. 
+\end{enumerate} Throughout this section, we choose the small probability $\delta=1/(\Numepi\horizon)$. 
+
+
+During policy execution, at each step $h\in[\horizon]$, UCB-VI takes the greedy action $\action_h:=\argmax_{\action}\trestQfun(\state_h,\action)$ and observes the reward and next state $(\reward_h,\state_{h+1})$. To facilitate pretraining, in this work we consider a soft version of UCB-VI, which takes action $\action_h$  following the softmax policy 
+\begin{align*}
+\plc_h(\action|\state_h)=\frac{\exp(\trestQfun_h(\state_h,\action)/\temp)}{\lone{\exp(\trestQfun_h(\state_h,\action)/\temp)}}
+\end{align*}
+using the estimated $Q$-function for some sufficiently small $\temp>0$. Note that soft UCB-VI recovers UCB-VI as $\temp\to 0$.
+
+% \sm{Consider to restate. }
+
+% \begin{theorem}[Approximating UCB-VI]\label{thm:approx_ucbvi}
+% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
+%  There exists a  transformer $\TF_\btheta(\cdot)$ with 
+% \begin{align}L= 2\horizon+8,~~~\max_{\ell\in[L]}\head^{\lth}= O(\horizon\Numst^2\Numact),~~~ \max_{\ell\in[\layer]}\hidden^\lth= O(\Numepi^2\horizon\Numst^2\Numact),~~~~\nrmp{\btheta}\leq \tilde O(\Numepi^2\horizon\Numst^2\Numact+\Numepi^3+1/\temp),\label{eq:ucbvi_tf_param}
+% \end{align} such that 
+% $\Big|\log\frac{\sAlg_{\sUCBVI}(\action_t|\dset_{t-1},\state_t)}{\sAlg_{\tfpar}(\action_t|\dset_{t-1},\state_t)}\Big|=0$ for all $t\in[T]$. Here $\tilde O(\cdot)$ hides logarithmic dependencies.
+% \end{theorem} \lc{need to check the tokens are bounded.}
+
+% \begin{theorem}[Regret of UCB-VI and ICRL]\label{thm:ucbvi_icrl}
+% Take  $0<\temp\leq1/\Numepi$ and $\delta=1/(\Numepi\horizon)$ in smoothed UCB-VI.  Then  it achieves the regret
+% \begin{align*}
+% \E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\sUCBVI}(\totlen)]\leq \tilde O (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)
+% \end{align*} for all MDP instances $\inst$, where $\tilde O(\cdot)$ hides logarithmic dependencies on $\horizon,\Numepi,\Numst,\Numact$.
+% Moreover, let  $\tfparspace$ be the class of transformers satisfying Eq.~\eqref{eq:ucbvi_tf_param} with  $\sAlg_0=\sAlg_\shortexp=\sAlg_{\sUCBVI}$ during pretraining. Then the solution to Eq.~\eqref{eq:general_mle} has the expected regret
+% \begin{align*}
+% \E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)]\leq \tilde O (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)+
+%  C \cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} }.
+% % &\leq Cd\sqrt{T}\log(T)+\tilde O\Big(\totlen^2 \sqrt{\frac{\log(\Numobs/\delta)}{\Numobs}}\Big)
+% \end{align*} with probability at least $1-\delta$ for some problem-dependent constant $C>0$.  ~\lc{in the proof need to show the token matrices at each step are bounded.}
+
+% \end{theorem}
+
+
+
+% \yub{Use lookup table to exactly implement division and square root.}
+
+
+
+
+
+
+% Denote the policy given by UCB-VI and smoothed UCB-VI at episode $k\in[\Numepi]$ by $\plc^{k}=(\plc^k_1,\ldots,\plc^k_\horizon),\plc^k_{\s}=(\plc^k_{\s,1},\ldots,\plc^k_{\s,\sh},\ldots\plc^k_{\s,\horizon})$. We also introduces the notation 
+% $$
+% \plc^{k}_{\ccc,\sh}:=(\plc^k_{\s,1},\ldots,\plc^k_{\s,\sh},\plc^k_{\sh+1},\ldots,\plc^k_\horizon)
+% $$ to denote the concatenated policies with first $\sh$ steps following $\plc_\s^k$ and the rest following $\plc^k$ for all $\sh\in \{0\}\cup[\horizon]$. By Theorem 1 in~\cite{azar2017minimax} with $\delta=1/(\Numepi\horizon)$,  the regret of UCB-VI satisfies
+% \begin{align*}
+%   \E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\UCBVI}(\totlen)]]
+%   &=  
+%   \sum_{k=1}^\Numepi(\Vfun_\inst(\plc^*)-\Vfun_\inst(\plc^{k}))\leq\tilde O(\horizon^{3/2}\sqrt{\Numst\Numact\Numepi}+\horizon^2\Numst^2\Numact)
+% \end{align*}
+%  Now it sufficies to control the different of rewards between $\UCBVI$ and $\sUCBVI$. Note that
+% \begin{align*}
+%  &\quad\E[\totreward_{\inst,\sAlg_\UCBVI}(\totlen)-\totreward_{\inst,\sAlg_\sUCBVI}(\totlen)]\\
+%  &=
+%  \sum_{k=1}^\Numepi
+%  (\Vfun_\inst(\plc^k)-\Vfun_\inst(\plc_{\s}^{k}))\\
+%  &= \sum_{k=1}^\Numepi\sum_{\sh=1}^{\horizon}
+%  (\Vfun_\inst(\plc_{\ccc,\sh-1}^k)-\Vfun_\inst(\plc_{\ccc,\sh}^k))\\
+%  &=
+%  \sum_{k=1}^\Numepi\sum_{\sh=1}^{\horizon}
+%  \E_{\plc^k_{\s,1:\sh-1}}\Big[\E_{\action_{k,\sh}\sim\plc^k_\sh}\Qfun_{\inst,\sh}(\state_{k,h},\action_{k,h})-\E_{\action_{k,\sh}\sim\plc^k_\sh}\Qfun_{\inst,\sh}(\state_{k,h},\action_{k,h})\Big]
+% \end{align*}
+
+
+
+
+
+
+\subsection{Proof of Theorem~\ref{thm:approx_ucbvi}}\label{sec:pf_approx_ucbvi}
+Throughout the proof, we abuse the notations $\bh_i^{\star}$ for $\star\in\{\parta,\partb,\partc,\partd\}$ to denote the corresponding positions in the token vector $\bh_i$. For any $t'\in[\totlen]$, we let $k(t'),h(t')$ be the non-negative integers such that $t'=\horizon(k(t')-1)+h(t')$ and $h(t')\in[\horizon]$. For the current time $t$, we use the shorthands $k=k(t),h=h(t)$.  For a token index $i\in[(2\horizon+1)\Numepi]$, let $\bar{k}(i),\bar{h}(i)$ be the episode and time step the $i$-th token corresponds to (for the empty tokens we set $h=\horizon+1$). 
+Given the input token matrix $\bH^\pre_{\roll,t}$, we construct a transformer that implements the following steps on the last token. 
+$\bh^{\star}_{2(t-1)+k}=\bh^{\pre,\star}_{2(t-1)+k}$ for $\star\in\{\parta,\partb,\partc,\partd\}$ 
+\begin{align}
+    \begin{bmatrix}
+    \bh_{2(t-1)+k}^{\pre,\parta} \\  \bh_{2(t-1)+k}^{\pre,\partb}\\  \bh_{2(t-1)+k}^{\pre,\partc}\\   \bh_{2(t-1)+k}^{\pre,\partd}
+\end{bmatrix}&
+\xrightarrow{\text{step 1}}
+   \begin{bmatrix}
+    \bh_{2(t-1)+k}^{\pre,\{\parta,\partb,\partc\}} \\
+        \Numvi_{1}(\state,\action,\state') \\ \vdots \\
+         \Numvi_{\horizon}(\state,\action,\state') 
+         \\ 
+        \Numvi_{1}(\state,\action) \\\vdots\\
+        \Numvi_{\horizon}(\state,\action,\state') 
+         \\  
+         \Numvi_{1}(\state,\action)\reward_{1}(\state,\action) \\\vdots\\
+        \Numvi_{\horizon}(\state,\action,\state') \reward_{\horizon}(\state,\action)
+         \\ 
+         \star\\ \bzero \\\posv_{2(t-1)+k}
+\end{bmatrix}
+\xrightarrow{\text{step 2}}
+\begin{bmatrix}
+    \bh_{2(t-1)+k}^{\pre,\{\parta,\partb,\partc\}} \\
+         \esttransit_{1}(\state,\action,\state') \\ \vdots \\
+         \esttransit_{\horizon}(\state,\action,\state')  \\ \star
+        \\ \bzero \\\posv_{2(t-1)+k}
+\end{bmatrix}
+\xrightarrow{\text{step 3}}
+\begin{bmatrix}
+    \bh_{2(t-1)+k}^{\pre,\{\parta,\partb,\partc\}} \\
+         \estQfun_{1}(\state,\action,\state') \\ \vdots \\
+         \estQfun_{\horizon}(\state,\action,\state')  \\ 
+           \estVfun_{1}(\state) \\ \vdots \\
+         \estVfun_{\horizon}(\state)  \\ \star
+        \\ \bzero \\\posv_{2(t-1)+k}
+\end{bmatrix}\notag\\
+&
+\xrightarrow{\text{step 4}}
+\begin{bmatrix}
+    \bh_{2(t-1)+k}^{\pre,\{\parta,\partb\}}\\ \frac{\estQfun_h(\state_t,\action_1)}{\temp}\\\vdots\\
+\frac{\estQfun_h(\state_t,\action_1)}{\temp}
+    \\ \bh_{2(t-1)+k}^{\partd}
+\end{bmatrix}
+=:
+\begin{bmatrix}
+    \bh_{2(t-1)+k}^{\post,\parta} \\  \bh_{2(t-1)+k}^{\post,\partb}\\  \bh_{2(t-1)+k}^{\post,\partc}\\   \bh_{2(t-1)+k}^{\post,\partd}
+\end{bmatrix},\label{eq:ucbvi_roadmap}
+\end{align}
+where $\Numvi_{\sh}(\state,\action,\state'),\esttransit_{\sh}(\state,\action,\state'),\estQfun_{\sh}(\state,\action,\state')\in\R^{\Numst^2\times\Numact},~\Numvi_{\sh}(\state,\action)\in\R^{\Numst\times\Numact},\estVfun_{\sh}(\state)\in\R^\Numst$ for all $\sh\in[\horizon]$, and $\star$ denote additional quantities in $\bh^\partd_{2(t-1)+k}$. Given the current state $\state_t$, the transformer $\TF_\tfpar(\cdot)$ generates the policy $$\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2(t-1)+k})}{\|\exp(\bh^{\post,\partc}_{2(t-1)+k})\|_1}\in\Delta^\Numact.$$
+We claim the following results which we will prove later.
+
+\begin{enumerate}[label=Step \arabic*,ref= \arabic*]
+    \item\label{mdp_step1}There exists an attention-only transformer $\TF_\btheta(\cdot)$ with     $$L=4,~~\max_{\ell\in[L]}M^{(l)}\leq \conO(\horizon\Numst^2\Numact),~~~ \nrmp{\btheta}\leq \conO(\horizon\Numepi+\horizon\Numst^2\Numact) $$
+ that implements step 1 in~\eqref{eq:roadmap_ts}.
+   \item \label{mdp_step2}
+ There exists a one-layer  transformer $\TF_\btheta(\cdot)$ with 
+$$
+L=1,~~\head\leq \conO(\horizon\Numst^2\Numact),~~~ \hidden\leq \conO(\Numepi^2\horizon\Numst^2\Numact),~~~\nrmp{\btheta}\leq \tcO(\horizon\Numst^2\Numact+\Numepi^3+\Numepi\horizon)
+$$
+ that implements step 2 in~\eqref{eq:roadmap_ts}. 
+  \item\label{mdp_step3}  There exists a transformer  $\TF_\tfpar(\cdot)$ with 
+    $$L=2\horizon,~~\max_{\ell\in[L]}M^{(l)}\leq 2\Numst\Numact,~~\max_{\ell\in[L]}\hidden^{(l)}\leq 3\Numst\Numact,~~~ \nrmp{\btheta}\leq  \conO(\horizon+\Numst\Numact) $$
+ that implements step 3 (i.e., value iteration) in~\eqref{eq:roadmap_ts}.
+  \item \label{mdp_step4}
+ There exists an attention-only transformer $\TF_\btheta(\cdot)$ with 
+$$\layer=3,~~\max_{\ell\in[\layer]}\head^\lth=\conO(\horizon\Numact),~~\nrmp{\btheta}\leq \conO(\horizon(\Numepi+\Numact)+{1}/{\temp}) $$
+ that implements step 4 in~\eqref{eq:roadmap_ts}.
+\end{enumerate}
+From the construction of Step~\ref{mdp_step1}---\ref{mdp_step4}, we verify that one can choose the constructed transformer to have the embedding dimension $D=\conO(\horizon\Numst^2\Numact)$. Moreover, due to the boundedness of the reward function, $Q$-function  and the fact that the bonus $\bonus(\state,\action)\leq\tcO(\horizon)$, we verify that there exists some $\clipval>0$ with $\log \clipval=\tcO(1)$ such that $\|\bh_i^{\lth}\|_2\leq \clipval$ for all layer $\ell\in[\layer]$ and all token $i\in[\Numepi(2\horizon+1)]$. Therefore, similar to what we do in the proof of Theorem~\ref{thm:approx_smooth_linucb},~\ref{thm:approx_thompson_linear}, we may w.l.o.g. consider transformers without truncation (i.e.,  $\clipval=\infty$) in our construction of step 1---4 in~\eqref{eq:ucbvi_roadmap}.
+
+
+% Denote the errors $\eps$ appear in step 2--4   by $\eps_2,\eps_3,\eps_4$, respectively. By the Lipschitz continuity of the log-softmax function shown in Lemma~\ref{lm:log_softmax}, we have
+% \begin{align*}
+% \Big|\log\frac{\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t)}{\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t)}\Big|\leq 2\linf{\estQfun_h(\state_t,\cdot)/\temp-\trestQfun_\sh(\state_t,\cdot)/\temp}=2\eps_4.
+% \end{align*}
+% Thus, choosing (w.l.o.g. assume $\eps<1$) $$\eps_4=\frac\eps2,~~~\eps_3=\frac{\eps_4\temp}{2},~~~\eps_2=\frac{\eps_3}{\horizon(\Numst\horizon+2)}=\frac{\temp\eps}{4\horizon(\Numst\horizon+2)}$$ completes the proof.
+
+
+\paragraph{Proof of Step~\ref{mdp_step1}} We prove this step by constructing a transformer that implements the following two steps:
+\begin{enumerate}[label= Step 1\alph*, ref= 1\alph*]
+    \item\label{mdp_step1a} For each $t'< t$ with $t'=(k'-1)\horizon+h'$ for some $h'\in[\horizon]$, we add  $\state_{k',h'},(\action_{k',h'},\reward_{k',h'})$ from  $\bh^\partb_{2(t'-1)+k'}$ and $\bh^\parta_{2t'-1+k'}$  to  $\bh^\partd_{2t'+k'}$.
+    \item\label{mdp_step1b} Compute $\Numvi_{\sh}(\state,\action,\state'),\Numvi_{\sh}(\state,\action)$ for $\sh\in[\horizon]$ and assign them to the current token $\bh^\partd_{2(t-1)+k}$.
+\end{enumerate}
+For step~\ref{mdp_step1a}, we can construct a two-layer attention-only transformer with $\bQ^{(1)}_{1,2,3},\bK^{(1)}_{1,2,3},\bV^{(1)}_{1,2,3}$ such that for all $i\leq 2(t-1)+k$
+\begin{align*}
+&\bQ^{(1)}_{1}\bh^{(0)}_{i}=
+\begin{bmatrix}
+        \bar{k}(i)+1-\oddeven_{i}\\
+        \tfthres\\
+        1\\
+       i
+    \end{bmatrix},~~ \bK^{(1)}_{1}\bh^{(0)}_{i}=\begin{bmatrix}
+        -\tfthres\\\bar{k}(i)\\ i+3\\-1
+\end{bmatrix},~~ \bV^{(1)}_{1}\bh^{(0)}_{2(t'-1)+k'}=
+\begin{bmatrix}
+\bzero\\\bzero_{\Numact+1}\\\state_{k',h'}\\\bzero\end{bmatrix},\\
+&~~~
+\bV^{(1)}_{1}\bh^{(0)}_{2t'-1+k'}=
+\begin{bmatrix}
+\bzero\\\action_{k',h'}\\
+\reward_{k',h'}
+\\\bzero_\Numst\\\bzero,\end{bmatrix}
+\end{align*}
+where we choose $\tfthres=4$ and $\bV\bh^{(0)}$ are supported on some entries in $\bh^{(0),\partd}$. Moreover, we choose $\bQ^{(1)}_{3}=\bQ^{(1)}_{2}=\bQ^{(1)}_1$, $\bV^{(1)}_2=\bV^{(1)}_3=-\bV^{(1)}_1$ and $\bK^{(1)}_2,\bK^{(1)}_3$ such that
+\begin{align*}
+    \bK^{(1)}_{2}\bh^{(0)}_{i}=\begin{bmatrix}
+        -\tfthres\\\bar{k}(i)\\ i+2\\-1
+\end{bmatrix},~~\bK^{(1)}_{3}\bh^{(0)}_{i}=\begin{bmatrix}
+        -\tfthres\\\bar{k}(i)\\ i+1\\-1.
+\end{bmatrix}
+\end{align*}
+We verify that $\lops{\bQ^{(1)}_{\star}},\lops{\bK^{(1)}_{\star}}= 4,\lops{\bV^{(1)}_{\star}}=1$ for $\star\in[3]$. 
+Summing up the  heads, we obtain the following update on a subset of coordinates in $\bh^{(0),\partd}_{2t'+k'}$:
+\begin{align*}
+\bzero_{\Numst+\Numact+1}
+    &\rightarrow 
+\bzero_{\Numst+\Numact+1}+\sum_{j=1}^3\sum_{i=1}^{2t'+k'}\sigma(\<\bQ^{(1)}_{j}\bh^{(0)}_{2t'+k'},\bK^{(1)}_{j}\bh^{(0)}_{i}\>)\bV_j\bh^{(0)}_i\\
+    &=\frac{1}{2t'+k'} [(\bV^{(1)}_1\bh^{(0)}_{2t'+k'-2}+2\bV^{(1)}_1\bh^{(0)}_{2t'+k'-1}+3\bV^{(1)}_1\bh^{(0)}_{2t'+k'})\\
+    &\qquad-(\bV^{(1)}_1\bh^{(0)}_{2t'+k'-1}+2\bV^{(1)}_1\bh^{(0)}_{2t'+k'})-\bV^{(1)}_1\bh^{(0)}_{2t'+k'})]\\
+    &=\frac{1}{2t'+k'}(\bV^{(1)}_1\bh^{(0)}_{2t'+k'-2}+\bV^{(1)}_1\bh^{(0)}_{2t'+k'-1})\\
+    &=\frac{1}{2t'+k'}\begin{bmatrix}
+        \action_{k',h'} \\\reward_{k',h'}\\\state_{k',h'}
+    \end{bmatrix}.
+\end{align*}
+Note that $\<\bQ^{(1)}\bh^{(0)}_i,\bK^{(1)}\bh^{(0)}_j\>\leq0$ for $i=2t'-1+k'$ (i.e., all tokens that embed the action and reward) since $\oddeven_i=0$, it follows that no update happens on the tokens in which we embed the action and reward (i.e., the corresponding part of $\bh^\partd$ remains zero). Moreover, it should be noted that no  update happens on tokens with $h=1$. 
+
+We then use another  attention layer to  multiply the updated vectors by a factor of $2t'+k'$, namely, to perform the map
+$$\frac{1}{2t'+k'}\begin{bmatrix}
+        \action_{k',h'} \\\reward_{k',h'}\\\state_{k',h'}
+    \end{bmatrix}\mapsto\begin{bmatrix}
+        \action_{k',h'} \\\reward_{k',h'}\\\state_{k',h'}
+    \end{bmatrix},$$ where the output vector is supported on coordinates different from the input vectors. This can be achieved by choosing $\lops{\bQ_1^{(2)}}\leq (2\horizon+1)\Numepi, \lops{\bK_1^{(2)}}\leq (2\horizon+1)\Numepi, \lops{\bV_1^{(2)}}\leq1$
+such that \begin{align}
+    &
+\bQ^{(2)}_{1}\bh^{(1)}_{i}=\begin{bmatrix}
+         i^2\\-(2\horizon+1)\Numepi i^2\\  1\\ \bzero
+    \end{bmatrix},~~ \bK^{(2)}_{1}\bh^{(1)}_{j}=\begin{bmatrix}
+        1\\1\\ (2\horizon+1)\Numepi j^2\\\bzero
+    \end{bmatrix},~~ 
+\bV^{(2)}_{1}\bh^{(1)}_{2t'+k'}=\frac{1}{2t'+k'}\begin{bmatrix}
+        \bzero\\ 
+        \action_{k',h'} \\\reward_{k',h'}\\\state_{k',h'}
+    \\ \bzero
+    \end{bmatrix},\label{eq:tf_constrcut_ucbvi_multi}
+\end{align}
+and noting that $\<\bQ^{(2)}_1\bh_i^{(1)},\bQ^{(2)}_1\bh_j^{(1)}\>=i$ when $j=i$ and otherwise $0$.
+
+For step~\ref{mdp_step1b},  we show that it can be implemented using a two-layer attention-only transformer. 
+
+To compute $\Numvi_\sh(\state,\action,\state')$, in the first layer we construct $\head=10\horizon\Numst^2\Numact$ heads with the query, key, value matrices $\{\bQ^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10},\{\bK^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10},\{\bV^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10}$  such that for all $i\leq 2(t-1)+k$ and $\si,\sk\in[\Numst],\sj\in[\Numact],\sh\in[\horizon]$
+\begin{align*}
+&\bQ^{(1)}_{\si\sj\sk\sh,1}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\tfthres(\oddeven_i-1)\\
+        \tfthres\be_\si\\
+         \tfthres\be_\sj\\
+          \tfthres\be_\sk\\
+          1\\
+          1\\
+         \sh
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,1}\bh^{(0)}_{i}=\begin{bmatrix}1\\
+     \state_{\bar{k}(i),\bar{h}(i)-1}\\
+        \action_{\bar{k}(i),\bar{h}(i)-1}\\
+         \state_{\bar{k}(i),\bar{h}(i)}\\
+        -3\tfthres\\
+        1- \bar{h}(i)\\
+        1
+\end{bmatrix},~~ \bV^{(1)}_{\si\sj\sk\sh,1}\bh^{(0)}_{i}=-
+\begin{bmatrix}
+\bzero\\\be^{\Numvi_\sh}_{\si\sj\sk}
+\\\bzero\end{bmatrix},
+\end{align*}
+where we choose $\tfthres=2\horizon$ and $\be_{\si\sj\sk}^\sh$ denotes the one-hot vector supported on the $(\si,\sj,\sk)$-entry in $\Numvi_\sh(\state,\action,\state')$.
+We similarly construct 
+\begin{align*}
+&\bQ^{(1)}_{\si\sj\sk\sh,2}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\tfthres(\oddeven_i-1)\\
+        \tfthres\be_\si\\
+         \tfthres\be_\sj\\
+          \tfthres\be_\sk\\
+          1\\
+          1\\
+         \sh
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,2}\bh^{(0)}_{i}=\begin{bmatrix}1\\
+     \state_{\bar{k}(i),\bar{h}(i)-1}\\
+        \action_{\bar{k}(i),\bar{h}(i)-1}\\
+         \state_{\bar{k}(i),\bar{h}(i)}\\
+        -3\tfthres\\
+     - \bar{h}(i)\\
+        1
+\end{bmatrix},~~ \bV^{(1)}_{\si\sj\sk\sh,2}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\bzero\\\be^{\Numvi_\sh}_{\si\sj\sk}
+\\\bzero\end{bmatrix},
+\\
+&\bQ^{(1)}_{\si\sj\sk\sh,3}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\tfthres(\oddeven_i-1)\\
+        \tfthres\be_\si\\
+         \tfthres\be_\sj\\
+          \tfthres\be_\sk\\
+          1\\
+          1\\
+         -\sh
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,3}\bh^{(0)}_{i}=\begin{bmatrix}1\\
+     \state_{\bar{k}(i),\bar{h}(i)-1}\\
+        \action_{\bar{k}(i),\bar{h}(i)-1}\\
+         \state_{\bar{k}(i),\bar{h}(i)}\\
+        -3\tfthres\\
+      \bar{h}(i)-1\\
+        1
+\end{bmatrix},~~ \bV^{(1)}_{\si\sj\sk\sh,3}\bh^{(0)}_{i}=-
+\begin{bmatrix}
+\bzero\\\be^{\Numvi_\sh}_{\si\sj\sk}
+\\\bzero\end{bmatrix},\\
+&\bQ^{(1)}_{\si\sj\sk\sh,4}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\tfthres(\oddeven_i-1)\\
+        \tfthres\be_\si\\
+         \tfthres\be_\sj\\
+          \tfthres\be_\sk\\
+          1\\
+          1\\
+         -\sh
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,4}\bh^{(0)}_{i}=\begin{bmatrix}1\\
+     \state_{\bar{k}(i),\bar{h}(i)-1}\\
+        \action_{\bar{k}(i),\bar{h}(i)-1}\\
+         \state_{\bar{k}(i),\bar{h}(i)}\\
+        -3\tfthres\\
+      \bar{h}(i)-2\\
+        1
+\end{bmatrix},~~ \bV^{(1)}_{\si\sj\sk\sh,4}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\bzero\\\be^{\Numvi_\sh}_{\si\sj\sk}
+\\\bzero\end{bmatrix},\\
+&\bQ^{(1)}_{\si\sj\sk\sh,5}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\tfthres(\oddeven_i-1)\\
+        \tfthres\be_\si\\
+         \tfthres\be_\sj\\
+          \tfthres\be_\sk\\
+          1\\
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,5}\bh^{(0)}_{i}=\begin{bmatrix}1\\
+     \state_{\bar{k}(i),\bar{h}(i)-1}\\
+        \action_{\bar{k}(i),\bar{h}(i)-1}\\
+         \state_{\bar{k}(i),\bar{h}(i)}\\
+        -3\tfthres\\
+\end{bmatrix},~~ \bV^{(1)}_{\si\sj\sk\sh,5}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\bzero\\\be^{\Numvi_\sh}_{\si\sj\sk}
+\\\bzero\end{bmatrix}.\\
+\end{align*}
+Summing up the first five heads, we verify that such attention updates the token with $\bh_i^\parta=\bzero$ and has the form
+\begin{align*}
+\bzero\rightarrow\bzero+\frac1i\widetilde{\Numvi}_\sh(\si,\sj,\sk)\be_{\si\sj\sk}^{\Numvi_h}
+\end{align*} on  $\bh^\partd_i$, where $\widetilde{\Numvi}_\sh(\si,\sj,\sk)$ denote the number of visits to the state-action-next-state tuple $(\si,\sj,\sk)$ at time step $\sh$ before token $i$. For $\star\in[5]$, we choose $\bV^{(1)}_{\si\sj\sk\sh,\star+5}=-\bV^{(1)}_{\si\sj\sk\sh,\star+5}$ and $\bQ^{(1)}_{\si\sj\sk\sh,\star+5},\bK^{(1)}_{\si\sj\sk\sh,\star+5}$ be such that 
+\begin{align*}
+&\bQ^{(1)}_{\si\sj\sk\sh,\star+5}\bh^{(0)}_{i}=
+\begin{bmatrix}
+\bQ^{(1)}_{\si\sj\sk\sh,\star}\bh^{(0)}_{i}\\
+\tfthres\\
+-\bar{k}(i)
+    \end{bmatrix},~~ \bK^{(1)}_{\si\sj\sk\sh,\star+5}\bh^{(0)}_{i}=\begin{bmatrix}
+\bK^{(1)}_{\si\sj\sk\sh,\star}\bh^{(0)}_{i}\\ \bar{k}(i)\\\tfthres
+\end{bmatrix}
+\end{align*} which adds positional embedding about the current episode $\bar{k}(i)$. We verify that summing up the sixth to the tenth heads gives the update  \begin{align*}
+\bzero\rightarrow\bzero+\frac{1}{i}({\Numvi}_\sh(\si,\sj,\sk)-\widetilde{\Numvi}_\sh(\si,\sj,\sk))\be_{\si\sj\sk}^{\Numvi_h}
+\end{align*} on  $\bh^\partd_i$ for $i\leq 2(t-1)+k$ with $\bh_i^\parta=\bzero$. Therefore, combining all the heads together we have the update
+\begin{align*}
+\bzero\rightarrow\bzero+\frac{1}{i}{\Numvi}_\sh(\si,\sj,\sk)\be_{\si\sj\sk}^{\Numvi_h}\text{~~for all~}\si,\sk\in[\Numst],\sj\in[\Numact],\sh\in[\horizon]
+\end{align*} on $\bh^\partd_i$ for $i\leq 2(t-1)+k$ with $\bh_i^\parta=\bzero$, in particular when $i=2(t-1)+k$. Moreover,  notice that the matrices $\{\bQ^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10},\{\bK^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10}$ can be constructed with the operator norm less than $10\tfthres=10\horizon$, and $\{\bV^{(1)}_{\si\sj\sk\sh,s}\}_{s=1}^{10}$ with the operator norm equals $1$.
+
+Following a similar construction, we can also compute $\Numvi_\sh(\state,\action),\Numvi_\sh(\state,\action)\reward_\sh(\state,\action)$ for all $\sh,\state,\action,\state'$ on different supports of coordinates in $\bh_i^\partd$ via adding additional $\head=\conO(\horizon\Numst\Numact)$ heads to the attention-only layer.
+
+
+Next, we construct the second attention layer to multiply the token vector by the index number $i$ as in the proof of Step~\ref{mdp_step1a}. The construction is similar to that in Eq.~\eqref{eq:tf_constrcut_ucbvi_multi} and we omit it here. Moreover, note that Step~\ref{mdp_step1b} can be implemented with the embedding dimension $D\leq\conO(\horizon\Numst^2\Numact)$ as we need $\conO(1)$ dimensions for each quadruple $(\si,\sj,\sk,\sh)$.  Combining Step~\ref{mdp_step1a},~\ref{mdp_step1b} concludes the proof of Step~\ref{mdp_step1}.
+
+
+
+
+
+
+
+
+
+ 
+\paragraph{Proof of Step~\ref{mdp_step2}}
+After Step~\ref{mdp_step1}, for the current token $i=2(t-1)+k$, we have $\Numvi_\sh(\state,\action,\state'),\reward_\sh(\state,\action),\Numvi_\sh(\state,\action)$, $\Numvi_\sh(\state,\action)\reward_\sh(\state,\action)$  lie in $\bh_i^\partd$ for all $\sh\in[\horizon]$. Given these vectors that store the number of visits and rewards, note that
+\begin{align*}
+\reward_\sh(\state,\action)&=\frac{\Numvi_\sh(\state,\action)\reward_\sh(\state,\action)}{\Numvi_\sh(\state,\action)\vee1},~~\text{ when  } \Numvi_\sh(\state,\action)\geq1,~~~\\
+\bonus_\sh(\state,\action)
+&=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{\Numvi_\sh(\state,\action)\vee1}},
+\\
+\tresttransit_\sh(\state,\action,\state')
+&=\frac{\Numvi_\sh(\state,\action,\state')}{\Numvi_\sh(\state,\action)\vee 1}.
+\end{align*}
+
+Therefore, we may compute $\esttransit_\sh,\estbonus_\sh$ via using a transformer layer  to implement the functions $f_1(x,y)=\frac{x}{y\vee1},f_2(y)=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{y\vee 1}},f_3(x,y)=\frac{x}{y\vee1}+\horizon\bone_{y=0}$ for $x,y\in\{0\}\cup[\Numepi]$. 
+We demonstrate the computation of $\esttransit_\sh(\state,\action,\state')$  (i.e., the computation of $f_1(x,y)$) here. We start with constructing an attention layer with $\head=\conO(\horizon\Numst^2\Numact)$ heads such that it implements  $x\mapsto x^2$ for $x=\Numvi_\sh(\state,\action,\state'),\Numvi_\sh(\state,\action)$. For $\Numvi_\sh(\state,\action,\state')$, this can be done by  choosing  $\lops{\bQ_{\si\sj\sk\sh}^{(1)}}\leq\Numepi,\lops{\bK_{\si\sj\sk\sh}^{(1)}}\leq\Numepi,\lops{\bV_{\si\sj\sk\sh}^{(1)}}=1$ such that
+\begin{align*}
+    \bQ_{\si\sj\sk\sh}^{(1)}\bh_i^{(0)}=\begin{bmatrix}
+        \Numepi\\
+        -i\\
+        \Numvi_\sh(\be_\si,\be_\sj,\be_\sk)
+    \end{bmatrix},~~\bK_{\si\sj\sk\sh}^{(1)}\bh_j^{(0)}=\begin{bmatrix}
+        j\\ \Numepi\\
+        \Numvi_\sh(\be_\si,\be_\sj,\be_\sk)
+    \end{bmatrix},~~
+    \bV_{\si\sj\sk\sh}^{(1)}\bh_j^{(0)}=\begin{bmatrix}
+        \bzero\\j\\\bzero
+    \end{bmatrix}, 
+\end{align*} where $\be_\si,\be_\sk$ denote the $i,j$-th states and $\be_{sj}$ denotes the $k$-th action.
+Similarly, we can construct $\horizon\Numst\Numact$ additional heads
+to compute $\Numvi_\sh(\state,\action)^2$ for all possible $\state,\action.$
+
+Next, we compute the exact values of $\esttransit(\state,\action,\state')$ using an MLP layer. Namely, 
+we  construct $\bW^{(1)}_1=\bW^{(1)}_{12}\bW^{(1)}_{11},\bW^{(1)}_2=\bW^{(1)}_{23}\bW^{(1)}_{22}\bW^{(1)}_{21}$  such that for all $\sh,\state,\action,\state'$, on the corresponding vector component we have
+\begin{align*}
+   & \bW^{(1)}_{11}\bh_i^{(0)}=     \begin{bmatrix}
+    1\\
+       \Numvi_\sh(\state,\action,\state')^2 \\\vdots
+       \\
+        (\Numvi_\sh(\state,\action,\state')-\Numepi)^2\\
+         \Numvi_\sh(\state,\action)^2 \\\vdots
+       \\
+        (\Numvi_\sh(\state,\action)-\Numepi)^2
+    \end{bmatrix}= \begin{bmatrix}
+    1\\
+       \Numvi_\sh(\state,\action,\state')^2 \\\vdots
+       \\
+        \Numvi_\sh(\state,\action,\state')^2+\Numepi^2-2\Numepi\Numvi_\sh(\state,\action,\state')\\
+          \Numvi_\sh(\state,\action)^2 \\\vdots
+       \\
+        \Numvi_\sh(\state,\action)^2+\Numepi^2-2\Numepi\Numvi_\sh(\state,\action)
+    \end{bmatrix},
+    \\
+&\bW^{(1)}_{12}\bW^{(1)}_{11}\bh_i^{(0)}=     \begin{bmatrix}
+    1-
+       \Numvi_\sh(\state,\action,\state')^2 - \Numvi_\sh(\state,\action)^2 \\\vdots
+       \\ 1-
+       (\Numvi_\sh(\state,\action,\state')-x)^2 - (\Numvi_\sh(\state,\action)-y)^2 \\\vdots\\
+       1- (\Numvi_\sh(\state,\action,\state')-\Numepi)^2-(\Numvi_\sh(\state,\action)-\Numepi)^2
+    \end{bmatrix} ,
+\end{align*} where $x,y\in\{0\}\cup[\Numepi]$. Moreover,  we construct $\bW^{(1)}_{21}$ so that on the entries corresponding to $\sh,\state,\action,\state'$ it implements  
+\begin{align*}
+\bW_{2}^{(1)}\sigma(\bW_{1}^{(1)}\bh_i^{(0)})
+    =\begin{bmatrix}
+        \sum_{x,y=0}^{\Numepi}\sigma(1- (\Numvi_\sh(\state,\action,\state')-x)^2 - (\Numvi_\sh(\state,\action)-y)^2)\cdot\frac{x}{y\vee1}
+    \end{bmatrix}=\begin{bmatrix}
+        \frac{\Numvi_\sh(\state,\action,\state')}{\Numvi_\sh(\state,\action)\vee1}.
+    \end{bmatrix}
+\end{align*} 
+
+It can be verified that we can find such $\bW_1^{(1)},\bW_2^{(1)}$ with $$\lops{\bW_1^{(1)}}\leq \lops{\bW_{11}^{(1)}}\lops{\bW_{12}^{(1)}}\leq \conO(\Numepi^2)\cdot \conO(\Numepi)=\conO(\Numepi^3),$$ $\lops{\bW_2^{(1)}}\leq \conO(\Numepi)
+$, and the number of hidden neurons $\hidden=\conO(\Numepi^2\horizon\Numst^2\Numact)$. Simlarly, we can compute $f_2(\cdot)$ (or $f_3(\cdot)$) exactly following the same construction but with a different $\bW_2^{(1)}$ that records all possible values of  $f_2(\cdot)$ (or $f_3(\cdot)$). Combining the upper bounds on the operator norm of the  weight matrices, we further have $\nrmp{\tfpar}\leq\tcO(\horizon\Numst^2\Numact+\Numepi^3+\Numepi\horizon)$. 
+
+
+
+
+
+
+
+
+% Therefore, we may construct approximations  $\tresttransit_\sh,\estbonus_\sh$ using an two-layer MLP  to approximate the functions $f_1(x,y)=\frac{x}{y\vee1},f_2(y)=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{y\vee 1}}$ for $x,y\in[\Numepi]$. Moreover, we can construct an approximation $\estreward_\sh(\state,\action)$ such that $\estreward_\sh(\state,\action)\approx \reward_\sh(\state,\action)$ when $\Numvi_\sh(\state,\action)>0$ and otherwise $\estreward_\sh(\state,\action)\geq 3\horizon$. This can be achieved by constructing an two-layer MLP approximating $f_3(x,y)=\frac{x}{y\vee 1}+4\horizon\sigma(1-y)$, which can be approximated as accurate as $f_1$ by adding an additional neuron. Using Proposition A.1 in~\cite{bai2023transformers}, it can be verified that for all $\eps_0>0$ a smooth extension of $f_1(x,y)$ is $(\eps_0,\Numepi,\tilde c\Numepi^6/\eps_0^2,c\Numepi^3)$-approximable by sum of relus, where $c>0$ is some numerical constant and $\tilde c$ hides logarithmic dependence on $1/\eps_0$ and $\Numepi$. Similarly, we verify that $f_2,f_3$ are $(\eps_0,\Numepi,\tilde c\Numepi^4/\eps_0^2,c\Numepi^2)$-approximable by sum of relus for all $\eps_0>0$. Therefore, choosing $\eps_0=\eps$, we can construct a two-layer MLP with $\lops{\bW_1}\leq \tilde c\Numepi^3/\eps,\lops{\bW_2}\leq c\Numepi^3$ and $\hidden=\tilde O(\Numepi^6\horizon\Numst^2\Numact/\eps^2)$  that approximately computes $\transit_\sh(\state,\action,\state'),\bonus_\sh(\state,\action),\reward_\sh(\state,\action)$ such that satisfies the condition in step 2.
+
+
+
+
+
+
+
+\paragraph{Proof of Step~\ref{mdp_step3}} Given $\trestVfun_{\horizon+1}=\estVfun_{\horizon+1}=\bzero$, we show the there exists an transformer with
+\begin{align*}
+\layer=2,~~~\max_{\ell\in[\layer]}\head^\lth\leq2\Numst\Numact,~~~\max_{\ell\in[\layer]}\hidden^{\lth}\leq3\Numst\Numact,~~~\nrmp{\tfpar}\leq \conO(\horizon+\Numst\Numact)
+\end{align*}
+that implements one step of value iteration
+\begin{align*}
+    \estQfun_\sh(\state,\action)&=\max\{\min\{\horizon,\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\},0\},\\
+\estVfun_\sh(\state)&=\max_{\action\in\actionsp}\estQfun_\sh(\state,\action)
+\end{align*} for some $\sh\in[\horizon]$. 
+Namely, we start with constructing an-attention layer with $\head=2\Numst\Numact$ and $\{\bQ_{\si\sj\sh,s}^{(1)}\}^2_{s=1}$, $\{\bK_{\si\sj\sh,s}^{(1)}\}^2_{s=1}$, $\{\bV_{\si\sj\sh,s}^{(1)}\}^2_{s=1}$ such that for all $i\leq 2(t-1)+k$
+\begin{align*}
+   \bQ_{\si\sj,1}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       \tfthres\\-i\\
+       \estVfun_{\sh+1}(\cdot)\\
+   \end{bmatrix},~~ \bK_{\si\sj,1}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       i\\ \tfthres\\
+       \esttransit_{\sh+1}(\cdot|\state,\action)\\
+   \end{bmatrix},~~~
+   \bV_{\si\sj,1}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       \bzero \\ i\be^{\Qfun_\sh}_{\si\sj}\\
+       \bzero,
+   \end{bmatrix}
+   \\
+    \bQ_{\si\sj,2}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       \tfthres\\-i\\
+       -\estVfun_{\sh+1}(\cdot)\\
+   \end{bmatrix},~~ \bK_{\si\sj,2}^{(1)}=\bK_{\si\sj,1}^{(1)},~~~
+\bV_{\si\sj,2}^{(1)}=-\bV_{\si\sj,2}^{(1)}
+\end{align*}
+where $\tfthres=3\horizon$ and $\be^{\Qfun_\sh}_{\si\sj}\in\R^{\Numst\Numact}$ is a vector supported on some coordinates in $\bh^\partd_i$ reserved for $\estQfun_\sh$. Moreover, we have $\lops{\bQ^{(1)}_{\si\sj\sh,s}},\lops{\bK^{(1)}_{\si\sj\sh,s}}\leq \tfthres,~\lops{\bV^{(1)}_{\si\sj\sh,s}}=1$. 
+Since $$\Big|\<\estVfun_{\sh+1}(\cdot),\esttransit_{\sh+1}(\cdot|\state,\action)\>\Big|\leq \linf{\estVfun_{\sh+1}(\cdot)}\cdot\lone{\esttransit_{\sh+1}(\cdot|\state,\action)}\leq\horizon$$ as $\estVfun_{\sh+1}(\state)\in[0,\horizon]$ and $\lone{\esttransit_{\sh+1}(\cdot|\state,\action)}=1$, it follows that summing up two heads gives the update for $i\leq 2(t-1)+k$
+\begin{align*}
+\bzero
+&\mapsto\bzero+\Big[\sigma(\< \bQ_{\si\sj,1}^{(1)}\bh_i^{(0)} , \bK_{\si\sj,1}^{(1)}\bh_j^{(0)} \>)-\sigma(\< \bQ_{\si\sj,1}^{(1)}\bh_i^{(0)} , \bK_{\si\sj,1}^{(1)}\bh_j^{(0)} \>)\Big]\be_{\si\sj}^{\Qfun_\sh}\\
+&=\< \bQ_{\si\sj,1}^{(1)}\bh_i^{(0)} , \bK_{\si\sj,1}^{(1)}\bh_j^{(0)} \>\be_{\si\sj}^{\Qfun_\sh}.
+\end{align*}
+Denote the resulting token vector by $\bh_i^{(1)}$. 
+Moreover, we can construct a two-layer MLP with $$\lops{\bW^{(1)}_1}=\conO(\horizon),~~ \lops{\bW^{(1)}_2}\leq 3,~~\hidden=3\Numst\Numact$$
+such that for any state-action pair $(\state,\action)\in\statesp\times\actionsp$ on the corresponding coordinates
+\begin{align*}
+\bW^{(1)}_1\bh_i^{(1)}=
+\begin{bmatrix}
+\vdots\\-[\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')]
+\\
+\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')-\horizon\\\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\\\vdots
+\end{bmatrix}
+\end{align*}
+ and \begin{align*}
+  \bW^{(1)}_2\sigma(\bW^{(1)}_1\bh_i^{(1)})
+  &=   \sigma(-[\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')])\\&\quad-\sigma(\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')-\horizon)\\
+&\qquad+\sigma(\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state'))\\
+&=\max\{\min\{\horizon,\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\},0\}=\estQfun_h(\state,\action).
+ \end{align*}
+ Denote the resulting token vector by $\bh_i^{(2)}$.
+ Next, we construct a second MLP layer with $$\lops{\bW_1^{(2)}}\leq2,~~\lops{\bW_2^{(2)}}\leq\sqrt{\Numact},~~\hidden=\Numact\Numst
+ $$ such that for any $\state\in\statesp$ on the corresponding coordinates we have
+ \begin{align*}
+     \bW_1^{(2)}\bh_i^{(2)}=\begin{bmatrix}
+        \vdots\\ \estQfun_\sh(\state,\action_1)\\
+         \estQfun_\sh(\state,\action_2)-\estQfun_\sh(\state,\action_1)\\
+         \vdots\\
+          \estQfun_\sh(\state,\action_\Numact)-\estQfun_\sh(\state,\action_{\Numact-1})
+    \\ \vdots\end{bmatrix},
+ \end{align*}
+ where $\action_j$ denotes the $j-$th action, 
+ and 
+ \begin{align*}
+  \bW^{(2)}_2\sigma(\bW^{(2)}_1\bh_i^{(2)})
+ &=
+ \sigma(\estQfun_\sh(\state,\action_1))+\sum_{j=2}^\Numact\sigma( \estQfun_\sh(\state,\action_j)-\estQfun_\sh(\state,\action_{j-1}))\\
+ &=\max_{\action\in\actionsp}\estQfun_\sh(\state,\action)=\estVfun_\sh(\state).
+ \end{align*}
+ Using the upper bounds on the operator norm of the  weight matrices, we further have $\nrmp{\tfpar}\leq\conO(\Numst\Numact+\horizon)$. 
+Combining the steps concludes the construction in Step~\ref{mdp_step3}. 
+
+ % Next, we provide a upper bound for the approximation error  $\linf{\estQfun_\sh-\trestQfun_\sh},\linf{\estVfun_\sh-\trestVfun_\sh}$ for all $\sh\in[\horizon]$. Denote the approximation error we achieved in step 2 by $\eps_2$. 
+ 
+ % We claim that $\linf{\estQfun_\sh-\trestQfun_\sh}\leq \eps_{3,\sh},\linf{\estVfun_\sh-\trestVfun_\sh}\leq\eps_{3,\sh}$ for all $\sh\in[\horizon]$ with $$\eps_{3,\sh}=[2+(\horizon-\sh)(\Numst\horizon+2)]\eps_2.$$
+ % We prove this by induction. When $\Numvi_\sh(\state,\action)=0$, we have $\trestQfun_\sh(\state,\action)=\horizon$ by definition. Moreover, by our construction in step 2 we have 
+ % \begin{align*}
+ % \horizon\geq\estQfun_\sh(\state,\action) &=  \max\{\min\{\horizon,\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\},0\} \\
+ % &\geq 
+ % \min\{\horizon,3\horizon+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\} \\
+ %  &\geq 
+ % \min\{\horizon,3\horizon-\eps_2-\horizon-\Numst\horizon\eps_2\}=\horizon, 
+ % \end{align*}where the line follows from the assumption on $\eps_2$ and the approximation results we obtain in step 2.  Therefore, $\estQfun_\sh(\state,\action)=\trestQfun_\sh(\state,\action)$ when $\Numvi_\sh(\state,\action)=0$. Now, w.l.o.g., we assume all $\Numvi_\sh(\state,\action)\geq1$. 
+ 
+ % First, it can be verified that the claim is true for $\sh=\horizon$ as $$\linf{\estVfun_\horizon-\trestVfun_\horizon}
+ % \leq
+ % \linf{\estQfun_\horizon-\trestQfun_\horizon}\leq\linf{\estreward_\horizon-\reward_\horizon}+\linf{\estbonus_\horizon-\bonus_\horizon}\leq2\eps_2.$$ Now, suppose the claim holds for $\sh+1$, then we have
+ % \begin{align*}
+ %     \linf{\estVfun_\sh-\trestVfun_\sh}
+ % \leq
+ % \linf{\estQfun_\sh-\trestQfun_\sh}
+ % &\leq
+ % \linf{\estreward_\sh-\reward_\sh}+\linf{\estbonus_\sh-\bonus_\sh}+\linf{\esttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\trestVfun_{\sh+1}}\\
+ % &\leq
+ % \linf{\estreward_\sh-\reward_\sh}+\linf{\estbonus_\sh-\bonus_\sh}+\linf{\esttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\estVfun_{\sh+1}}+\linf{\tresttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\trestVfun_{\sh+1}}\\
+ % &\leq\eps_2+\eps_2+\Numst\linf{\esttransit_\sh-\tresttransit_\sh}\linf{\estVfun_{\sh+1}}+\linf{\estVfun_{\sh+1}-\trestVfun_{\sh+1}}\\
+ % &\leq (2+\Numst\horizon)\eps_2+\linf{\estVfun_{\sh+1}-\trestVfun_{\sh+1}}\\
+ % &\leq \eps_{3,\sh},
+ % \end{align*}
+ % where first inequality use the fact that $\linf{\max_{\action}f(\state,\action)-\max_{\action}\tilde f(\state,\action)}\leq \linf{f(\state,\action)-\tilde f(\state,\action)}$, the last second inequality uses $\linf{\estVfun_{\sh+1}}\leq\horizon$ and the last inequality follows from the induction assumption. Therefore the error bound requirements in step 3 are satisfied when $\eps_2\leq \eps/(\horizon(\Numst\horizon+2))$.
+ 
+
+ \paragraph{Proof of Step~\ref{mdp_step4}}
+ we start with constructing an-attention layer with $\head=2\horizon\Numact$ and $\{\bQ_{\sj\sh,s}^{(1)}\}^2_{s=1}$, $\{\bK_{\sj\sh,s}^{(1)}\}^2_{s=1}$, $\{\bV_{\sj\sh,s}^{(1)}\}^2_{s=1}$ such that for all the current token $i= 2(t-1)+k$ and $j\leq i$
+\begin{align*}
+  & \bQ_{\sj\sh,1}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       \state_{\bar{k}(i),\bar{h}(i)}\\-i\\
+       \tfthres
+   \end{bmatrix},~~ \bK_{\sj\sh,1}^{(1)}\bh_j^{(0)} =\begin{bmatrix}
+    \estQfun_\sh(\cdot,\action_\sj)\\  \tfthres\\ j
+   \end{bmatrix},~~~
+   \bV_{\sj\sh,1}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       \bzero \\ i\be_{\sj\sh}\\
+       \bzero,
+   \end{bmatrix}
+   \\
+    &\bQ_{\sj\sh,2}^{(1)}\bh_i^{(0)} =\begin{bmatrix}
+       -\state_{\bar{k}(i),\bar{h}(i)}\\-i\\
+       \tfthres
+   \end{bmatrix},~~ \bK_{\sj\sh,2}^{(1)}=\bK_{\sj\sh,1}^{(1)},~~~
+\bV_{\sj\sh,2}^{(1)}=-\bV_{\sj\sh,1}^{(1)},
+\end{align*}
+where we choose $\tfthres=2\horizon$ and $\bV_{\sj\sh,1}^{(1)}\bh_i^{(0)}$ is a one-hot vector supported on some entry of $\bh_i^\partd$. We verify  that summing up the heads gives the update 
+\begin{align*}
+    \bzero\mapsto \estQfun_{\sh}(\state_{k,h},\action_\sj)\be_{\sj\sh}
+\end{align*}
+ for all $\sh\in[\horizon],\sj\in[\Numact]$. Moreover, we have $\lops{\bQ_{\sj\sh,s}^{(1)}}\leq2\horizon,\lops{\bK_{\sj\sh,s}^{(1)}}\leq2\horizon,\lops{\bV_{\sj\sh,s}^{(1)}}\leq1$ for $s=1,2$. Through this attention-only layer, we extract the values $\estQfun_\sh(\state_{k,h},\action_j)$ for all $\sh\in[\horizon]$ from the Q-function.
+ 
+Similar to the proof of Step~\ref{mdp_step1b}, we construct a second attention-only layer with attention heads   $\{\bQ_{\sj\sh,s}^{(2)}\}^2_{s=1}$, $\{\bK_{\sj\sh,s}^{(2)}\}^2_{s=1}$, $\{\bV_{\sj\sh,s}^{(2)}\}^2_{s=1}$ that
+\begin{align*}
+  & \bQ_{\sj\sh,1}^{(2)}\bh_i^{(1)} =\begin{bmatrix}
+       1\\-\bar{h}(i)\\-i\\
+       \tfthres
+   \end{bmatrix},~~ \bK_{\sj\sh,1}^{(2)}\bh_j^{(1)} =\begin{bmatrix}
+   \sh\\ 1 \\\tfthres\\ j
+   \end{bmatrix},~~~
+   \bV_{\sj\sh,1}^{(2)}\bh_i^{(1)} =-\begin{bmatrix}
+       \bzero \\  \estQfun_\sh(\state_{k,h},\action_\sj)\be_{\sj}\\
+       \bzero
+   \end{bmatrix},
+   \\
+   & \bQ_{\sj\sh,2}^{(2)}=\bQ_{\sj\sh,1}^{(2)},~~ \bK_{\sj\sh,2}^{(2)}\bh_j^{(1)} =\begin{bmatrix}
+   \sh-1\\ 1 \\\tfthres\\ j
+   \end{bmatrix},~~~
+   \bV_{\sj\sh,2}^{(2)} =-  \bV_{\sj\sh,2}^{(2)},
+\end{align*} where $ \bV_{\sj\sh,1}^{(2)}\bh_i^{(1)}$ are supported on some entry of $\bh_i^\partd$ for $s=1,2$. 
+Summing up the heads gives the update
+\begin{align*}
+    \bzero\mapsto -\sum_{s=\bar{h}(i)+1}^{\horizon}\frac{1}{i}\estQfun_{s}(\state_{k,h},\action_\sj).
+\end{align*}
+Similarly, we can construct attention heads   $\{\bQ_{\sj\sh,s}^{(2)}\}^4_{s=3},\{\bK_{\sj\sh,s}^{(2)}\}^4_{s=3},\{\bV_{\sj\sh,s}^{(2)}\}^4_{s=3}$ that implements
+\begin{align*}
+    \bzero\mapsto -\frac{1}{i}\sum_{s=1}^{\bar{h}(i)-1}{\estQfun_{s}(\state_{k,h},\action_\sj)}.
+\end{align*}
+Moreover, we construct 
+$\bQ_{\sj\sh,5}^{(2)},\bK_{\sj\sh,5}^{(2)},\bV_{\sj\sh,5}^{(2)}$ with
+\begin{align*}
+  & \bQ_{\sj\sh,5}^{(2)}\bh_i^{(1)} =\begin{bmatrix}
+       1\\-i\\
+       \tfthres
+   \end{bmatrix},~~ \bK_{\sj\sh,5}^{(2)}\bh_j^{(1)} =\begin{bmatrix}
+    1 \\\tfthres\\ j
+   \end{bmatrix},~~~
+   \bV_{\sj\sh,1}^{(2)}\bh_i^{(1)} =\begin{bmatrix}
+       \bzero \\  \estQfun_\sh(\state_{k,h},\action_\sj)\be_{\sj}\\
+       \bzero,
+   \end{bmatrix}
+\end{align*} that implements
+\begin{align*}
+    \bzero\mapsto \frac{1}{i}\sum_{s=1}^{\horizon}{\estQfun_{s}(\state_{k,h},\action_\sj)}.
+\end{align*}
+Therefore, summing up the $\head=5\horizon\Numact$ heads we obtain the update
+\begin{align*}
+  \bzero_{\Numact}\mapsto \frac{1}{i}\estQfun_{h}(\state_{k,h},\cdot).
+\end{align*}
+Note that $\lops{\bQ_{\sj\sh,s}^{(1)}}\leq4\horizon,\lops{\bK_{\sj\sh,s}^{(1)}}\leq4\horizon,\lops{\bV_{\sj\sh,s}^{(1)}}\leq1$ for $s\in[5]$.
+
+Finally, we apply an attention-only layer to implement the multiplication by a factor of $i/\temp$ using a similar construction as in Eq.~\eqref{eq:tf_constrcut_ucbvi_multi} with $\lops{\bQ_1^{(3)}}=\conO(\horizon\Numepi),\lops{\bK_1^{(3)}}=\conO(\horizon\Numepi),\lops{\bV_1^{(3)}}=\conO(1/\temp)$, and assign the resulting vector $\estQfun(\state_{k,h},\cdot)/\temp$ to $\bh_i^\partc$. 
+Combining the three attention-only layers completes Step~\ref{mdp_step4}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Proof of Theorem~\ref{thm:ucbvi_icrl-main}}\label{sec:pf_thm:ucbvi_icrl-main}
+By Theorem~\ref{thm:diff_reward}~and~\ref{thm:approx_ucbvi}, it suffices to show the regret of soft UCB-VI satisfies
+\begin{align*}
+\E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\sUCBVI(\temp)}(\totlen)]\leq \tcO (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)
+\end{align*} for all MDP instances $\inst$, where $\temp=1/\Numepi$ and $\tcO(\cdot)$ hides logarithmic dependencies on $(\horizon,\Numepi,\Numst,\Numact)$. 
+
+
+Throughout the proof, we may drop the dependence on $\inst$ for notational simplicity when there is no confusion. For each episode $k\in[\Numepi]$, let $\Numvi^k_\sh,\tresttransit^k_\sh,\trestQfun^k_\sh,\trestVfun^k_\sh,\bonus^k_\sh$ denote the corresponding quantities $\Numvi_\sh,\tresttransit_\sh,\trestQfun_\sh,\trestVfun_\sh,\bonus_\sh$  introduced in UCB-VI (see Section~\ref{sec:example_ucbvi}). 
+
+For a policy $\plc$ and time step $\sh\in[\horizon]$, we define the Q-function $\Qfun_\sh^\plc$ and the value function $\Vfun_\sh^\plc$
+\begin{align*}
+\Qfun_\sh^\plc(\state,\action)&:=\E[\sum_{t=\sh}^\horizon \reward(\state_t,\action_t)\mid \state_\sh=\state,\action_\sh=\action,\plc],\\  
+\Vfun_\sh^\plc(\state)&:=\E[\sum_{t=\sh}^\horizon \reward(\state_t,\action)\mid \state_\sh=\state,\plc].
+\end{align*}
+ We use $\plc^{k}=(\plc^k_1,\ldots,\plc^k_\horizon),\plc^k_{\s}=(\plc^k_{\s,1},\ldots,\plc^k_{\s,\sh},\ldots\plc^k_{\s,\horizon})$ to denote the policies given by UCB-VI and soft UCB-VI in the $k$-th episode, respectively. Note that we have $\Vfun_\inst(\plc)=\E_{\state\sim\init}[\Vfun_\sh^\plc(\state)]$ and cumulative the regret 
+ $$
+ \E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\sUCBVI(\temp)}(\totlen)]]=\E\Big[\sum_{k=1}^{\Numepi}[\Vfun_1^{\optplc}(\state_{k,1})-\Vfun_1^{\plc^k_{\s}}(\state_{k,1})
+ ]\Big]
+ $$ 
+ where the expectation is taken over the collected data $$\dset_\totlen=\{(\state_{k,\sh},\action_{k,\sh},\reward_{k,\sh})\}_{k\in[\Numepi],\sh\in[\horizon]}\sim\P_\inst^{\sUCBVI(\temp)}.$$ 
+ For any function $f=f(\state,\action)$, we abuse the notation $f(\state,\plc(
+\cdot)):=\E_{\action\sim\plc}[f(\state,\action)]$. Lastly, we define
+\begin{align*}
+\epstemp=\max_{k\in[\Numepi],\sh\in[\horizon],\state\in\statesp}[\trestQfun^k_\sh(\state,\plc^k_{\sh}(\cdot))-\trestQfun^k_\sh(\state,\plc^k_{\s,\sh}(\cdot)) ].
+\end{align*}
+We claim the following which we will prove later 
+\begin{align}\label{eq:epstemp_control}
+  \epstemp\leq \Numact\temp.  
+\end{align}
+
+The proof follows from similar arguments as in the proof of Theorem 1 in~\cite{azar2017minimax} (see also Theorem 7.6 in~\cite{agarwal2019reinforcement}). Hence we only provide a sketch of proof here.
+First, from the proof of Theorem 7.6 in~\cite{agarwal2019reinforcement} , it can be shown that 
+\begin{align*}
+ \trestVfun_\sh^k(\state)\geq\Vfun^{\optplc}_\sh(\state)
+\end{align*}
+for any $k,\sh,\state$ with probability at least $1-\delta$.
+Thus with probability at least $1-\delta$ for all $\sh\in[\horizon],k\in[\Numepi]$
+\begin{align*}
+&\qquad\Vfun_\sh^{\optplc}(\state_{k,\sh})- \Vfun^{\plc^k_\s}_\sh(\state_{k,\sh})  \\
+&\leq
+\trestVfun^k_\sh(\state_{k,\sh})- \Vfun^{\plc^k_\s}_\sh(\state_{k,\sh})  \\
+&=\trestQfun^k_\sh(\state_{k,\sh},\plc^k_{\sh}(\cdot))-\trestQfun^k_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))+\trestQfun^k_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))\\
+&\leq 
+\trestQfun^k_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))+\epstemp\\
+&=
+\trestQfun^k_\sh(\state_{k,\sh},\action_{k,\sh})-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\action_{k,\sh})+\MD^{(1)}_{k,\sh}+\epstemp,
+\end{align*}
+where the first equality uses $\trestVfun^k_\sh(\state_{k,\sh})=\argmax_{\action}\trestQfun^k_\sh(\state_{k,\sh},\action_{k,\sh})=\trestQfun^k_\sh(\state_{k,\sh},\plc_\sh^k(\cdot))$, and in the last line $$
+\MD^{(1)}_{k,\sh}:=[\trestQfun^k_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\plc^k_{\s,\sh}(\cdot))]-[\trestQfun^k_\sh(\state_{k,\sh},\action_{k,\sh})-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\action_{k,\sh})].
+$$  Note that for any fixed $\sh\in[\horizon]$, $\{\MD^{(1)}_{k,\sh}\}_{k=1}^{\Numepi}$ is a bounded martingale difference sequence. Following  the proof of Theorem 7.6 in~\cite{agarwal2019reinforcement}, we further have 
+\begin{align*}
+&\quad\Vfun_\sh^{\optplc}(\state_{k,\sh})- \Vfun^{\plc^k_\s}_\sh(\state_{k,\sh})\\  
+&\leq \trestQfun^k_\sh(\state_{k,\sh},\action_{k,\sh})-
+\Qfun^{\plc^k_\s}_\sh(\state_{k,\sh},\action_{k,\sh})+
+\MD^{(1)}_{k,\sh}+\epstemp\\
+&\leq
+\Big(1+\frac{1}\horizon\Big)\Big[\trestVfun_{\sh+1}^k(\state_{k,\sh+1})- \Vfun^{\plc^k_\s}_{\sh+1}(\state_{k,\sh+1})  \Big]+2\bonus_\sh^k(\state_{k,\sh},\action_{k,\sh})
+\\
+&\qquad+
+\frac{c_0L_0\horizon^2\Numst}{\Numvi^k_\sh(\state_{k,\sh},\action_{k,\sh})}+\MD^{(2)}_{k,\sh}+\MD^{(1)}_{k,\sh}+\epstemp,
+\end{align*}with probability at least $1-c\delta$ for some universal constant $c>0$, 
+where $L_0=\log(\Numst\Numact\Numepi\horizon/\delta)$,  $c_0>0$ is some universal constant and 
+\begin{align*}
+ \MD^{(2)}_{k,\sh}:=\transit_\sh(\cdot\mid\state_{k,\sh},\action_{k,\sh})\cdot(\Vfun_{\sh+1}^\optplc-\Vfun_{\sh+1}^{\plc^k_\s})-  (\Vfun_{\sh+1}^\optplc(\state_{k,\sh+  1})-\Vfun_{\sh+1}^{\plc^k_\s}(\state_{k,\sh+  1})) 
+\end{align*} is a bounded martingale difference sequence for any fixed $\sh\in[\horizon]$. Using the recursive formula and the fact that $(1+1/\horizon)^\horizon<e$, we obtain
+\begin{align*}
+ &\quad \E\Big[ \sum_{k=1}^\Numepi [\Vfun_1^{\optplc}(\state_{k,1})-\Vfun_1^{\plc^k_{\s}}(\state_{k,1})
+ ]  \Big]\\
+ &\leq c\E\Bigg[\sum_{k=1}^\Numepi\sum_{\sh=1}^\horizon\Big[2\bonus_\sh^k(\state_{k,\sh},\action_{k,\sh})
++
+\frac{c_0L_0\horizon^2\Numst}{\Numvi^k_\sh(\state_{k,\sh},\action_{k,\sh})}+\MD^{(2)}_{k,\sh}+\MD^{(1)}_{k,\sh}\Big]\Bigg]+\E[\Numepi\sum_{\sh=0}^{\horizon-1}(1+\frac{1}\horizon)^\sh\epstemp]\\
+&\leq c\E\Bigg[\sum_{k=1}^\Numepi\sum_{\sh=1}^\horizon\Big[2\bonus_\sh^k(\state_{k,\sh},\action_{k,\sh})
++
+\frac{c_0L_0\horizon^2\Numst}{\Numvi^k_\sh(\state_{k,\sh},\action_{k,\sh})}+\MD^{(2)}_{k,\sh}+\MD^{(1)}_{k,\sh}\Big]\Bigg]+c\Numepi\horizon\Numact\temp\\
+&\leq 
+\tcO (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)+c\Numepi\horizon\Numact\temp\\
+&\leq \tcO(\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact),
+\end{align*} where $c>0$ is some universal constant,  $\tcO(\cdot)$ hides logarithmic dependencies on $(\horizon,\Numepi,\Numst,\Numact)$, and the last line follows again from the proof of Theorem~7.6 in~\cite{agarwal2019reinforcement}, and the assumption that $\temp=1/\Numepi$.
+ We omit the detailed derivations here as they are similar to those in~\cite{azar2017minimax,agarwal2019reinforcement}. Therefore, we conclude the proof of the first part of Theorem~\ref{thm:ucbvi_icrl-main}. Moreover,  the second part of Theorem~\ref{thm:ucbvi_icrl-main} (i.e., the upper bound on $\log\cN_{\tfparspace}$) follows immediately from Lemma~\ref{lm:cover_num_bound} and Eq.~\eqref{eq:ucbvi_tf_param-main}.
+
+ 
+ \paragraph{Proof of Eq.~\eqref{eq:epstemp_control}}
+ By definition of $\trestQfun_\sh^k$ and $\plc_\sh^k,\plc^k_{\s,\sh}$, we have
+ \begin{align*}
+     \trestQfun^k_\sh(\state,\plc^k_{\sh}(\cdot))-\trestQfun^k_\sh(\state,\plc^k_{\s,\sh}(\cdot)) &=\max_{\action} \trestQfun^k_\sh(\state,\action)-
+\sum_{\action}\frac{\exp(\trestQfun^k_\sh(\state,\action)/\temp)}{\sum_\action \exp(\trestQfun^k_\sh(\state,\action)/\temp)}\cdot\trestQfun^k_\sh(\state,\action)\\
+&=
+\sum_{\action}\frac{\exp(\trestQfun^k_\sh(\state,\action)/\temp)}{\sum_\action \exp(\trestQfun^k_\sh(\state,\action)/\temp)}\cdot[\max_{\action} \trestQfun^k_\sh(\state,\action)-\trestQfun^k_\sh(\state,\action)]\\
+&\leq
+\sum_{\action}\frac{\exp(\trestQfun^k_\sh(\state,\action)/\temp)}{ \exp(\max_\action\trestQfun^k_\sh(\state,\action)/\temp)}\cdot[\max_{\action} \trestQfun^k_\sh(\state,\action)-\trestQfun^k_\sh(\state,\action)]\\
+&\leq \Numact \cdot [\sup_{t\geq 0}t\exp(-t/\temp)]\leq\Numact\temp.
+ \end{align*} 

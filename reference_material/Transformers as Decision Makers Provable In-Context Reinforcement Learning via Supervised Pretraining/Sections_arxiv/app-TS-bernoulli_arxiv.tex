@@ -1,0 +1,184 @@
+\section{Additional results: Thompson sampling for multi-armed Bernoulli bandits}\label{example:ts-app}
+
+We present additional results on using transformers to approximate the Thompson sampling (TS) algorithm for Bernoulli bandits. Compared with the Thompson sampling algorithm for linear bandits, the construction of TS for  Bernoulli bandits relies on weaker assumptions and achieves zero approximation error (i.e., $\geneps=0$).
+
+
+
+
+% Throughout this section, we use $c>0$ to denote universal constants whose values may vary from line to line.
+% Moreover, for notational simplicity, we use $\conO(\cdot)$ to hide universal constants, $\cO(\cdot)$ to hide polynomial terms in the problem parameters  $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$. We also use the bold font letter $\ba_t\in\R^d$ to denote the selected action $\action_t$ at time $t\in[\totlen]$.
+
+
+
+
+
+
+\subsection{Thompson sampling for multi-armed Bernoulli bandits}
+Namely, we consider a special case of linear bandit, multi-armed Bernoulli bandit,  where $d=A$ and $\sA_t\equiv\sA_1$ consisting  of the $A$-dimensional one-hot indicator vectors $\{\be_j\}_{j=1}^A$. Denote the expected reward vector by $\bw^*=(w^*_1,\ldots,w^*_A)\in[0,1]^A$. At each time $t$ the agent chooses an action $\action_t\in[A]$ and observes the reward $r_t\sim\Bern(\bw^*_{\action_t})$.   We also assume the bandit instance $\inst$ follows a prior $\prior$ in which the reward vector $\bw^*$ is sampled from the uniform distribution on $[0,1]^A$. 
+Starting from $\alpha_{k}=\beta_{k}=1$ for $k\in[A]$, Thompson sampling performs the following at time $t\in[T]$.
+
+\begin{enumerate}
+    \item Samples $u_{tk}\sim\Bern(\alpha_{k},\beta_{k})$ for $k\in[A]$.
+    \item Chooses the action $\action_t=\argmax_{j\in[A]}u_{tj}$ and observes the reward $r_t\in\{0,1\}$
+    \item Updates the parameter $\alpha_{\action_t}\leftarrow\alpha_{\action_t}+1$ if $r_t=1$ otherwise updates $\beta_{\action_t}\leftarrow\beta_{\action_t}+1$.
+
+\end{enumerate} 
+
+
+\subsection{Main results}
+For multi-armed Bernoulli bandits, we have the following results on approximating the TS algorithm (Theorem~\ref{thm:approx_thompson_bernoulli}) and controling the regret of ICRL  
+
+
+
+\begin{theorem}[Approximating the Thompson sampling for multi-armed Bernoulli bandits]\label{thm:approx_thompson_bernoulli}
+Consider the same embedding mapping $\embedmap$ and extraction mapping $\extractmap$ as for soft LinUCB in \ref{sec:tf_embed_bandit},
+%\sm{Link}\lc{same as before},
+and consider the standard concatenation operator $\cat$. There exists a  transformer $\TF_\btheta(\cdot)$ with 
+$$L=1,~~~M^{(1)}=2,~~~ \nrmp{\btheta}\leq 3+\sqrt{ M A}+C,$$  
+such that 
+\[
+\log \sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t) = \log \sAlg_{\tfpar}(\ba_{t,k}|\dset_{t-1},\state_t) , ~~~ \text{for all } t\in[T],k\in[A].
+\]
+Here $\tcO(\cdot)$ hides polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$ and poly-logarithmic terms in $(\neuron,\weightn,\totlen,A,d,1/\delta_0,1/\eps)$.
+\end{theorem}
+
+
+
+
+
+See the proof in Section~\ref{sec:pf_thm:approx_thompson_bernoulli}.
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Proof of Theorem~\ref{thm:approx_thompson_bernoulli}}\label{sec:pf_thm:approx_thompson_bernoulli}
+Similar to the proof of Theorem~\ref{thm:approx_thompson_linear-formal}, 
+we construct a transformer implementing the following two steps at each time $t\in[T]$ starting with $\bh^{\star}_{2t-1}=\bh^{\pre,\star}_{2t-1}$ for $\star\in\{\parta,\partb,\partc,\partd\}$ 
+\begin{align}
+    \bh_{2t-1}=
+    \begin{bmatrix}
+    \bh_{2t-1}^{\pre,\parta} \\  \bh_{2t-1}^{\pre,\partb}\\  \bh_{2t-1}^{\pre,\partc}\\   \bh_{2t-1}^{\pre,\partd}
+\end{bmatrix}
+\xrightarrow{\text{step 1}}
+   \begin{bmatrix}
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}} \\
+        \balpha_t+\bbeta_t-2\bone_A\\\balpha_t-\bone_A\\ \star\\ \bzero \\\posv
+\end{bmatrix}
+\xrightarrow{\text{step 2}}
+\begin{bmatrix}
+    \bh_{2t-1}^{\pre,\{\parta,\partb\}}\\  v^*_{t1}\\\vdots\\ {v}^*_{tA} \vspace{0.5em}\\ \bh_{2t-1}^{\partd}
+\end{bmatrix}
+=:
+\begin{bmatrix}
+    \bh_{2t-1}^{\post,\parta} \\  \bh_{2t-1}^{\post,\partb}\\  \bh_{2t-1}^{\post,\partc}\\   \bh_{2t-1}^{\post,\partd}
+\end{bmatrix},\label{eq:roadmap_ts_bernoulli}
+\end{align}
+where $\posv:=[i,i^2,1]^\top$; $\balpha_t=(\alpha_{t1},\ldots,\alpha_{tA})$, $\bbeta_t=(\beta_{t1},\ldots,\beta_{tA})$ are the parameters of the beta distribution in at time $t$ for each action, $v^*_{tk}:=\log \P(k=\argmax_{j\in[A]}u_{tj})$ are the log-policy of Thompson sampling, where $u_{tj}$ are independent random variables from $B(\alpha_{tj},\beta_{tj})$ for $j\in[A]$. In addition, we use $\bh^\star,\star\in\{\parta,\partb,\partc,\partd\}$ to denote the corresponding parts of a token vector $\bh$. After passing through the transformer, we obtain the policy
+$$
+\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2t-1})}{\|\exp(\bh^{\post,\partc}_{2t-1})\|_1}=\frac{\exp( \bv^*_t)}{\|\exp( \bv^*_t)\|_1}\in\Delta^A.
+$$
+We claim the following results which we will prove later.
+
+\begin{enumerate}[label=Step \arabic*,ref= \arabic*]
+    \item\label{ts_bern_step1} There exists an attention-only transformer $\TF_\btheta(\cdot)$ with     $$L=1,~~~M^{(1)}=2,~~~ \nrmp{\btheta}\leq 3 $$
+ that implements step 1 in~\eqref{eq:roadmap_ts_bernoulli}.
+   \item\label{ts_bern_step2} There exists an  MLP-only transformer $\DTF_\btheta(\cdot)$ with 
+    $$L=1,~~~\lops{\bW_1}\leq \sqrt{MA}, ~~~\lops{\bW_2}\leq C$$
+ that implements step 2 in~\eqref{eq:roadmap_ts_bernoulli}.
+\end{enumerate}
+Theorem~\ref{thm:approx_thompson_bernoulli} follows immediately from combining Step~\ref{ts_bern_step1}~and~~\ref{ts_bern_step2}.  Now it remains to prove the two steps.
+
+
+ Similar to the proof of Theorem~\ref{thm:approx_smooth_linucb}~and~\ref{thm:approx_thompson_linear-formal}, from the proof of each step which will be given later, we can verify that the token dimension $D$ can be chosen to be of order $\tcO(T^{1/4}Ad)$. Moreover,  it is readily verified that there exists some sufficiently large value $\clipval>0$ with $\log \clipval=\tcO(1)$ such that  we have $\| \bh_i^{\lth} \|_{2} \leq\clipval$
+ for all layer $\ell\in[L]$ and all token $i\in[2\totlen]$ in our TF construction. Therefore, $\TF^\clipval_\btheta$ and $\TF^\infty_\btheta$ yield identical outputs for all token matrices considered, and hence w.l.o.g. we assume $\TF=\TF^\infty$ in the constructions follow.
+
+
+
+
+
+
+
+
+
+\paragraph{Proof of Step~\ref{ts_bern_step1}} We choose the heads $\bQ_{1,2},\bK_{1,2},\bV_{1,2}$ such that for any even indices $2j$ with $j\leq i-1$ and odd indices $2j-1$ with $j\leq i$
+\begin{align*}
+&
+     \bQ_{1}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+         2t-1\\ \bzero
+    \end{bmatrix},~~ \bK_{1}\bh^{(0)}_{2j}=\bK_{1}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        1\\ \bzero
+    \end{bmatrix},~~ 
+   \bV_{1}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero\\\ba_j\\ \bzero
+\end{bmatrix},~~\bV_{1}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \bzero
+    \end{bmatrix},\\
+   &
+     \bQ_{2}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+         2t-1\\ \bzero
+    \end{bmatrix},~~ \bK_{2}\bh^{(0)}_{2j}=\begin{bmatrix}
+        r_j\\ \bzero
+    \end{bmatrix},~~\bK_{2}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        0\\ \bzero
+    \end{bmatrix},~~ 
+   \bV_{2}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero\\\ba_j\\ \bzero
+\end{bmatrix},~~\bV_{2}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \bzero
+    \end{bmatrix},
+\end{align*}
+where $\bV_{1}\bh^{(0)}_{2j},\bV_{2}\bh^{(0)}_{2j}$ are supported on the $1\sim A,A+1\sim 2A$ entries of $\bh^d_{2t-1}$, respectively. Then the attention layer gives the update (denote the output token by $\bh^{(1)}_{2t-1}$)
+\begin{align*}
+    \bh^{(1),d}_{2t-1,1:A}&=\bzero_A+\frac{1}{2t-1}\Big[
+    \sum_{j=1}^{t}\sigma\Big(\<\bQ_1\bh^{(0)}_{2t-1},\bK_1\bh^{(0)}_{2j-1}\>\Big)\bV_1\bh^{(0)}_{2j-1}
+    +
+    \sum_{j=1}^{t-1}
+    \sigma\Big(\<\bQ_1\bh^{(0)}_{2t-1},\bK_1\bh^{(0)}_{2j}\>\Big)\bV_1\bh^{(0)}_{2j}\Big]\\
+    &=
+    \sum_{j=1}^{t-1}\ba_j=\balpha_t+\bbeta_t-2\bone_A,
+    \\
+    \bh^{(1),d}_{2t-1,A+1:2A}&=\bzero_A+\frac{1}{2t-1}\Big[
+    \sum_{j=1}^{t}\sigma\Big(\<\bQ_1\bh^{(0)}_{2t-1},\bK_1\bh^{(0)}_{2j-1}\>\Big)\bV_1\bh^{(0)}_{2j-1}
+    +
+    \sum_{j=1}^{t-1}
+    \sigma\Big(\<\bQ_1\bh^{(0)}_{2t-1},\bK_1\bh^{(0)}_{2j}\>\Big)\bV_1\bh^{(0)}_{2j}\Big]\\
+    &=
+    \sum_{j=1}^{t-1}r_j\ba_j=\balpha_t-\bone_A.
+\end{align*}
+Therefore, the attention layer implements step 1 in~\ref{eq:roadmap_ts_bernoulli} exactly.
+Moreover, one can choose the matrices such that $\lops{\bQ_{1,2}}\leq1,\lops{\bK_{1,2}}\leq1,\lops{\bV_{1,2}}\leq1$. Therefore the norm of the attention-only transformer $\nrmp{\btheta}\leq 3$.
+
+
+\paragraph{Proof of Step 2}
+For any $\bx,\by\in(\{0\}\cup[T])^$, define $f_{k}(\bx,\by):=\log\P(k=\argmax_{k\in[K]}u_{k})$, where $u_k$ are independent samples from $\B(y_k+1,x_k-y_k+1)$. 
+
+By Assumption~\ref{ass:thompson_mlp_approx},  $f_k(\bx,\by)$ are $(\eps,T, M,C)$-approximable by sum of relus for some $ M,C$ depend polynomially on $1/\eps,T,A$. Therefore, by stacking up the approximation functions for each coordinate $k\in[A]$ we can construct a two-layer MLP with $\lops{\bW_1}\leq \sqrt{AM},\lops{\bW_1}\leq C$ such that 
+\begin{align*}\bW_2\sigma(\bW_1\bh^{(1)}_{2t-1})=\begin{bmatrix}
+    \bzero\\\hat \bv_t\\\bzero,
+\end{bmatrix}
+\end{align*}
+where $\hat \bv_t$ is supported on $\bh^c_{2t-1}$ and $|\hat v_{tk}-f_{k}(\balpha_t+\bbeta_t-2\bone_k,\balpha_t-\bone_k)|\leq \eps$ for all $k\in[A]$. 
+
+
+
+
+
+
+
+
+
+
+%\sm{Write a road map. Here I copied the roadmap for LinUCB proof section. This section is organized as follows. Section~\ref{sec:tf_embed_bandit} discusses the input-output format of transformers for the stochastic linear bandit environment. Section~\ref{sec:soft-LinUCB} describes the LinUCB and the soft LinUCB algorithms. Section~\ref{app:approx-ridge-estimator} introduces and proves a lemma on approximating the linear ridge regression estimator, which is important for proving Theorem~\ref{thm:approx_smooth_linucb}. We prove Theorem~\ref{thm:approx_smooth_linucb} in Section~\ref{sec:pf_thm:approx_smooth_linucb} and prove Theorem~\ref{thm:smooth_linucb} in Section~\ref{sec:pf_thm:smooth_linucb}. }
+This section is organized as follows. Section~\ref{app:ts_algorithm_formula} describes the Thompson sampling algorithm for stochastic linear bandits. Section~\ref{app:thompson_def_ass} introduces some additional definitions, assumptions, and the formal version of Theorem~\ref{thm:approx_thompson_linear} as in Theorem~\ref{thm:approx_thompson_linear-formal}.
+We prove Theorem~~\ref{thm:approx_thompson_linear-formal} in Section~\ref{sec:pf_thm:approx_thompson_linear-formal} and prove Theorem~\ref{thm:ts_linear_regret} in Section~\ref{sec:pf_prop:ts_linear_regret}. Lastly, the proof of Lemma~\ref{lm:lip_of_tps} used in the proof of Theorem~\ref{thm:approx_thompson_linear-formal} is provided in Section~\ref{sec:pf_lm:lip_of_tps}.
+
+
+

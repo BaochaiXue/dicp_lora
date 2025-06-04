@@ -1,0 +1,813 @@
+\section{Soft LinUCB for linear stochastic bandit}\label{app:linUCB}
+Throughout this section, we use $c>0$ to denote universal constants whose values may vary from line to line.
+Moreover, for notational simplicity, we use $\conO(\cdot)$ to hide universal constants, $\cO(\cdot)$ to hide polynomial terms in the problem parameters $(\sigma,b_a^{-1},B_a,B_w,\lambda^{\pm1})$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(T,A,d,1/\eps,1/\temp)$ and  polynomial terms in  $(\sigma,b_a^{-1},B_a,B_w,\lambda^{\pm1})$. We also use the bold font $\ba_t\in\R^d$ to denote the selected action vector $\action_t$ at time $t\in[\totlen]$.
+
+
+This section is organized as follows. Section~\ref{sec:tf_embed_bandit} discusses the embedding and extraction formats of transformers for the stochastic linear bandit environment. Section~\ref{sec:soft-LinUCB} describes the LinUCB and the soft LinUCB algorithms. Section~\ref{app:approx-ridge-estimator} introduces and proves a lemma on approximating the linear ridge regression estimator, which is important for proving Theorem~\ref{thm:approx_smooth_linucb}. We prove Theorem~\ref{thm:approx_smooth_linucb} in Section~\ref{sec:pf_thm:approx_smooth_linucb} and prove Theorem~\ref{thm:smooth_linucb} in Section~\ref{sec:pf_thm:smooth_linucb}. 
+
+
+\subsection{Embedding and extraction mappings}\label{sec:tf_embed_bandit}
+
+% \sm{Explicitly write the operator $\embedmap$, $\extractmap$, $\cat$} 
+Consider the embedding in which for each $t\in[\totlen]$, we have two tokens $\bh_{2t-1},\bh_{2t}\in\R^D$ such that
+\[
+\begin{aligned}
+\bh_{2t-1}=
+\left[
+\begin{array}{c}
+     \bzero_{d+1} \\
+     \hdashline
+     \sA_t\\  
+     \hdashline
+     \bzero_A\\  
+     \hdashline
+      \bzero\\ \posv_{2t-1}
+\end{array}
+\right]
+% \begin{bmatrix}
+%      \bzero_{d+1} \\
+%      \hdashline
+%      \sA_t\\  
+%      \hdashline
+%      \bzero_A\\  
+%      \hdashline
+%       \bzero\\ \posv_{2t-1}
+% \end{bmatrix}
+=:
+\begin{bmatrix}
+     \bh_{2t-1}^{\parta} \\  \bh_{2t-1}^{\partb}\\  \bh_{2t-1}^{\partc}\\   \bh_{2t-1}^{\partd}\\
+\end{bmatrix},~~
+\bh_{2t}=
+\left[
+\begin{array}{cc}
+     \ba_{t} \\
+      r_t\\  
+      \hdashline
+       \bzero_{Ad}\\ 
+       \hdashline 
+       \bzero_{A}\\ 
+       \hdashline  
+       \bzero\\ \posv_{2t}
+\end{array}
+\right]=:
+\begin{bmatrix}
+    \bh_{2t}^{\parta} \\  \bh_{2t}^{\partb}\\   \bh_{2t}^{\partc}\\   \bh_{2t}^{\partd}
+\end{bmatrix},
+\end{aligned}
+\]
+where $\bh_{2t-1}^{\partb}=\sA_t=\begin{bmatrix}
+    \ba_{t,1}^\top &\ldots & \ba_{t,A}^\top
+\end{bmatrix}^\top$ denotes the action set at time $t$, $\bh_{2t}^{\parta}=\begin{bmatrix}
+    \ba_t^\top &r_t
+\end{bmatrix}^\top$ denotes the action and the observed reward at time $t$, $\bh^\partc_{2t-1}$ is used to store the (unnormalized) policy at time  $t$, $\bzero$ in $\bh^\partd$ denotes an additional zero vector with  dimension $\conO(dA)$, and $\posv_i:=(i,i^2,1)^\top$ for $i\in[2\totlen]$ is the positional embedding.    Note that the token dimension $D= O(dA)$. In addition, we define the token matrix $\bH_t:=\begin{bmatrix}
+    \bh_1,\ldots,\bh_{2t}
+\end{bmatrix}\in\R^{D\times 2t}$ for all $t\in[\totlen]$.
+
+
+
+
+\paragraph{Offline pretraining} 
+During pretraining, the transformer $\TF_\tfpar$ takes in   $\bH_\totlen^\pre:=\bH_\totlen$ as the input token matrix and generates $\bH_\totlen^\post:=\TF_\tfpar(\bH_\totlen^\pre)$ as the output. For each step $t\in[\totlen]$, we define the  induced policy  $\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2t-1})}{\|\exp(\bh^{\post,\partc}_{2t-1})\|_1}\in\Delta^A$, whose $i$-th entry is the probability of selecting action $\ba_{t,i}$ given $(\dset_{t-1},\state_t)$. We then find the transformer $\esttfpar\in\tfparspace$ by solving Eq.~\eqref{eq:general_mle}. 
+Due to the decoder structure of transformer $\TF_\tfpar$, the $2t-1$-th token only has access to the first $2t-1$ tokens. Therefore the induced policy is  determined by the historical data $(\dset_{t-1},\state_t)$ and does not depend on future observations. 
+\paragraph{Rollout}
+At each time $t\in[\totlen]$, given the action set $\sA_t$ (i.e., current state $\state_t$) and the previous data $\dset_{t-1}$, we first construct the token matrix $\bH^{\pre}_{\roll,t}=[\bH_{t-1},\bh_{2t-1}]\in\R^{D\times (2t-1)}$.   The transformer then takes $\bH^{\pre}_{\roll,t}$ as the input  and generates $\bH^{\post}_{\roll,t}=[\bH^{\post}_{t-1},\bh^{\post}_{2t-1}]=\TF_\tfpar(\bH^{\pre}_{\roll,t})$. Next,  the agent selects an action $\ba_t\in\sA_t$ according to the induced  policy $\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2t-1})}{\|\exp(\bh^{\post,\partc}_{2t-1})\|_1}\in\Delta^A$ and observes the reward $r_t$.
+
+\paragraph{Embedding and extraction mappings}
+To integrate the above construction into the  framework described in Section~\ref{sec:framework},  we have the embedding vectors $\embedmap(\state_t):=\bh_{2t-1},\embedmap(\action_t,\reward_t):=\bh_{2t}$,  the concatenation operator $\cat(\bh_1, \ldots, \bh_N): = [\bh_1, \ldots, \bh_N]$, the input token matrix  $$\bH=\bH^\pre_{\roll,t}: = \cat(\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)) \in \R^{D \times (2t-1)},$$ the output token matrix $\bar{\bH}=\bH^\post_{\roll,t}$, and the linear extraction map $\extractmap$  satisfies $\extractmap\cdot\bar{\bh}_{-1}=\extractmap\cdot\bar{\bh}^\post_{2t-1}=\bh^{\post,\partc}_{2t-1}$. 
+
+
+
+
+
+
+
+% \subsection{Embedding}
+% Consider the linear stochastic bandit problem where at each time $t$ the agent plays an action $\ba_t\in\sA_t$ and receives an reward  $r_t=\<\ba_t,\bw^*\>+\eta_t$,  where $\eta_t$ is some zero mean noise with $|\eta_t|\leq\sigma$. Assume  $\ba_t,\bw^*\in\R^d$ with $\alb\leq\|\ba_t\|_2\leq B_a$, $\|\bw^*\|_2\leq B_w$, and the action set $\sA_t=\{\ba_{t,1},\ldots,\ba_{t,A}\}$ for some $A\geq 1$ and all $t\geq1$. We let $R$ to be some constant sufficiently large that may vary in different problems.
+
+% Consider the embedding where 
+% \begin{align*}
+% \bh_{2t-1}=
+% \begin{bmatrix}
+%      \bh_{2t-1}^{\parta} \\  \bh_{2t-1}^{\partb}\\  \bh_{2t-1}^{\partc}\\   \bh_{2t-1}^{\partd}
+% \end{bmatrix},~~
+% \bh_{2t}=
+% \begin{bmatrix}
+%     \bh_{2t}^{\parta} \\  \bh_{2t}^{\partb}\\   \bh_{2t}^{\partc}\\   \bh_{2t}^{\partd}
+% \end{bmatrix},
+% \end{align*}
+% where $\bh^\parta_{2t-1}=\bzero_{d+1},\bh^\partb_{2t}=\bzero_{Ad},\bh^\partc_{2t}=\bzero_{A}$; $\bh_{2t}^{\parta}=\begin{bmatrix}
+%     \ba_t^\top &r_t
+% \end{bmatrix}^\top$ denotes the action and the observed reward at time $i$;  $\bh_{2t-1}^{\partb}=\begin{bmatrix}
+%     \ba_{t,1}^\top &\ldots & \ba_{t,A}^\top
+% \end{bmatrix}^\top$ denotes the action set at time $i$; $\bh_{2t-1}^{\partc}=\begin{bmatrix}
+%     u_{t1} &\ldots u_{tA}
+% \end{bmatrix}^\top\in\Delta^A$ denotes the (unnormalized) policy used to select the action $\ba_t$ at time $i$;  $\bh_{2t-1}^{\partd}=\begin{bmatrix}
+%     \bzero^\top_{d+dA+2A} & \bzero^\top  &(2t-1) &(2t-1)^2 &1
+% \end{bmatrix}^\top$,  $\bh_{2t}^{\partd}=\begin{bmatrix}
+%     \bzero^\top_{d+dA+2A} & \bzero^\top  &2t &(2t)^2 &1
+% \end{bmatrix}^\top$ denotes the extra positional embedding. Note that the embedding dimension $D\geq O(dA)$.
+
+% At each time $i$ the transformer takes in $\bH^{\pre}_{t}=[\bH^{\post}_{t-1},\bh^{\pre}_{2t-1}]\in\R^{D\times i}$ and outputs $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_{2t-1}]\in\R^{D\times i}$, where  $\bh^{\pre,\parta}_{2t-1}=\bzero_{d+1},\bh^{\post,\parta}_{2t-1}=\bzero_{d+1}$; $\bh^{\pre,\partc}_{2t-1}=\bzero_{A}$, and $\bh^{\post,\partc}_{2t-1}\in[0,1]^A$ denotes the unnormalized policy at time $i$. The agent   selects an action $\ba_t$ according to the normalized  policy $\bp_t:=\frac{\exp(\bh^{\post,\partc}_{2t-1}/\temp)}{\|\exp(\bh^{\post,\partc}_{2t-1}/\temp)\|_1}$ for some constant $\temp$, observes the reward $r_t$ and denotes $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_{2t-1},\bh^{\post}_{2t}]$ where $\bh^{\post,\parta}_{2t}=\begin{bmatrix}
+%     \ba_t^\top & r_t
+% \end{bmatrix}^\top$, $\bh^{\post,\partb}_{2t}=\bzero_{Ad},\bh^{\post,\partc}_{2t}=\bzero_{A}$ and $\bh^{\post,\partd}_{2t}=\bh^\partd_{2t}$ is the positional embedding.
+
+
+% A standard algorithm for this problem is LinUCB~\citep{chu2011contextual}. We will show that there exists a transformer that approximately implement LinUCB. 
+
+
+
+
+
+
+\subsection{LinUCB and soft LinUCB}\label{sec:soft-LinUCB}
+Let $T$ be the total time and $\lambda,\cwid>0$ be some prespecified values. At each time $t\in[T]$, LinUCB consists of the following steps: 
+\begin{enumerate}
+    \item Computes the ridge estimator $\bw^t_{\ridge,\lambda}=\argmin_{\bw\in\R^d}\frac{1}{2t}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2t}\|\bw\|_2^2$.
+    \item For each action $k\in[A]$, computes $v^*_{tk}:=\<\ba_{t,k},\bw^t_{\ridge,\lambda}\>+\cwid\sqrt{\ba_{t,k}^\top \bA_{t}^{-1}  \ba_{t,k}}$, where $\bA_t=\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$.
+    \item Selects the action $\ba_{t,j}$ with $j:=\argmax_{k\in[A]}v^*_{tk}$.
+\end{enumerate}
+Unless stated otherwise, in step 2 above we choose $\alpha=\alpha(\delta)$ with $\delta=1/(2B_aB_wT)$ and $$\cwid(\delta):=\sqrt{\lambda}B_w+\sigma\sqrt{2\log(1/\delta)+d\log((d\lambda+TB_a^2)/(d\lambda))}=\cO(\sqrt{d\log \totlen})=\tcO(\sqrt{d}).$$
+
+
+In this work, to facilitate the analysis of supervised pretraining, we consider soft LinUCB (denoted by $\sLinUCB(\temp)$), which replaces step 3 in LinUCB with
+\begin{enumerate}
+    \item [3'] Selects the action $\ba_{t,j}$ with probability $\frac{\exp(v^*_{tj}/\temp)}{\lone{\exp(v^*_{tj}/\temp)}}$ for $j\in[A]$. 
+\end{enumerate} Note that soft LinUCB recovers the standard LinUCB as $\temp\to0$. 
+
+
+
+
+
+% By Theorem 19.2, Corollary 19.3 in Lattimore and Szepesvari~\cite{lattimore2020bandit}, we have the regret $$\bR(T)=\sum_{t=1}^T \max_{j\in[A]}\<\ba_{t,j},\bw^*\>-\<\ba_t,\bw^*\>$$ satisfies $\bR(T)\leq\sqrt{8 dT\alpha\log((d\lambda+TB_a^2)/(d\lambda))}$ with probability over $1-\delta$. Choosing $\delta=1/T$ gives $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some  problem-dependent constant $C>0$.
+
+% We will show that for any $\eps>0$ there exists a transformer that can perform an approximate LinUCB algorithm such that $\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$.
+
+
+
+
+
+\subsection{Approximation of the ridge estimator}\label{app:approx-ridge-estimator}
+In this section, we present a lemma on how transformers can  approximately implement the ridge regression estimator in-context. 
+
+% \begin{theorem}[Approximated LinUCB]\label{thm:approx_linucb}
+% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
+% For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
+% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ such that 
+% $|v^*_{tk}-\max_{j\in[k]}v_{tj}^*|\leq \eps$ for all $t\in[T]$ and  $k$ such that $p_{tk}>0$. 
+% Here $\tcO(\cdot)$ hides constants and logarithmic dependence on $T,A,\log(1/\delta),1/\eps$.
+
+% \end{theorem}
+
+% See the proof in Section~\ref{sec:pf_thm:approx_linucb}.
+
+% \begin{corollary}[Regret analysis of approximated LinUCB ]\label{cor:approx_linucb}
+%     For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
+% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ that approximately implements LinUCB such that the regret
+% $$\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$$
+% with probability over $1-\delta$. Moreover, choosing $\eps=1/\sqrt{T},\delta=1/{T}$ gives a transformer the implements approximated  LinUCB with the regret
+% $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some problem-dependent constant $C>0$, with probability over $1-1/T$.
+% \end{corollary}
+
+% See the proof in Section~\ref{sec:pf_cor:approx_linucb}.
+
+Throughout the proof, for $t\in[2\totlen]$,  we let $\bh_{t}^{(L)}$ denote the $i$-th token in the output token matrix obtained after passing through an $L$-layer transformer. We also define  $\read_{\bw_\ridge}: \R^{D}\mapsto\R^{d}$ be the operator that gives the values of  $d$ coordinates  in the token vector that are used to store the estimation of  the ridge estimate.
+
+
+\begin{lemma}[Approximation of the ridge estimator]\label{lm:approx_ridge}
+For any small $\eps>0$, there exists an attention-only (i.e., no MLP layers) transformer $\TF_\btheta(\cdot)$ with 
+$$L=\Big\lceil\frac{4T(B_a^2+\lambda)}{\lambda}\log({TB_a(B_aB_w+\sigma)}/({\lambda}\eps))\Big\rceil=\tcO(T),~~~\max_{\ell\in[L]}M^{(l)}\leq3,~~~ \nrmp{\btheta}\leq  \sqrt{2}+\frac{\lambda+2}{B_a^2+\lambda}=\cO(1)$$ such that $\|\read_{\bw_{\ridge}}(\bh_{2t-1}^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
+
+Moreover, there exists a  transformer $\TF_\btheta(\cdot)$ with  \begin{align*}&L=\Big\lceil2\sqrt{2T}\sqrt{\frac{B_a^2+\lambda}{\lambda}}\log\Big(\frac{(2T(B_a^2+\lambda)+\lambda)TB_a(B_aB_w+\sigma)}{\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),~~~\max_{\ell\in[L]}M^{(l)}\leq4,~~~ \\
+&~~~~~~\max_{\ell\in[L]}\hidden^{\lth}\leq 4d,~~~\nrmp{\btheta}\leq  10+\frac{\lambda+2}{B_a^2+\lambda}=\cO(1) \end{align*}
+ such that $\|\read_{\bw_{\ridge}}(h_{2t-1}^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
+\end{lemma}
+% See the proof is Section~\ref{sec:pf_lm:approx_ridge}.
+
+
+Results similar to Lemma~\ref{lm:approx_ridge} have been shown in~\cite{bai2023transformers} under a different scenario.   However, we remark that  the second part of Lemma~\ref{lm:approx_ridge} has a weaker requirement on the number of layers as we prove that transformers can implement accelerated gradient descent (AGD,~\cite{nesterov2003introductory}) in-context.
+
+
+\begin{proof}[Proof of Lemma~\ref{lm:approx_ridge}]
+%\label{sec:pf_lm:approx_ridge}
+Note that $\lambda\id_d\preceq \bA_t\preceq (TB_a^2+\lambda)\id_d$. Therefore the optimization problem 
+$$\bw^t_{\ridge,\lambda}=\argmin_{\bw\in\R^d}L(\bw):=\argmin_{\bw\in\R^d}\frac{1}{2(2t-1)}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2(2t-1)}\|\bw\|_2^2$$
+is $\lambda/(2t-1)$-strongly convex  and $(B_a^2+\lambda)$-smooth and the condition number $\kappa\leq 2T(B_a^2+\lambda)/\lambda$. Moreover, by the definition of $\bw_{\ridge,\lambda}^t$ we have 
+\begin{align*}
+    \|\bw^t_{\ridge,\lambda}\|_2=\|(\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top)^{-1}(\sum_{j=1}^{t-1}\ba_jr_j)\|_2&\leq 
+    \|(\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top)^{-1}\|_2\cdot\|\sum_{j=1}^{t-1}\ba_jr_j\|_2\\&\leq
+    \frac{TB_a(B_aB_w+\sigma)}{\lambda}
+\end{align*} 
+for all $t\in[T]$. 
+\paragraph{Proof of part 1}
+By Proposition~\ref{prop:conv_gd_agd}, we see that $L=\lceil4T(B_a^2+\lambda)\log({TB_a(B_aB_w+\sigma)}/({\lambda}\eps))/\lambda\rceil$ steps of gradient descent with stepsize $\eta=1/(B_a^2+\lambda)$ starting from $\bw_{\GD}^0=\bzero_d$ finds $\bw^L_\GD$ such that $\|\bw^L_{\GD}-\bw^t_{\ridge,\lambda}\|_2\leq\eps$.
+
+Now we prove that one  attention-only layer can implement one step of gradient descent
+\begin{align*}
+    \bw^{\ssl+1}_{\GD}:=\bw^{\ssl}_{\GD}- \frac{\eta}{2t-1}\sum_{j=1}^{t-1}(\<\ba_j,\bw^\ssl_{\GD}\>-r_j)\ba_j- \frac{\eta\lambda}{2t-1}\bw^\ssl_{\GD}.
+\end{align*}
+We encode the algorithm using the last token (i.e., the $2t-1$-th token). 
+Denote the first $d$ entries of $\bh_{2t-1}^{\partd}$ by $\hat\bw$ and  define $\read_{\bw_{\ridge}}(\bh_{2t-1})=\hat\bw$. Starting from $\hat\bw^{0}=\bzero_d$, for each layer $\ell\in[L]$, we let the number of heads $M^{(\ell)}=3$ and  choose $\bQ_{1,2,3}^{(\ell)},\bK_{1,2,3}^{(\ell)},\bV_{1,2,3}^{(\ell)}$ such that for even tokens $\bh_{2j}$ with $j\leq t-1$ and odd tokens $\bh_{2j-1}$ with $j\leq t$
+\begin{align*}
+    &\bQ_1^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+        \hat\bw^{\ell-1}\\ 1
+    \end{bmatrix},~~ \bK_1^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
+        \ba_j\\ -r_j 
+    \end{bmatrix},~~ \bV_1^{(\ell)}\bh^{(\ell-1)}_{2j}=-\eta\begin{bmatrix}
+        \bzero\\ \ba_j \\ \bzero
+    \end{bmatrix},~~
+    \bK_1^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\bzero, ~~\bV_1^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\bzero
+    \\
+    &
+    \bQ_2^{(\ell)}=-\bQ_1^{(\ell)},~~ \bK_2^{(\ell)}=\bK_1^{(\ell)},~~  \bV_2^{(\ell)}=-\bV_1^{(\ell)},\\
+     &
+     \bQ_3^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+         1\\-(2t-1)\\ 1
+    \end{bmatrix},~~ \bK_3^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
+        1\\ 1 \\2j
+    \end{bmatrix},~~ \bK_3^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\begin{bmatrix}
+        1\\ 1 \\2j-1
+    \end{bmatrix},~~ \bV_3^{(\ell)}\bh^{(\ell-1)}_{2t-1}=-\eta\lambda\begin{bmatrix}
+        \bzero\\ \hat\bw^{\ell-1}\\ \bzero
+    \end{bmatrix}.
+\end{align*}
+Summing up the three heads and noting that $t=\sigma(t)-\sigma(-t)$, we see that the $\hat\bw$ part of $\bh_{2t-1}$ (i.e., $\read_{\bw_\ridge}(\bh_{2t-1})$) has the update
+\begin{align*}
+    \hat\bw^{l}
+    &=\hat\bw^{l-1}-\frac{\eta}{2t-1}\sum_{j=1}^t[\sigma(\<\ba_j,\hat\bw^{l-1}\>-r_j)-\sigma(r_j-\<\ba_j,\hat\bw^{l-1}\>)]\ba_j\\&
+    \qquad
+    -\frac{\eta\lambda}{2t-1}\Big[\sum_{j=1}^{t-1}(\sigma(1+2j-2t)\bV_3^{(\ell)}\bh^{(\ell-1)}_{2j-1}+\sigma(1+2j-2t+1)\bV_3^{(\ell)}\bh^{(\ell-1)}_{2j})+
+   \bV_3^{(\ell)}\bh^{(\ell-1)}_{2t-1}\Big]\\
+     &=\hat\bw^{l-1}-\frac{\eta}{2t-1}\sum_{j=1}^t[\<\ba_j,\hat\bw^{l-1}\>-r_j]\ba_j-\frac{\eta\lambda}{2t-1}\bV_3^{(\ell)}\bh^{(\ell-1)}_{2t-1}\\
+     &=\hat\bw^{l-1}-\frac{\eta}{2t-1}\sum_{j=1}^{t-1}[\<\ba_j,\hat\bw^{l-1}\>-r_j]\ba_j-\frac{\eta\lambda}{2t-1}\hat\bw^{l-1},
+\end{align*}
+which is one step of gradient descent with stepsize $\eta$.  Moreover, it is easy to see that one can choose the marices such that $\max_{m\in[3]}\lops{\bQ^\lth_m}=\max_{m\in[3]}\lops{\bK^\lth_m}=\sqrt{2}$ and $\lops{\bV^\lth_1}=\lops{\bV^\lth_2}=\eta,\lops{\bV^\lth_3}= \lambda\eta$. Therefore the norm of the transformer $\nrmp{\btheta}\leq \sqrt{2}+(\lambda+2)/(B_a^2+\lambda)$.
+
+
+\paragraph{Proof of part 2}
+Similarly,  Proposition~\ref{prop:conv_gd_agd} shows $L=\lceil2\sqrt{2T(B_a^2+\lambda)/\lambda}\log((1+\kappa){TB_a(B_aB_w+\sigma)}/({\lambda}\eps))\rceil$ steps of accelerated gradient descent gives  $\|\bw^L_{\AGD}-\bw^t_{\ridge,\lambda}\|_2\leq\eps$. 
+
+Again, we encode the algorithm using the last token (i.e., the $2t-1$-th token). 
+Denote the first $d,d+1\sim 2d, 2d+1\sim3d $ entries of $\bh_{2t-1}^{\partd}$ by $\hat\bw_a,\hat\bw_b,\hat\bv$ respectively. Starting from $\hat\bw_a^{0}=\hat\bw_b^{0}=\hat\bv^{0}=\bzero_d$,  AGD updates the parameters as follows:
+\begin{subequations}
+\begin{align}
+    \hat\bw^\ell_a&=\hat\bw_a^{\ell-1}+(\hat\bv^{\ell-1}-\hat\bw_a^{\ell-1})-\eta \nabla L(\hat\bv^{\ell-1}),\label{eq:agd_step1}\\
+    \hat\bv^{\ell}&=\hat\bv^{\ell-1}+[\hat\bw^\ell_a+\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\hat\bw^\ell_a-\hat\bw^{\ell-1}_b)-\hat\bv^{\ell-1}],\label{eq:agd_step2}\\
+    \hat\bw^\ell_b&= \hat\bw^{\ell-1}_b+( \hat\bw^\ell_a-\hat\bw^{\ell-1}_b).\label{eq:agd_step3}
+\end{align}
+\end{subequations}
+We show that one attention layer and one MLP layer can implement one step of AGD as above. Namely, Eq.~\eqref{eq:agd_step1} can be obtained using the same attention layer we constructed for gradient descent with $\hat\bv$ replacing $\hat\bw$, and an extra head with
+\begin{align*}
+     \bQ_4^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+         2t-1\\-(2t-1)^2\\ 1
+    \end{bmatrix},~~ \bK_4^{(\ell)}\bh^{(\ell-1)}_{i}=\begin{bmatrix}
+        1\\ 1 \\i^2
+    \end{bmatrix},~~ \bV_4^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+        \bzero\\ \hat\bv^{\ell-1}-\hat\bw_a^{l-1}\\ \bzero
+    \end{bmatrix}
+\end{align*} for $i\leq 2t-1$ that gives $\hat\bv^{\ell-1}-\hat\bw_a^{\ell-1}$.
+Denote the output tokens of the attention layer by $\tilde \bh$. Eq.~\eqref{eq:agd_step2},~\eqref{eq:agd_step3} can be implemented using one layer of MLP. Concretely, we choose $\bW_{1}^\lth,\bW_{2}^\lth$ such that
+\begin{align*}
+     &\bW_1^{(\ell)}\tilde\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+        \bw^{\ell}_a+\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\hat\bw^{\ell}_a-\hat\bw^{\ell-1}_b)-\hat\bv^{l-1}
+        \\
+        -\bw^{\ell}_a-\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\hat\bw^{\ell-1}_a-\hat\bw^{\ell-1}_b)+\hat\bv^{l-1}
+        \\
+        \bw^{\ell}_a- \bw^{\ell-1}_b
+        \\
+        -\bw^{\ell}_a+\bw^{\ell-1}_b
+    \end{bmatrix},~~ \bW_2^{(\ell)}\sigma(\bW_1^{(\ell)}\tilde\bh^{(\ell-1)}_{2t-1})=\begin{bmatrix}
+      \bzero\\  \hat\bw^{\ell}_b \\ \hat\bv^\ell\\\bzero
+    \end{bmatrix}.
+\end{align*} Since $t=\sigma(t)-\sigma(-t)$ for $t\in\R$,  it is readily verified that one can choose the linear maps such that $\lops{\bW_1^\lth}\leq 4\sqrt{2},\lops{\bW_2^\lth}=\sqrt{2}$. Combining this with the attention layer for Eq.~\eqref{eq:agd_step1} and noting that $\lops{\bV_4^\lth}=\sqrt{2}$, we verify that the  transformer we constructed has norm $\nrmp{\btheta}\leq 10+(\lambda+2)/(B_a^2+\lambda)$. This completes the proof of Lemma~\ref{lm:approx_ridge}.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\subsection{Proof of Theorem~\ref{thm:approx_smooth_linucb}}\label{sec:pf_thm:approx_smooth_linucb}
+We construct a transformer that implements the following steps at each time $t\in[T]$ starting with $\bh^{x}_{2t-1}=\bh^{\pre,x}_{2t-1}$ for $x\in\{\parta,\partb,\partc,\partd\}$ 
+\begin{align}
+    \bh_{2t-1}=
+    \begin{bmatrix}
+    \bh_{2t-1}^{\pre,\parta} \\  \bh_{2t-1}^{\pre,\partb}\\  \bh_{2t-1}^{\pre,\partc}\\   \bh_{2t-1}^{\pre,\partd}
+\end{bmatrix}
+\xrightarrow{\text{step 1}}
+   \begin{bmatrix}
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}} \\
+        \hat\bw_{\ridge} \\ \star\\ \bzero \\\posv
+\end{bmatrix}
+\xrightarrow{\text{step 2}}
+\begin{bmatrix}
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}} \\
+        \hat\bw_{\ridge} \\ \star\\ \widehat{\bA_t^{-1}\ba_{t,1}}\\\vdots\\\widehat{\bA_t^{-1}\ba_{t,A}}
+        \\ \bzero \\\posv
+\end{bmatrix}
+\xrightarrow{\text{step 3}}
+\begin{bmatrix}
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}} \\
+        \hat\bw_{\ridge} \\ \star\\ \widehat{\bA_t^{-1}\ba_{t,1}}\\\vdots\\\widehat{\bA_t^{-1}\ba_{t,A}}\\ {\hat v_{t1}}/{\temp}\\\vdots\\ {\hat v_{tA}}/{\temp}
+        \\ \bzero \\\posv
+\end{bmatrix}
+=:
+\begin{bmatrix}
+    \bh_{2t-1}^{\post,\parta} \\  \bh_{2t-1}^{\post,\partb}\\  \bh_{2t-1}^{\post,\partc}\\   \bh_{2t-1}^{\post,\partd}
+\end{bmatrix},\label{eq:slinucb_pipeline}
+\end{align}
+where $\posv:=[t,i^2,1]^\top$; $\hat\bw_{\ridge}$ is an approximation to the ridge estimator $\bw^t_{\ridge,\lambda}$; $\widehat{\bA_{t}^{-1}\ba_{t,k}}$ are approximations to ${\bA_{t}^{-1}\ba_{t,k}}$;  $\hat v_{tk}$ are approximations to $v_{tk}:=\<\hat\bw_{\ridge},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, \widehat{\bA_t^{-1} \ba_{t,k}}\>}$, which are also approximations to $$
+v^*_{tk}:=\<\bw^t_{\ridge,\lambda},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>}
+$$ for $k\in[A]$. After passing through the transformer, we obtain the policy  
+$$
+\sAlg_{\tfpar}(\cdot|\dset_{t-1},\state_t):=\frac{\exp(\bh^{\post,\partc}_{2t-1})}{\|\exp(\bh^{\post,\partc}_{2t-1})\|_1}\in\Delta^A.$$ 
+We claim the following results which we will prove later.
+\begin{enumerate}[label=Step \arabic*,ref= \arabic*]
+    \item \label{slinucb_step1} For any $\eps>0$, 
+    there exists a transformer $\TF_\btheta(\cdot)$ with 
+\begin{align*}
+&L=\Big\lceil2\sqrt{2T}\sqrt{\frac{B_a^2+\lambda}{\lambda}}\log\Big(\frac{(2T(B_a^2+\lambda)+\lambda)TB_a(B_aB_w+\sigma)}{\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),\\
+&~~~\qquad\max_{\ell\in[L]}M^{(l)}\leq4,~~~\max_{\ell\in[L]}\hidden^{(l)}\leq4d,~~~ \nrmp{\btheta}\leq  10+\frac{\lambda+2}{B_a^2+\lambda}=\cO(1) \end{align*}
+ that implements step 1 in~\eqref{eq:slinucb_pipeline} with  $\|\hat\bw_{\ridge}-\bw^t_{\ridge,\lambda}\|_2\leq\eps$.
+   \item\label{slinucb_step2}
+   For any $\eps>0$, there exists a transformer $\TF_\btheta(\cdot)$ with 
+\begin{align*}
+&L=\Big\lceil2\sqrt{2T}\sqrt{\frac{B_a^2+\lambda}{\lambda}}\log\Big(\frac{(2T(B_a^2+\lambda)+\lambda)B_a}{\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,\\
+&\qquad~~
+\max_{\ell\in[L]}\hidden^{(l)}\leq4dA,~~~ \nrmp{\btheta}\leq  10+A(\frac{\lambda+3}{B_a^2+\lambda}+\sqrt{2})=\cO(A) \end{align*}
+ that implements step 2 in~\eqref{eq:slinucb_pipeline} with  $\|\widehat{\bA_{t}^{-1}\ba_{t,k}}-\bA_{t}^{-1}\ba_{t,k}\|_2\leq\eps$ for $k\in[A]$.
+  \item\label{slinucb_step3} Suppose that the approximation error in Step~\ref{slinucb_step2} satisfies $\eps_2\leq b_a^2/[2(B_a^2+\lambda)TB_a]$.
+  For any $\eps>0$, 
+  there exists a one-layer transformer $\TF_\btheta(\cdot)$ with 
+    $$
+    L=2,~\max_{\ell\in[L]}M^{(l)}\leq 4A,~ \max_{\ell\in[L]}\hidden^\lth\leq \cO(A\sqrt{T\alpha/(\temp\eps)}),~\nrmp{\btheta}\leq  \cO(A+T({\alpha/(\temp\eps)})^{1/4}+\alpha/\temp) $$
+ that implements step 3 in~\eqref{eq:slinucb_pipeline} with  $|\hat v_{tk}/\temp-v_{tk}/\temp|\leq\eps$ for $k\in[A]$.
+\end{enumerate}
+Denote the errors $\eps$ appear in each step by $\eps_1,\eps_2,\eps_3$, respectively. Define for all $k\in[A]$ that $$
+v^{*}_{tk}:=\<\bw^t_{\ridge,\lambda},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>},
+$$ which are the actual values used to compare across different actions in LinUCB. Then  for all $k\in[A]$, we have the approximation error 
+\begin{align*}
+    \Big|\frac{v_{tk}^*}{\temp}-\frac{\hat v_{tk}}{\temp}\Big|
+    &\leq
+     \Big|\frac{v_{tk}^*}{\temp}- \frac{v_{tk}}{\temp}\Big|+ \Big|\frac{v_{tk}}{\temp}-\frac{\hat v_{tk}}{\temp}\Big|\\
+     &\leq
+   \frac1\temp |\<\bw^t_{\ridge,\lambda}-\hat \bw_{\ridge},\ba_{t,k}\>|+\frac1\temp\Big|\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>}-\alpha\sqrt{\<\ba_{t,k}, \widehat{\bA_t^{-1} \ba_{t,k}}\>}\Big|+\eps_3
+    \\&\leq
+    \frac{B_a\eps_1}\temp+\frac{\alpha B_a\eps_2}{2\temp\min\Big\{\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>},\sqrt{\<\ba_{t,k}, \widehat{\bA_t^{-1} \ba_{t,k}}\>}
+    \Big\}}+\eps_3\\
+    &\leq \frac{B_a\eps_1}\temp+\frac{\sqrt{T(B_a^2+\lambda)}  \alpha B_a\eps_2}{b_a\temp}+\eps_3,
+\end{align*}
+where the last line uses Eq.~\eqref{eq:lb_qudratic}. 
+For a targeted approximation error $\eps$, choosing 
+ $\eps_1=\eps\temp/(12B_a),\eps_2=\min\{b_a\temp\eps/(12\sqrt{T(B_a^2+\lambda)}  \alpha B_a),b_a^2/[2(B_a^2+\lambda)TB_a]\}$ and $\eps_3=\eps/12$, we obtain $|v_{tk}^*/\temp-\hat v_{tk}/\temp|\leq \eps/2$ for all $k\in[A]$. 
+
+ From the proof of each step, we can verify that the token dimension $D$ can be chosen to be of order $\conO(dA)$. Moreover, due to the convergence guarantee for each iteration of AGD in Proposition~\ref{prop:conv_gd_agd}, it can be verified that there exists some sufficiently large value $\clipval>0$ with $\log \clipval=\tcO(1)$ such that  we have $\| \bh_i^{\lth} \|_{2} \leq\clipval$
+ for all layer $\ell\in[L]$ and all token $i\in[2\totlen]$ in our TF construction. Therefore, $\TF^\clipval_\btheta$ and $\TF^\infty_\btheta$ generate the same output for all the token matrices we consider, and w.l.o.g. we  may assume in the proof of each step  that the  transformers we consider are those without truncation (i.e., $\TF_\btheta=\TF_\btheta^\infty$).
+
+Finally, combining Step~\ref{slinucb_step1}---\ref{slinucb_step3} with $\alpha=\tcO(\sqrt{d})$ and applying Lemma~\ref{lm:log_softmax} completes the proof of Theorem~\ref{thm:approx_smooth_linucb}.
+
+
+
+
+
+
+\paragraph{Proof of Step~\ref{slinucb_step1}} We use the first $d$ entries of $\bh_{2t-1}^{\partd}$ to represent $\hat\bw_{\ridge}$ and the $d+1\sim 3d$ entries (denoted by $\star$) to record intermediate results for computing $\hat\bw_{\ridge}$. Step~\ref{slinucb_step1} follows immediately from the second part of Lemma~\ref{lm:approx_ridge}. 
+
+\paragraph{Proof of Step~\ref{slinucb_step2}}
+Note that $$\bA_{t}^{-1}\ba_{t,k}=\argmin_{\bx\in\R^d}\frac{1}{2(2t-1)}\bx^\top\bA_t\bx-\frac{1}{(2t-1)}\<\bx,\ba_{t,k}\>=:\argmin_{\bx\in\R^d}L_k(\bx)$$ is the global minimizer of a $\lambda/(2t-1)$-strongly convex  and $(B_a^2+\lambda)$-smooth  quadratic function with the condition number $\kappa\leq 2T(B_a^2+\lambda)/\lambda$. Moreover, we have $$\|\bA_{t}^{-1}\ba_{t,k}\|_2\leq \lops{\bA_{t}^{-1}}\|\ba_{t,k}\|_2\leq B_a/\lambda.$$ It follows from  Proposition~\ref{prop:conv_gd_agd} that $L=\lceil2\sqrt{2 T(B_a^2+\lambda)/\lambda}\log((1+\kappa)B_a/(\lambda\eps))\rceil$ steps of accelerated gradient descent finds $\widehat{\bA_{t}^{-1}\ba_{t,k}}$   with $\|\widehat{\bA_{t}^{-1}\ba_{t,k}}-\bA_{t}^{-1}\ba_{t,k}\|_2\leq\eps$. 
+% Moreover, the gradient $\nabla L_k(\bx)=(\bA_t\bx-\ba_{t,k})/i$. 
+
+Similar to the proof of Lemma~\ref{lm:approx_ridge}, we can construct a transformer such that each (self-attention+MLP) layer implements one step of the accelerated gradient descent (AGD) for all $k\in[A]$. Denote the $(k+2)d+1\sim (k+3)d, (A+1+2k)d+1\sim (A+2+2k)d, (A+2+2k)d+1\sim (A+3+2k)d$ entries of  $\bh_{2t-1}^{\partd}$ by $\hat\bw_{a,tk},\hat\bw_{b,k},\hat\bv_{k}$ for $k\in[A]$. Note that in the input vector $\bh_{2t-1}^{\pre,\partd}$ we have $\hat\bw^0_{a,tk},\hat\bw^0_{b,k},\hat\bv^0_{k}=\bzero_d$.
+
+For each layer $\ell\in[L]$ and $k\in[A]$, we choose 
+$\bQ_{k1,k2,k3,k4}^{(\ell)},\bK_{k1,k2,k3,k4}^{(\ell)},\bV_{k1,k2,k3,k4}^{(\ell)}$ such that for even tokens $\bh_{2j}$ with $j\leq t-1$ and odd tokens $\bh_{2j-1}$ with $j\leq t$
+\begin{align*}
+    &\bQ_{k1}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+        \hat\bv_k^{\ell-1}\\\bzero
+    \end{bmatrix},~~ \bK_{k1}^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
+        \ba_{j}\\\bzero
+\end{bmatrix},~~\bK_{k1}^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\bzero,~~ \bV_{k1}^{(\ell)}\bh^{(\ell-1)}_{2j}=-\eta\begin{bmatrix}
+        \bzero\\ \ba_j \\ \bzero
+    \end{bmatrix},~~\bV_{k1}^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\bzero\\
+    &
+    \bQ_{k2}^{(\ell)}=-\bQ_{k1}^{(\ell)},~~ \bK_{k2}^{(\ell)}=\bK_{k1}^{(\ell)},~~  \bV_{k2}^{(\ell)}=-\bV_{k1}^{(\ell)},\\
+     &
+     \bQ_{k3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+         1\\1-2t\\ 1\\\bzero
+    \end{bmatrix},~~ \bK_{k3}^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
+        1\\ 1 \\2j\\\bzero
+    \end{bmatrix},~~ 
+    \bK_{k3}^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\begin{bmatrix}
+        1\\ 1 \\2j-1\\\bzero
+    \end{bmatrix},~~ \bV_{k3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\eta\begin{bmatrix}
+        \bzero\\ \ba_{j,k}-\lambda\hat\bv_k^{\ell-1}\\ \bzero
+    \end{bmatrix},\\
+     &
+     \bQ_{k4}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+         2t-1\\-(2t-1)^2\\ 1\\\bzero
+    \end{bmatrix},~~ \bK_{k4}^{(\ell)}\bh^{(\ell)}_{2j}=\begin{bmatrix}
+        1\\ 1 \\(2j)^2\\\bzero
+    \end{bmatrix},~~ 
+\bK_{k4}^{(\ell)}\bh^{(\ell)}_{2j-1}=\begin{bmatrix}
+        1\\ 1 \\(2j-1)^2\\\bzero
+    \end{bmatrix},~~ \bV_{k4}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
+        \bzero\\ \hat\bv^{\ell-1}_{k}-\hat\bw_{a,k}^{\ell-1}\\ \bzero
+    \end{bmatrix},
+\end{align*}
+where $\eta=1/(B_a^2+\lambda)$ and the values $\bV_{kt}^{(\ell)}\bh^{(\ell-1)}_{2j},\bV_{kt}^{(\ell)}\bh^{(\ell-1)}_{2j-1},~t=1,2,3,4$ are supported on the entries corresponding to $\hat\bw_{a,k}$.
+Summing up the $M=4A$ heads and noting that $t=\sigma(t)-\sigma(-t)$, we see that the $\hat\bw_{a,k}$ part of $\bh_t$ has the update
+\begin{align*}
+    \hat\bw_{a,k}^{\ell}
+    &=
+    \hat\bw_{a,k}^{\ell-1}-\frac{\eta}{2t-1}\sum_{j=1}^{t-1}[\sigma(\<\ba_j,\hat\bv_k^{\ell-1}\>)-\sigma(-\<\ba_j,\hat\bv_k^{\ell-1}\>)]\ba_j-\frac{\eta\lambda}{2t-1}\bV_{k3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}+\bV_{k4}^{(\ell)}\bh^{(\ell-1)}_{2t-1}\\
+     &=
+     \hat\bw_{a,k}^{\ell-1}-\frac{\eta}{2t-1}\sum_{j=1}^{t-1}\<\ba_j,\hat\bv_k^{\ell-1}\>\ba_j-\frac{\eta\lambda}{2t-1}\bV_{k3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}+\bV_{k4}^{(\ell)}\bh^{(\ell-1)}_{2t-1}\\
+     &=
+     \hat\bv_k^{\ell-1}-\frac{\eta}{2t-1}\sum_{j=1}^{t-1}\<\ba_j,\hat\bv_k^{\ell-1}\>\ba_j-\frac{\eta\lambda}{2t-1}\hat\bv_k^{\ell-1}+\frac{\eta}{2t-1}\ba_{t,k}\\
+     &=\hat\bv_k^{\ell-1}-\eta\nabla L(\bv_k^{\ell-1}),
+\end{align*}
+which is one step of gradient descent with step size $\eta$ (c.f.   Eq.~\ref{eq:agd_step1}).  Moreover, it can be verified that one can choose the matrices such that $\max_{k\in[A],m\in[4]}\lops{\bQ_{km}^\lth}=\max_{k\in[A],m\in[4]}\lops{\bK^\lth_{km}}\leq\sqrt{2}$ and $\max_{k\in[A]}\lops{\bV^\lth_{k1}}=\max_{k\in[A]}\lops{\bV^\lth_{k2}}=\eta,~\max_{k\in[A]}\lops{\bV^\lth_{k3}}\leq (\lambda+1)\eta,~\max_{k\in[A]}\lops{\bV^\lth_{k4}}\leq \sqrt{2}$. Therefore, the norm of the attention layer $$\nrmp{\btheta}\leq \sqrt{2}(A+1)+A(\lambda+3)/(B_a^2+\lambda).$$ Following the construction as in the proof of Lemma~\ref{lm:approx_ridge}, we can choose $\bW_1^\lth,\bW_2^\lth$ that implement Eq.~\eqref{eq:agd_step2},~\eqref{eq:agd_step2} for all $k\in[A]$ simultaneously and we also have $\lops{\bW_1^\lth}\leq4\sqrt{2},\bW_2^\lth=\sqrt{2}$ with $\hidden'^{\lth}=4dA$. It follows from  combining the bounds for the weight matrices that 
+$$
+\nrmp{\btheta}\leq \sqrt{2}(A+1)+A(\frac{\lambda+3}{B_a^2+\lambda}+\sqrt{2})+\sqrt{2}+4\sqrt{2}\leq 10+A(\frac{\lambda+3}{B_a^2+\lambda}+\sqrt{2})=\cO(A).$$
+
+\paragraph{Proof of Step~\ref{slinucb_step3}}
+Denote the $i$-th token  of the output of step 2 (i.e., the input of step 3) by $\bh_i^{(0)}$. 
+We use the $(3A+3)d+1\sim (3A+3)d+A $ entries of $\bh_{2t-1}^{\partd}$ to record $\hat v_{t1}/\temp,\ldots,\hat v_{tA}/\temp$ and  use the $(3A+3)d+A+1\sim (3A+3)d+2A $ entries to store additional information (denoted by $ v_{a,t1},\ldots, v_{a,tA}$) for computing $ \hat v_{t1}/\temp,\ldots, \hat  v_{tA}/\temp$. Concretely, for all $k\in[A]$, we choose 
+$\bQ_{k1,k2,k3,k4}^{(\ell)},\bK_{k1,k2,k3,k4}^{(\ell)},\bV_{k1,k2,k3,k4}^{(\ell)}$ such that   for even tokens $\bh_{2j}$ with $j\leq t-1$ and odd tokens $\bh_{2j-1}$ with $j\leq t$
+\begin{align*}
+    &\bQ^{(1)}_{k1}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+        \hat\bw_{\ridge} \\2t-1\\ 1\\\bzero
+    \end{bmatrix},~~ \bK^{(1)}_{k1}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \ba_{j,k}\\  -\tfthres \\ \tfthres (2j-1)\\\bzero
+    \end{bmatrix},~~ 
+    \bK^{(1)}_{k1}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero_d\\  -\tfthres \\ 2\tfthres j\\\bzero
+    \end{bmatrix},\\
+    &~~~\qquad\bV^{(1)}_{k1}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \bzero\\ 2j-1 \\ \bzero
+\end{bmatrix},~~\bV^{(1)}_{k1}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero\\ 2j \\ \bzero
+    \end{bmatrix},\\
+    &
+    \bQ^{(1)}_{k2}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+        -\hat\bw_{\ridge} \\2t-1\\1\\\bzero
+    \end{bmatrix},~~  \bK^{(1)}_{k2}=\bK^{(1)}_{k1},~~  \ \bV^{(1)}_{k2}=-\bV^{(1)}_{k1},\\
+    &
+    \bQ^{(1)}_{k3}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+        \widehat{\bA_t^{-1}\ba_{t,k}} \\2t-1\\ 1\\\bzero
+    \end{bmatrix},~~ \bK^{(1)}_{k3}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \ba_{j,k}\\  -\tfthres \\ \tfthres (2j-1)\\\bzero
+    \end{bmatrix},~~ 
+    \bK^{(1)}_{k3}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero_d\\  -\tfthres \\ 2\tfthres j\\\bzero
+    \end{bmatrix},\\
+    &
+    \qquad~~~ \bV^{(1)}_{k3}\bh^{(0)}_{2j-1}=\begin{bmatrix}
+        \bzero\\ 2j-1 \\ \bzero
+    \end{bmatrix},~~ \bV^{(1)}_{k3}\bh^{(0)}_{2j}=\begin{bmatrix}
+        \bzero\\ 2j \\ \bzero
+    \end{bmatrix},\\
+    &
+    \bQ^{(1)}_{k4}\bh^{(0)}_{2t-1}=\begin{bmatrix}
+        - \widehat{\bA_t^{-1}\ba_{t,k}} \\2t-1\\1\\\bzero
+    \end{bmatrix},~~  \bK^{(1)}_{k4}=\bK^{(1)}_{k3},~~  \ \bV^{(1)}_{k4}=-\bV^{(1)}_{k3},
+\end{align*}
+where $\tfthres:=TB_a^2(B_aB_w+\sigma)/\lambda+2B_a^2/\lambda$; $\bV^{(1)}_{k1}\bh^{(0)}_{c},\bV^{(1)}_{k2}\bh^{(0)}_{c} (c=2j-1,2j)$ are supported on the $[(3A+3)d+k]$-th entry of $\bh_c^{\partd}$; $\bV^{(1)}_{k3}\bh^{(0)}_{c},\bV^{(1)}_{k4}\bh^{(0)}_{c} (c=2j-1,2j)$ are supported on the $[(3A+3)d+A+k]$-th entry of $\bh_c^{\partd}$. 
+
+Since $\<\hat\bw_{\ridge},\ba_{j,k}\>\leq \|\hat\bw_{\ridge}\|_2\|\ba_{j,k}\|_2\leq\tfthres$, it follows that $$\<\bQ^{(1)}_{k1}\bh^{(0)}_{2t-1},\bK^{(1)}_{k1}\bh^{(0)}_{2j-1}\>=\<\hat\bw_{\ridge},\ba_{j,k}\>+(2j-1-(2t-1))\tfthres\leq 0$$ for $j<i$. Likewise $\<\bQ^{(1)}_{k1}\bh^{(0)}_{2t-1},\bK^{(1)}_{k1}\bh^{(0)}_{2j}\>\leq0$ for $j<i$. 
+Since we assume the error $\eps_2\leq b_a^2/[2(B_a^2T+\lambda)B_a]$
+in Step~\ref{slinucb_step2}, $b_a\leq\|\ba_{t,k}\|_2\leq B_a$ and $\lambda\id_d\preceq\bA_t\preceq (B_a^2T+\lambda)\id_d$, it follows that 
+\begin{align}
+    \<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\> 
+    &\geq 
+    \<\ba_{t,k},{\bA_t^{-1}\ba_{t,k}}\>-\|\ba_{t,k}\|_2\|\bA_t^{-1}\ba_{t,k}-\widehat{\bA_t^{-1}\ba_{t,k}}\|_2\notag\\
+    &\geq \frac{b_a^2}{2(B_a^2T+\lambda)}\geq \frac{b_a^2}{2T(B_a^2+\lambda)}=:\frac{1}{T}\cdot{\lran},\label{eq:lb_qudratic}
+    \\
+     \<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>
+     &\leq 
+     \<\ba_{t,k},{\bA_t^{-1}\ba_{t,k}}\>+\|\ba_{t,k}\|_2\|\bA_t^{-1}\ba_{t,k}-\widehat{\bA_t^{-1}\ba_{t,k}}\|_2\leq \frac{2B_a^2}{\lambda}=:\uran.\label{eq:ub_qudratic}
+\end{align}
+Therefore,  $\<\bQ^{(1)}_{k3}\bh^{(0)}_{2t-1},\bK^{(1)}_{k3}\bh^{(0)}_{2j-1}\>=\<\widehat{\bA_t^{-1}\ba_{t,k}},\ba_{j,k}\>+(2j-1-(2t-1))\tfthres\geq 0$ iff $j=i$. Likewise $\<\bQ^{(1)}_{k3}\bh^{(0)}_{2t-1},\bK^{(1)}_{k3}\bh^{(0)}_{2j}\>\leq 0$  for $j<i$. Similar results hold for the $k2,k4$-th heads.  By some basic algebra and noting that $t=\sigma(t)-\sigma(-t)$ for $t\in\R$, we see that the attention layer updates the position for $\hat v_{tk}/\temp,\hat v_{a,tk}$ with the values $\<\hat\bw_{\ridge},\ba_{t,k}\>, \<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>$ for all $k\in[A]$, respectively.  Moreover, it can be verified that one can choose the matrices such that $$\max_{k\in[A],m\in[4]}\lops{\bQ_{km}^{(1)}}=\max_{k\in[A],m\in[4]}\lops{\bV_{km}^{(1)}}=1,~\max_{k\in[A],m\in[4]}\lops{\bK^{(1)}_{km}}\leq\tfthres.$$ 
+
+
+
+
+Now, to compute the value of $\hat v_{tk}/\temp$ in step 3 in~\eqref{eq:slinucb_pipeline}, what remains  is to  approximately compute $\cwid\sqrt{\hat v_{a,tk}}$, add the result to the position for $\hat v_{tk}/\temp$, and multiplied it by $1/\temp$.
+
+Since $\hat v_{a,tk}=\<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>\in[\lran/T,\uran]$, to approximately compute $\sqrt{\<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>}$, it suffices to approximate $f(x)=\sqrt{x},x\in[\lran/T,\uran]$. For any  level of approximation error $\eps_\appr>0$, let $(x_1,x_2,\ldots,x_N)\in[\lran/T,\uran]$ satisfy
+\begin{align*}
+x_1=\lran/T,~x_N=\uran,   ~~~~~
+    0\leq\sqrt{x_{j+1}}-\sqrt{x_{j}}\leq\eps_\appr,~~\text{ for }j\in[N-1].
+\end{align*}
+Define the function
+\begin{align*}
+    \tilde f(x):=\sqrt{x_1}+\sum_{j=1}^{N-1}\sigma(x-x_{j})\frac{1}{\sqrt{x_{j+1}}+\sqrt{x_j}}.
+\end{align*} Note that $\tilde f(x)$ is a piecewise linear function on $[\lran/T,\uran]$ with $\tilde f(x_i)=\sqrt{x_i}$ for $i\in[N]$. By some basic algebra,  it can the shown that for $\eps_\appr<\lran/T$, the difference between $f(x)$ and $\tilde f(x)$
+\begin{align*}
+   \max_{c\in[x_j,x_{j+1}]} |\tilde f(c)-f(c)|=\max_{t\in[0,1]}\Big|\sqrt{x_j}+\frac{t}{\sqrt{x_j+1}+\sqrt{x_j}}-\sqrt{x_j+t(x_{j+1}-x_j)}\Big|\leq\eps_\appr
+\end{align*} when $\sqrt{x_{j+1}}-\sqrt{x_{j}}<c\sqrt{\eps_\appr\lran/T}$ for some universal constant $c>0$ and all $j\in[N-1]$. 
+
+Therefore, 
+ there exists a function $\tilde f(x)$ with $N=\cO(\sqrt{T/\eps_\appr})$ that satisfies $$\max_{[\lran/T,\uran]}|\tilde f(x)-f(x)|\leq\eps_\appr.$$ 
+ As a consequence, we verify that one can implement $\tilde f(\hat v_{a,tk})$ for all $k\in[A]$ simultaneously  by constructing a two-layer MLP with $$\lops{\bW_1^{(1)}}\leq \conO(\sqrt{N}),~~\lops{\bW_2^{(1)}}\leq \cO(\sqrt{TN}),~~\hidden\leq AN.$$
+
+
+
+
+
+
+ % Moreover, since $\<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>\in[\lran/T,\uran]$, it follows that a symmetrically extended version of $f(x)=\sqrt{x},x\in[\lran/T,\uran]$ onto $[-\uran,\uran]$ that is smooth on $[-\lran/T,\lran/T]$, and that $\sup|f(x)|\leq\uran$, $\sup|\nabla f(x)|\leq T/(2\lran),~\sup|\nabla^2 f(x)|\leq T^{3/2}/(4\lran^{3/2})$, is $(\eps_{\appr},\uran,M,C_1)$-approximable by sum of relus  with  $C_1=c\cdot \sqrt{\uran}[(\uran/\lran)^{3/2}+1]T^{3/2}$ and $M=c \cdot C_1^2\log(1+C_1/\eps_{\appr})/\eps^2_{\appr}$  for some universal constant $c>0$.   \lc{need to import results from~\cite{bai2023transformers}}
+ 
+ Choose $\eps_{\appr}=\temp\eps/\alpha$. Substituting the expressions for $N,\eps_\appr$ into the upper bounds on the norms, we obtain
+ $$\lops{\bW_1^{(1)}}\leq \cO(({\alpha T/(\temp\eps)})^{1/4}),~~\lops{\bW_2^{(1)}}\leq \cO(T^{3/4}({\alpha/(\temp\eps)})^{1/4}),~~\hidden\leq \cO(A({\alpha T/(\temp\eps)})^{1/2}).$$
+
+ 
+ Lastly, we can construct another two-layer MLP with weights $\bW^{(2)}_1,\bW^{(2)}_2$ such that it implements the summation and multiplication updates 
+ \begin{align*}
+ \hat\bv\leftarrow\hat\bv+\bW^{(2)}_2\sigma(\bW^{(2)}_1\bh_{2t-1}^{(1)})\approx\hat\bv+\Big(\frac1\temp-1\Big)\hat\bv+\frac\alpha\temp\Big[\sqrt{ \hat v_{a,t1}},\ldots,\sqrt{ \hat v_{a,tA}}\Big]^\top=\frac{\hat v_{tk}}{\temp}
+ \end{align*}
+with $\|\hat v_{tk}/\temp-v_{tk}/\temp\|\leq \eps$ for all $k\in[A]$. We verify that the weight matrices can be chosen with
+  $$
+ \lops{\bW^{(2)}_1}\leq \conO(1),~~ \lops{\bW^{(2)}_2}\leq \conO(\alpha/\temp)
+ $$ and $\hidden\leq \conO(A)$.
+
+ Therefore the norm of the transformer that implements step 3 satisfies $$
+ \nrmp{\btheta}\leq \conO(\tfthres+1+4A+T^{3/4}({\alpha/(\temp\eps)})^{1/4}+\cwid/\temp)=
+ \cO(A+T({\alpha/(\temp\eps)})^{1/4}+\alpha/\temp).$$  This conclude the proof of Step~\ref{slinucb_step3}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \subsection{Proof of Corollary~\ref{cor:approx_linucb}}\label{sec:pf_cor:approx_linucb}
+% This corollary follows directly from the standard regret analysis of LinUCB (see e.g. Theorem 19.2 in Lattimore and Szepesvari~\cite{lattimore2020bandit}) and the approximation result given in Theorem~\ref{thm:approx_linucb}. Concretely, note that $v_{tj}^*=\<\bw^t_{\ridge,\lambda},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>}$ is the solution to the optimization problem 
+% \begin{align*}&\text{maximize }~~~\<\bw,\ba_{t,k}\>
+% \\
+% &\text{subject to }~~~\bw\in \sC_t:=\{\bw|(\bw-\bw^t_{\ridge,\lambda})^\top\bA_t(\bw-\bw^t_{\ridge,\lambda})\leq\alpha^2\}.
+% \end{align*}
+% Moreover, standard analysis as in the proof of Theorem 19.2 in Lattimore and Szepesvari~\cite{lattimore2020bandit} shows with probability over $1-\delta$ we have $\bw^*\in\sC_t$ for all $t\in[T]$. As shown in Theorem~\ref{thm:approx_linucb}, we can construct a transformer that implements an approximated LinUCB with  approximation error less than $\eps$. Let $k$ denotes the action chosen by the approximated algorithm at time $i$ (following the policy $\bp_t$). On the event $\bw^*\in\sC_t$, we have
+% \begin{align*}
+%      \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>\leq  \max_{j\in[A]}v^*_{tj}\leq v^*_{tk}+\eps =\<\tilde{\bw},\ba_{t,k}\>+\eps
+% \end{align*}
+% for some $\tilde{\bw}\in\sC_t$.
+% Therefore for  each $t\in[T]$
+% \begin{align*}
+%     \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\<\bw^*,\ba_{t,k}\>\leq \eps+ \<\tilde{\bw}-\bw^*,\ba_{t,k}\>\leq \eps+ \|\tilde{\bw}-\bw^*\|_{\bA_t}\cdot\|\ba_{t,k}\|_{\bA^{-1}_t}
+%     \leq \eps+ 2\alpha\|\ba_{t,k}\|_{\bA^{-1}_t}.
+% \end{align*}
+%  Moreover, note that $ \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\<\bw^*,\ba_{t,k}\>\leq 2B_wB_a\leq2\alpha$.
+% Summing over $t\in[T]$ gives
+% \begin{align*}
+%    \bR(T)&\leq 2\sum_{t=1}^T\alpha(1\wedge\|\ba_{t,k}\|_{\bA^{-1}_t})+\eps T\\
+%    &\leq 
+% 2\alpha\sqrt{T}\sqrt{\sum_{t=1}^T(1\wedge\|\ba_{t,k}\|^2_{\bA^{-1}_t})}+\eps T\\
+% &\leq 
+% \sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T,
+% \end{align*}
+% where the second line uses Cauchy-Schwatz inequality and the last line follows from Lemma 19.4 of Lattimore and Szepesvari~\cite{lattimore2020bandit}.
+
+
+
+
+
+
+
+
+
+\subsection{Proof of Theorem~\ref{thm:smooth_linucb}}\label{sec:pf_thm:smooth_linucb}
+
+By Theorem~\ref{thm:diff_reward} and Theorem~\ref{thm:approx_smooth_linucb} with ${\geneps=\eps=1/\totlen^3}$, it suffices to show soft LinUCB with parameter $\temp$ has the regret guarantee \begin{align*}
+\E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_{\sLinUCB(\temp)}}(\totlen)\Big]&\leq\cO(d\sqrt{T}\log(T)).
+\end{align*}
+This follows directly from a  regret analysis similar to  that for LinUCB (see e.g.~\cite{chu2011contextual} or  Theorem 19.2 in~\cite{lattimore2020bandit}). Concretely, note that $v_{tk}^*=\<\bw^t_{\ridge,\lambda},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>}$ is the solution to the optimization problem 
+\begin{align*}&\text{maximize }~~~\<\bw,\ba_{t,k}\>
+\\
+&\text{subject to }~~~\bw\in \sC_t:=\{\bw|(\bw-\bw^t_{\ridge,\lambda})^\top\bA_t(\bw-\bw^t_{\ridge,\lambda})\leq\alpha^2\},
+\end{align*}
+where we recall $\alpha=\alpha(\delta_0)$ with $\delta_0=1/(2B_aB_wT)$ and
+\begin{align}
+\cwid=\cwid(\delta_0):=\sqrt{\lambda}B_w+\sigma\sqrt{2\log(1/\delta_0)+d\log((d\lambda+TB_a^2)/(d\lambda))}.\label{eq:recall_alpha_formula}
+\end{align}
+Moreover, standard analysis as in the proof of Theorem 19.2 in~\cite{lattimore2020bandit} shows with probability over $1-1/(2B_aB_wT)$ we have $\bw^*\in\sC_t$ for all $t\in[T]$. Denote this event by $\cE_0$. Moreover, let $p_{t,k}$ denote the probability of soft LinUCB selecting the action $\ba_{t,k}$ at time $t$ for all $k\in[A]$.  For any $\eps>0$, let $\sS_t(\eps):=\{k\in[A]:v^*_{tk}-\max_{j\in[A]}v^*_{tj}\leq \eps\}$. 
+
+Therefore, on the event $\cE_0$ at time $t$ we have
+\begin{align*}
+    \max_{j}v^*_{tj}-\sum_{k=1}^A p_{t,k}v^*_{tk}&= \sum_{k\in\sS_t(\eps_0)} p_{t,k}(\max_{j}v^*_{tj}-v^*_{tk})+\sum_{k\notin\sS_t(\eps_0)} p_{t,k}(\max_{j}v^*_{tj}-v^*_{tk})\\
+    &\leq \eps_0+\sum_{k\notin\sS_t(\eps_0)} \exp\Big(-\frac{\eps_0}{\temp}\Big)(\max_{j}v^*_{tj}-v^*_{tk})\\
+    &\leq \eps_0+2A\exp\Big(-\frac{\eps_0}{\temp}\Big)B_a(B_w+2\alpha/\sqrt{\lambda}),
+\end{align*}
+where the second line uses $$
+p_{t,k}\leq\exp\Big(-\frac{\eps_0}{\temp}\Big)\cdot\max{p_{t,k}}\leq \exp\Big(-\frac{\eps_0}{\temp}\Big),
+$$ and the  last line follows from that $|v^*_{tj}|\leq B_a(B_w+2\alpha/\sqrt{\lambda})$
+ on the event $\cE_0$. Choosing $\eps_0=\eps_1/2:=1/\sqrt{4T}$ and noting that $\temp=\eps_0/\log(4TA B_a(B_w+2\alpha/\sqrt{\lambda}))=\tcO(1/\sqrt{T})$, we obtain 
+ \begin{align*}
+    \max_{j}v^*_{tj}-\sum_{k=1}^A p_{t,k}v^*_{tk}&\leq\eps_1.
+\end{align*}
+Now, on the event $\cE_0$, we have
+\begin{align*}
+    \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>\leq  \max_{j\in[A]}v^*_{tj}\leq \sum_{k=1}^A p_{t,k}v^*_{tk}+\eps_1 =\sum_{k=1}^A p_{t,k}\<\tilde{\bw}_k,\ba_{t,k}\>+\eps_1
+\end{align*}
+for some $\tilde{\bw}_k\in\sC_t,k\in[A]$.
+Therefore,  on $\cE_0$ for  each $t\in[T]$
+\begin{align*}
+    &~~\quad\max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\sum_{k=1}^Ap_{t,k}\<\bw^*,\ba_{t,k}\>
+    \leq \eps_1+ \sum_{k=1}^Ap_{t,k}\<\tilde{\bw}_k-\bw^*,\ba_{t,k}\>
+    \\&\leq  
+    \eps_1+\sum_{k=1}^Ap_{t,k}\|\tilde{\bw}_k-\bw^*\|_{\bA_t}\cdot\|\ba_{t,k}\|_{\bA^{-1}_t}
+    \leq \eps_1+ 2\alpha\E_{k\sim \bp_t}\|\ba_{t,k}\|_{\bA^{-1}_t}.
+\end{align*}
+ Moreover, note that $ \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\<\bw^*,\ba_{t,k}\>\leq 2B_wB_a$ and $\|\ba_{t,k}\|_{\bA^{-1}_t}\leq B_a/\sqrt{\lambda}$.
+Summing over $t\in[T]$ and using the tower property of martingales, we obtain
+\begin{align*}
+&\qquad\E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_{\sLinUCB(\temp)}}(\totlen)\Big]\\
+&=
+\E\Big[\max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\sum_{k=1}^Ap_{t,k}\<\bw^*,\ba_{t,k}\>
+ \Big]   
+\\
+&\leq \E[2\sum_{t=1}^T\alpha\E_{k\sim \bp_t}\|\ba_{t,k}\|_{\bA^{-1}_t}+\eps_1 T +2B_wB_a T\cdot\mathbf{1}_{\{\cE^c_0\}}]\\
+   &\leq
+\E[2\sum_{t=1}^T\alpha\Big(\frac{B_a}{\sqrt{\lambda}}\wedge\|\ba_{t,k}\|_{\bA^{-1}_t}\Big)+\eps_1 T +2B_wB_a T\cdot\mathbf{1}_{\{\cE^c_0\}}]\\
+   &\leq 
+2\E\Big[\alpha\sqrt{T}(\frac{B_a}{\sqrt{\lambda}}+1)\sqrt{\sum_{t=1}^T(1\wedge\|\ba_{t,k}\|^2_{\bA^{-1}_t})}+\eps_1 T\Big]+2B_wB_a T\P(\cE^c_0)\\
+&\leq 
+\sqrt{8 d({B_a}/{\sqrt{\lambda}}+1)^2T\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps_1 T+1,
+\end{align*}
+where the fourth line uses the fact that
+\begin{align*}
+ \frac{B_a}{\sqrt{\lambda}}\wedge\|\ba_{t,k}\|_{\bA^{-1}_t}\leq (\frac{B_a}{\sqrt{\lambda}}+1)\cdot(1\wedge\|\ba_{t,k}\|^2_{\bA^{-1}_t})
+\end{align*}
+and Cauchy-Schwatz inequality, the last line follows from Lemma 19.4 of~\cite{lattimore2020bandit}. Plugging in $\eps_1=1/\sqrt{T}$ and Eq.~\eqref{eq:recall_alpha_formula} gives the upper bound on expected regret 
+\begin{align*}
+\E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_{\sLinUCB(\temp)}}(\totlen)\Big]&\leq\cO(d\sqrt{T}\log(T))
+\end{align*}
+for soft LinUCB with parameter $\temp.$
+
+Moreover, the second part of Theorem~\ref{thm:smooth_linucb} (i.e., the upper bound on $\log\cN_{\tfparspace}$) follows directly from Lemma~\ref{lm:cover_num_bound} and Eq.~\eqref{eq:linucb_tf_param}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \section{LinUCB for linear stochastic bandit}
+
+% Consider the linear stochastic bandit problem where at each time $t$ the agent plays an action $\ba_t\in\sA_t$ and receives an reward  $r_t=\<\ba_t,\bw^*\>+\eta_t$,  where $\eta_t$ is some zero mean noise with $|\eta_t|\leq\sigma$. Assume  $\ba_t,\bw^*\in\R^d$ with $\alb\leq\|\ba_t\|_2\leq B_a$, $\|\bw^*\|_2\leq B_w$, and the action set $\sA_t=\{\ba_{t,1},\ldots,\ba_{t,A}\}$ for some $A\geq 1$ and all $t\geq1$. We let $R$ to be some constant sufficiently large that may vary in different problems.
+
+% Consider the embedding where 
+% \begin{align*}
+% \bh_t=
+% \begin{bmatrix}
+%     \bh_t^{\parta} \\  \bh_t^{\partb}\\  \bh_t^{\partc}\\   \bh_t^{\partd}
+% \end{bmatrix},
+% \end{align*}
+% where $\bh_t^{\parta}=\begin{bmatrix}
+%     \ba_t^\top &r_t
+% \end{bmatrix}^\top$ denotes the action and the observed reward at time $i$;  $\bh_t^{\partb}=\begin{bmatrix}
+%     \ba_{t,1}^\top &\ldots & \ba_{t,A}^\top
+% \end{bmatrix}^\top$ denotes the action set at time $i$; $\bh_t^{\partc}=\begin{bmatrix}
+%     u_{t1} &\ldots u_{tA}
+% \end{bmatrix}^\top\in\Delta^A$ denotes the (unnormalized) policy used to select the action $\ba_t$ at time $i$;  $\bh_t^{\partd}=\begin{bmatrix}
+%     \bzero^\top_{d+dA+2A} & \bzero^\top &i &i^2 &1
+% \end{bmatrix}^\top$ denotes the extra positional embedding. Note that the embedding dimension $D\geq O(dA)$.
+
+% At each time $i$ the transformer takes in $\bH^{\pre}_{t}=[\bH^{\post}_{t-1},\bh^{\pre}_t]\in\R^{D\times i}$ and outputs $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_t]\in\R^{D\times i}$, where  $\bh^{\pre,\parta}_{t}=\bzero_{d+1},\bh^{\post,\parta}_{t}=\bzero_{d+1}$; $\bh^{\pre,\partc}_{t}=\bzero_{A}$, and $\bh^{\post,\partc}_{t}\in[0,1]^A$ denotes the unnormalized policy at time $i$. The agent   selects an action according to the normalized  policy $\bp_t:=\bh^{\post,\partc}_{t}/\|\bh^{\post,\partc}_{t}\|_1$, observes the reward and denotes $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_t]$ where  $\bh^{\post,\parta}_{t}=\begin{bmatrix}
+%     \ba_t^\top & r_t
+% \end{bmatrix}^\top$, $\bh^{\post,\star}_{t}=\bh^{\post,\star}_{t}$ for $\star$ in $\{\partb,\partc,\partd\}$.
+
+% A standard algorithm for this problem is LinUCB~\citep{chu2011contextual}. We will show that there exists a transformer that approximately implement LinUCB. 
+
+
+
+
+
+
+% \subsection{tnteraction, algorithm and regret bound}
+% Let $T$ be the total time and $\lambda,\cwid>0$ be some prespecified values. At each time $t\in[T]$, LinUCB consists of the following steps: 
+% \begin{enumerate}
+%     \item Computes the ridge estimator $\bw^t_{\ridge,\lambda}=\argmin_{\bw\in\R^d}\frac{1}{2t}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2t}\|\bw\|_2^2$.
+%     \item For each action $k\in[A]$, computes $v^*_{tk}:=\<\ba_{t,k},\bw^t_{\ridge,\lambda}\>+\cwid\sqrt{\ba_{t,k}^\top \bA_{t}^{-1}  \ba_{t,k}}$, where $\bA_t=\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$.
+%     \item Selects the action $\ba_{t,j}$ with $j:=\argmax_{k\in[A]}v^*_{tk}$.
+% \end{enumerate}
+
+% Unless stated otherwise, we choose $\cwid=B_aB_w\vee [\sqrt{\lambda}B_w+\sigma\sqrt{2\log(1/\delta)+d\log((d\lambda+TB_a^2)/(d\lambda))}]$\lc{we don't need the $B_aB_w$ term for the soft linucb case.}. By Theorem 19.2, Corollary 19.3 in Lattimore and Szepesvari~\cite{lattimore2020bandit}, we have the regret $$\bR(T)=\sum_{t=1}^T \max_{j\in[A]}\<\ba_{t,j},\bw^*\>-\<\ba_t,\bw^*\>$$ satisfies $\bR(T)\leq\sqrt{8 dT\alpha\log((d\lambda+TB_a^2)/(d\lambda))}$ with probability over $1-\delta$. Choosing $\delta=1/T$ gives $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some  problem-dependent constant $C>0$.
+
+% We will show that for any $\eps>0$ there exists a transformer that can perform an approximate LinUCB algorithm such that $\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$.
+
+
+
+
+
+% \subsection{TF construction}
+
+% \begin{theorem}[Approximated LinUCB]\label{thm:approx_linucb}
+% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
+% For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
+% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ such that 
+% $|v^*_{tk}-\max_{j\in[k]}v_{tj}^*|\leq \eps$ for all $t\in[T]$ and  $k$ such that $p_{tk}>0$. 
+% Here $\tcO(\cdot)$ hides constants and logarithmic dependence on $T,A,\log(1/\delta),1/\eps$.
+
+% \end{theorem}
+
+% See the proof in Section~\ref{sec:pf_thm:approx_linucb}.
+
+% \begin{corollary}[Regret analysis of approximated LinUCB ]\label{cor:approx_linucb}
+%     For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
+% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ that approximately implements LinUCB such that the regret
+% $$\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$$
+% with probability over $1-\delta$. Moreover, choosing $\eps=1/\sqrt{T},\delta=1/{T}$ gives a transformer the implements approximated  LinUCB with the regret
+% $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some problem-dependent constant $C>0$, with probability over $1-1/T$.
+% \end{corollary}
+
+% See the proof in Section~\ref{sec:pf_cor:approx_linucb}.
+
+
+
+% \begin{proposition}[Convergence guarantee of GD and AGD]\label{prop:conv_gd_agd}
+% Suppose $L(\bw)$ is a $\alpha$-strongly convex and $\beta$-smooth function on $\R^d$. Denote the condition number $\kappa:=\beta/\alpha$ and $\bw^*:=\argmin_{\bw}L(\bw)$.
+% \begin{enumerate}
+% \item[(a).]
+% The gradient descent iterates $\bw^{t+1}_{\GD}:=\bw^{t}_{\GD}-\eta\nabla L(\bw^{t}_{\GD})$ with stepsize $\eta=1/\beta$ and initial point $\bw^{0}_{\GD}=\bzero_d$ satisfies
+% \begin{align*}
+%     \|\bw^{t}_{\GD}-\bw^*\|_2^2
+%     &\leq\exp(-\frac{t}{\kappa}) \|\bw^{0}_{\GD}-\bw^*\|_2^2,
+%     \\
+%     L(\bw^{t}_{\GD})-L(\bw^*)
+%     &\leq \frac{\beta}{2} \exp(-\frac{t}{\kappa})\|\bw^{0}_{\GD}-\bw^*\|_2^2.
+% \end{align*}
+%     \item [(b).] 
+%     The accelerated gradient descent (AGD, Nestrov~\cite{nesterov2003introductory}) iterates $\bw^{t+1}_{\AGD}:=\bv^{t}_{\GD}-\frac{1}{\beta} L(\bv^{t}_{\AGD}),~~ \bv^{t+1}_{\AGD}:=\bw^{t+1}_{\AGD}+\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\bw^{t+1}_{\AGD}-\bw^{t}_{\AGD})$ with $\bw^{0}_{\AGD}=\bv^{0}_{\AGD}=\bzero_d$ satisfies
+%     \begin{align*}
+%     \|\bw^{t}_{\AGD}-\bw^*\|_2^2
+%     &\leq(1+\kappa)\exp(-\frac{t}{\sqrt{\kappa}}) \|\bw^{0}_{\AGD}-\bw^*\|_2^2,
+%     \\
+%     L(\bw^{t}_{\AGD})-L(\bw^*)
+%     &\leq \frac{\alpha+\beta}{2} \exp(-\frac{t}{\sqrt\kappa})\|\bw^{0}_{\AGD}-\bw^*\|_2^2.
+% \end{align*}
+% % Moreover, if $L(\bw)$ is quadratic in $\bw$, then $ \|\bw^{t}_{\AGD}-\bw^*\|_2
+% %     \leq\|\bw^{0}_{\AGD}-\bw^*\|_2$ for all $t\geq1$ (see e.g.,~\cite{assran2020convergence,attia2021algorithmic} for stability results of the AGD trajectory).
+% \end{enumerate}
+    
+% \end{proposition}
+
+% \begin{lemma}[Approximate the ridge regression]\label{lm:approx_ridge}
+% For any small $\eps>0$, there exists a masked self-attention layer only transformer $\DTF_\btheta^0(\cdot)$ with 
+% $$L=\Big\lceil\frac{2T(B_a^2+\lambda)}{\lambda}\log({TB_a(B_aB_w+\sigma)}/({\lambda}\eps))\Big\rceil=\tcO(T),~~\max_{\ell\in[L]}M^{(l)}\leq3,~~~ \nrmp{\btheta}\leq  \sqrt{2}+(\lambda+2)/(B_a^2+\lambda) $$ such that $\|\read_{\bw_{\ridge}}(h_t^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
+
+% Moreover, there exists a decoder-based transformer $\DTF_\btheta(\cdot)$ with  $$L=\Big\lceil2\sqrt{T}\sqrt{\frac{B_a^2+\lambda}{\lambda}}\log\Big(\frac{(T(B_a^2+\lambda)+\lambda)TB_a(B_aB_w+\sigma)}{\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4,~~~ \nrmp{\btheta}\leq  11+(\lambda+2)/(B_a^2+\lambda) $$
+%  such that $\|\read_{\bw_{\ridge}}(h_t^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
+% \end{lemma}
+% See the proof is Section~\ref{sec:pf_lm:approx_ridge}.

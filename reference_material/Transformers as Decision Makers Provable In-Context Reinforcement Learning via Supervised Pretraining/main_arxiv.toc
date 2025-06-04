@@ -1,0 +1,85 @@
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {paragraph}{Summary of contributions and paper outline}{2}{section*.1}%
+\contentsline {subsection}{\numberline {1.1}Related work}{2}{subsection.1.1}%
+\contentsline {paragraph}{Meta-learning and meta-reinforcement learning}{2}{section*.2}%
+\contentsline {paragraph}{In-context learning}{3}{section*.3}%
+\contentsline {paragraph}{Transformers for decision making}{3}{section*.4}%
+\contentsline {paragraph}{Expressivity of transformers}{3}{section*.5}%
+\contentsline {paragraph}{Statistical theories of imitation learning}{3}{section*.6}%
+\contentsline {section}{\numberline {2}Framework for In-Context Reinforcement Learning}{3}{section.2}%
+\contentsline {paragraph}{Distributions of offline trajectories}{3}{section*.7}%
+\contentsline {paragraph}{Three special cases of expert algorithms}{4}{section*.8}%
+\contentsline {paragraph}{Transformer architecture}{4}{section*.9}%
+\contentsline {paragraph}{Algorithm induced by Transformers}{5}{section*.10}%
+\contentsline {section}{\numberline {3}Statistical analysis of supervised pretraining}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Main result}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Implications in special cases}{7}{subsection.3.2}%
+\contentsline {paragraph}{Algorithm Distillation}{7}{section*.11}%
+\contentsline {paragraph}{Decision Pretrained Transformer}{7}{section*.12}%
+\contentsline {paragraph}{Approximate DPT}{7}{section*.13}%
+\contentsline {section}{\numberline {4}Approximation by transformers}{7}{section.4}%
+\contentsline {subsection}{\numberline {4.1}LinUCB for linear bandits}{8}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Thompson sampling for linear bandit}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}UCB-VI for Tabular MDPs}{9}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Experiments}{10}{section.5}%
+\contentsline {section}{\numberline {6}Conclusions}{11}{section.6}%
+\contentsline {section}{\numberline {A}Limitation and discussion}{17}{appendix.A}%
+\contentsline {paragraph}{Distribution ratio}{17}{section*.18}%
+\contentsline {paragraph}{Guarantee of pretrained transformer}{17}{section*.19}%
+\contentsline {paragraph}{Alternative pretraining methods}{17}{section*.20}%
+\contentsline {paragraph}{Possibility of surpassing the expert algorithm by online training}{17}{section*.21}%
+\contentsline {paragraph}{Implications for practice}{17}{section*.22}%
+\contentsline {section}{\numberline {B}Experimental details}{17}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Implementation details}{18}{subsection.B.1}%
+\contentsline {paragraph}{Model and embedding}{18}{section*.23}%
+\contentsline {paragraph}{Online algorithms}{18}{section*.24}%
+\contentsline {subsection}{\numberline {B.2}Additional experiments and plots}{18}{subsection.B.2}%
+\contentsline {subsection}{\numberline {B.3}The effect of distribution ratio}{19}{subsection.B.3}%
+\contentsline {section}{\numberline {C}Technical preliminaries}{19}{appendix.C}%
+\contentsline {section}{\numberline {D}Proofs in Section \ref {sec:supervised-pretraining}}{22}{appendix.D}%
+\contentsline {subsection}{\numberline {D.1}Proof of Theorem\nobreakspace {}\ref {thm:diff_reward}}{22}{subsection.D.1}%
+\contentsline {paragraph}{Proof of Eq.\nobreakspace {}(\ref {eqn:Hellinger-bound-main-theorem})}{22}{section*.28}%
+\contentsline {paragraph}{Proof of Eq.\nobreakspace {}(\ref {eqn:reward-bound-main-theorem})}{23}{section*.29}%
+\contentsline {subsection}{\numberline {D.2}Proof of Proposition\nobreakspace {}\ref {prop:app_opt_diff_reward}}{24}{subsection.D.2}%
+\contentsline {subsection}{\numberline {D.3}An auxiliary lemma}{24}{subsection.D.3}%
+\contentsline {paragraph}{Proof of Eq.\nobreakspace {}\textup {\hbox {\mathsurround \z@ \normalfont (\ignorespaces \ref {eq:pf_hellinger_control_general}\unskip \@@italiccorr )}}}{25}{section*.30}%
+\contentsline {section}{\numberline {E}Soft LinUCB for linear stochastic bandit}{26}{appendix.E}%
+\contentsline {subsection}{\numberline {E.1}Embedding and extraction mappings}{26}{subsection.E.1}%
+\contentsline {paragraph}{Offline pretraining}{26}{section*.31}%
+\contentsline {paragraph}{Rollout}{27}{section*.32}%
+\contentsline {paragraph}{Embedding and extraction mappings}{27}{section*.33}%
+\contentsline {subsection}{\numberline {E.2}LinUCB and soft LinUCB}{27}{subsection.E.2}%
+\contentsline {subsection}{\numberline {E.3}Approximation of the ridge estimator}{27}{subsection.E.3}%
+\contentsline {paragraph}{Proof of part 1}{28}{section*.34}%
+\contentsline {paragraph}{Proof of part 2}{29}{section*.35}%
+\contentsline {subsection}{\numberline {E.4}Proof of Theorem\nobreakspace {}\ref {thm:approx_smooth_linucb}}{30}{subsection.E.4}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {slinucb_step1}}{31}{section*.36}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {slinucb_step2}}{31}{section*.37}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {slinucb_step3}}{32}{section*.38}%
+\contentsline {subsection}{\numberline {E.5}Proof of Theorem\nobreakspace {}\ref {thm:smooth_linucb}}{34}{subsection.E.5}%
+\contentsline {section}{\numberline {F}Thompson sampling for stochastic linear bandit}{36}{appendix.F}%
+\contentsline {subsection}{\numberline {F.1}Thompson sampling algorithm}{36}{subsection.F.1}%
+\contentsline {subsection}{\numberline {F.2}Definitions and assumptions}{37}{subsection.F.2}%
+\contentsline {subsection}{\numberline {F.3}Proof of Theorem\nobreakspace {}\ref {thm:approx_thompson_linear-formal} (and hence Theorem\nobreakspace {}\ref {thm:approx_thompson_linear}) }{38}{subsection.F.3}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step1}}{40}{section*.39}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step2}}{40}{section*.40}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step2a}}{42}{section*.41}%
+\contentsline {paragraph}{Proof of step\nobreakspace {}\ref {ts_step2b}}{43}{section*.42}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step2c}}{44}{section*.43}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step3}}{44}{section*.44}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {ts_step4}}{45}{section*.45}%
+\contentsline {subsection}{\numberline {F.4}Proof of Theorem\nobreakspace {}\ref {thm:ts_linear_regret}}{46}{subsection.F.4}%
+\contentsline {subsection}{\numberline {F.5}Proof of Lemma\nobreakspace {}\ref {lm:lip_of_tps}}{48}{subsection.F.5}%
+\contentsline {section}{\numberline {G}Learning in-context RL in markov decision processes}{50}{appendix.G}%
+\contentsline {subsection}{\numberline {G.1}Embedding and extraction mappings}{50}{subsection.G.1}%
+\contentsline {paragraph}{Offline pretraining}{50}{section*.46}%
+\contentsline {paragraph}{Rollout}{50}{section*.47}%
+\contentsline {paragraph}{Embedding and extraction mappings}{50}{section*.48}%
+\contentsline {subsection}{\numberline {G.2}UCB-VI and soft UCB-VI}{51}{subsection.G.2}%
+\contentsline {subsection}{\numberline {G.3}Proof of Theorem\nobreakspace {}\ref {thm:approx_ucbvi}}{51}{subsection.G.3}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {mdp_step1}}{53}{section*.49}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {mdp_step2}}{55}{section*.50}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {mdp_step3}}{57}{section*.51}%
+\contentsline {paragraph}{Proof of Step\nobreakspace {}\ref {mdp_step4}}{58}{section*.52}%
+\contentsline {subsection}{\numberline {G.4}Proof of Theorem\nobreakspace {}\ref {thm:ucbvi_icrl-main}}{59}{subsection.G.4}%
+\contentsline {paragraph}{Proof of Eq.\nobreakspace {}\textup {\hbox {\mathsurround \z@ \normalfont (\ignorespaces \ref {eq:epstemp_control}\unskip \@@italiccorr )}}}{61}{section*.53}%

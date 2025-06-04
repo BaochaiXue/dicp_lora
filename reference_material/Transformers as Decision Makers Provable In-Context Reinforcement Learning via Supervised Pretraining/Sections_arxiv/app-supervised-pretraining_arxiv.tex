@@ -1,0 +1,226 @@
+\section{Proofs in Section \ref{sec:supervised-pretraining}}
+
+In this section, $c>0$ denotes universal constants that may differ across equations. 
+
+
+\subsection{Proof of Theorem~\ref{thm:diff_reward}}\label{sec:pf_thm:diff_reward}
+\paragraph{Proof of Eq.~(\ref{eqn:Hellinger-bound-main-theorem})} Note that we have
+\begin{align*}
+&~
+\sum_{t=1}^\totlen\E_{\inst\sim\prior,\action_{1:t-1}\sim\osAlg_\shortexp,\state_t}\sqrt{\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}\\
+=&~
+\sum_{t=1}^\totlen\E_{\inst\sim\prior,\action_{1:t-1}\sim\sAlg_0,\state_t} \Big[
+\Big(\prod_{s=1}^{t-1}\frac{\osAlg_\shortexp(\action_s|\dset_{s-1},\state_s)}{\sAlg_0(\action_s|\dset_{s-1},\state_s)}\Big)
+\cdot
+\sqrt{\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}\Big] \\
+\leq&~
+\sum_{t=1}^\totlen
+\sqrt{\E_{\prior,\sAlg_0}
+\Big(\prod_{s=1}^{t-1}\frac{\osAlg_\shortexp(\action_s|\dset_{s-1},\state_s)}{\sAlg_0(\action_s|\dset_{s-1},\state_s)}\Big)^2\cdot\E_{\prior,\sAlg_0}\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}\\
+\leq &~
+\sqrt{\E_{\prior,\sAlg_0}
+\Big(\prod_{s=1}^{\totlen}\frac{\osAlg_\shortexp(\action_s|\dset_{s-1},\state_s)}{\sAlg_0(\action_s|\dset_{s-1},\state_s)}\Big)^2}
+\cdot
+\sum_{t=1}^\totlen\sqrt{\E_{\prior,\sAlg_0}\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))},\end{align*}
+where the second  line follows from a change of distribution argument, the third line follows from Cauchy-Schwartz inequality,  and the fourth line uses the fact that
+\begin{align*}
+&~\E_{x,y\sim\P_1\cdot\P_2}\Big(\frac{\Q_1(x)\Q_2(y|x)}{\P_1(x)\P_2(y|x)}\Big)^2
+    =
+    \int\frac{\Q_1(x)^2\Q_2^2(y|x)}{\P_1(x)\P_2(y|x)}d\mu(x,y)\\
+    =&~
+    \int\frac{\Q_1(x)^2}{\P_1(x)}\Big(\int\frac{\Q_2^2(y|x)}{\P_2(y|x)}d\mu(y|x)\Big)d\mu(x)
+    \geq  
+    \int\frac{\Q_1(x)^2}{\P_1(x)}d\mu(x)= \E_{x\sim\P_1}\Big(\frac{\Q_1(x)}{\P_1(x)}\Big)^2,
+\end{align*}
+for any probability densities $\{ \Q_i,\P_i \}_{i=1,2}$ with respect to some base measure $\mu$. 
+
+Continuing the calculation of the above lines of bounds, we have
+\begin{align*}
+&\qquad
+\sum_{t=1}^\totlen\E_{\inst\sim\prior,\action_{1:t-1}\sim\osAlg_\shortexp,\state_t}\sqrt{\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}\\
+\leq&~
+\sqrt{\totlen}\sqrt{\E_{\inst\sim\prior,\action_{1:\totlen-1}\sim\sAlg_0,\state_t}
+\Big(\prod_{s=1}^{\totlen}\frac{\osAlg_\shortexp(\action_s|\dset_{s-1},\state_s)}{\sAlg_0(\action_s|\dset_{s-1},\state_s)}\Big)^2}
+\\
+&\qquad\qquad\cdot\sqrt{\sum_{t=1}^\totlen{\E_{\inst\sim\prior,\action_{1:t-1}\sim\sAlg_0,\state_t}\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}}\\
+=&~
+\sqrt{\totlen}\sqrt{\E_{\inst\sim\prior,\action_{1:\totlen-1}\sim\osAlg_\shortexp,\state_t}
+\Big[\prod_{s=1}^{\totlen}\frac{\osAlg_\shortexp(\action_s|\dset_{s-1},\state_s)}{\sAlg_0(\action_s|\dset_{s-1},\state_s)}\Big]}
+\\
+&\qquad\qquad\cdot\sqrt{\sum_{t=1}^\totlen{\E_{\inst\sim\prior,\action_{1:t-1}\sim\sAlg_0,\state_t}\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t))}}
+\\
+\leq&~
+c{\totlen}\sqrt{\distratio_{\osAlg_\shortexp,\sAlg_0}}
+\sqrt{\frac{\log \cN_{\Parspace}(1/(\Numobs\totlen)^2)+\log(\totlen/\delta)}{n}+\geneps}\\
+\leq&~ c
+{\totlen}\sqrt{\distratio_{\osAlg_\shortexp,\sAlg_0}}
+\Big(\sqrt{\frac{\log [\cN_{\Parspace}(1/(\Numobs\totlen)^2)\totlen/\delta]}{n}}+\sqrt{\geneps}\Big),
+\end{align*} 
+where the first inequality follows from the Cauchy-Schwartz inequality, the first equality is due to a change of distribution argument, the second inequality uses Lemma~\ref{lm:general_imit}. This completes the proof of Eq.~(\ref{eqn:Hellinger-bound-main-theorem}). 
+
+
+
+
+
+
+
+\paragraph{Proof of Eq.~(\ref{eqn:reward-bound-main-theorem})}
+
+For any bounded function $f$ such that $|f(\dset_\totlen)|\leq F$ for some $F>0$,  we have
+\begin{align*}
+  &~ \Big| \E_{\inst\sim\prior,\action\sim\osAlg_\shortexp}[f(\dset_\totlen)]-
+   \E_{\inst\sim\prior,\action\sim\sAlg_\EstPar}[f(\dset_\totlen)]\Big|
+   \\
+   =&~
+\Big| \sum_{t=1}^\totlen\E_{\inst\sim\prior,\action_{1:t}\sim\osAlg_\shortexp,\action_{t+1:\totlen}\sim\sAlg_\EstPar}[f(\dset_\totlen)]-
+\E_{\inst\sim\prior,\action_{1:t-1}\sim\osAlg_{\shortexp},\action_{t:\totlen}\sim\sAlg_\EstPar}[f(\dset_\totlen)]\Big|
+   \\
+\leq&~
+2F\sum_{t=1}^\totlen\E_{\inst\sim\prior,\action_{1:t-1}\sim\osAlg_{\shortexp},\state_t}\VarD(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\sAlg_{\EstPar}(\cdot|\dset_{t-1},\state_t)),
+\end{align*}
+where the first equality uses the performance difference lemma, the last line follows from the variational representation of the total variation distance $$\VarD(\sP,\sQ)=\sup_{\linf{f}=1}\E_\sP[f(X)]/2-\E_\sQ[f(X)]/2,$$  and \begin{align}
+\VarD(\sP_1(x)\sP_2(y\mid x)\sP_3(z\mid y),\sP_1(x)\sP_{4}(y\mid x)\sP_3(z\mid y))=\E_{x\sim\sP_1}\VarD(\sP_2(y\mid x),\sP_{4}(y\mid x))\label{eq:kl_telescope}
+\end{align} 
+for probability densities $\{ \P_i\}_{i=1,2,3,4}$ with respect to some base measure $\mu$. Since $\VarD(\P,\Q)\leq\sqrt{\HelDs(\P,\Q)}$ for any distributions $\P,\Q$,  it follows from Eq.~(\ref{eqn:Hellinger-bound-main-theorem}) that
+\begin{align*}
+ &~ \Big| \E_{\inst\sim\prior,\action\sim\osAlg_{\shortexp}}[f(\dset_\totlen)]-
+   \E_{\inst\sim\prior,\action\sim\sAlg_\EstPar}[f(\dset_\totlen)]\Big|\\
+%    \leq &~
+% cF\sqrt{\distratio_{\osAlg_{\shortexp},\sAlg_0}}\cdot\totlen\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \geneps}\\
+  \leq &~cF\sqrt{\distratio_{\osAlg_{\shortexp},\sAlg_0}}\cdot\totlen\Big(\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n}} + \sqrt{\geneps}\Big)
+\end{align*}
+with probability at least $1-\delta$ for some universal constant $c>0$. Letting $f(\dset_\totlen)=\sum_{t=1}^\totlen\reward_t$  and noting that  $|f(\dset_\totlen)|\leq\totlen$ concludes the proof of Theorem~\ref{thm:diff_reward}.
+
+
+
+
+
+
+
+
+
+\subsection{Proof of Proposition~\ref{prop:app_opt_diff_reward}}\label{app:proof-prop-diff-reward-app-opt}
+
+By the jointly convexity of $\KL{\P}{\Q}$ with respect to $(\P,\Q)$ and the fact that $\HelDs(\P,\Q)\leq\KL{\P}{\Q}$, we have 
+\begin{align*}
+  &~\E_{\dset_{t-1},\state_t\sim\P_\prior^{\sAlg_0}}\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t),\P_{\TS}(\cdot|\dset_{t-1},\state_t))\\
+  \leq &~
+  \E_{\dset_{t-1},\state_t\sim\P_\prior^{\sAlg_0}}\KL{\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t)}{\P_{\TS}(\cdot|\dset_{t-1},\state_t)}\\
+   \leq &~
+ \E_{\dset_\totlen\sim\P_{\prior}^{\sAlg_0}}\KL{\widehat\action^*_t}{\P_{\TS,t}(\cdot|\dset_\totlen)}\leq\appeps.
+\end{align*} Therefore, applying Lemma~\ref{lm:general_imit} gives
+ \begin{align*}
+        &~\E_{\inst\sim \prior, \dset_\totlen\sim \P^{\sAlg_0}_\inst}\brac{ \sum_{t=1}^\totlen \HelDs\paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\TS}(\cdot|\dset_{t-1},\state_t )} }\\
+        \le&~
+        2\E_{\inst\sim \prior, \dset_\totlen\sim \P^{\sAlg_0}_\inst}\brac{ \sum_{t=1}^\totlen \HelDs\paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )}+\HelDs\paren{ \sAlg_{{\shortexp}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\TS}(\cdot|\dset_{t-1},\state_t )} }\\
+       \le&~
+       c\Big(\frac{\totlen \log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \totlen(\geneps+\appeps)\Big)
+    \end{align*} 
+    with probability at least $1-\delta$. Proposition~\ref{prop:app_opt_diff_reward} follows from similar arguments as in the proof of Theorem~\ref{thm:diff_reward} with $\geneps$ replaced by $\geneps+\appeps$. 
+
+\subsection{An auxiliary lemma}
+
+\begin{lemma}[General guarantee for supervised pretraining]\label{lm:general_imit}
+Suppose Assumption~\ref{asp:realizability} holds. Then  the solution to~Eq.~\eqref{eq:general_mle} achieves
+\begin{align*}
+\E_{\dset_\totlen\sim \P^{\sAlg_0}_\prior}\brac{ \sum_{t=1}^\totlen \HelDs\paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )} } \le c\frac{\totlen \log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \totlen\geneps.
+\end{align*}
+with probability at least $1-\delta$ for some universal constant $c>0$.
+\end{lemma}
+% See the proof in Section~\ref{sec:pf_lm:general_imit}. 
+
+
+
+\begin{proof}[Proof of Lemma~\ref{lm:general_imit}]~
+
+Define \begin{align*}\cL_{nt}(\btheta):=\sum_{i=1}^n\log\sAlg_\Par(\eaction^\ith_{t}|\dset_{t-1}^\ith,\state^\ith_t),~~\text{ and }~~\cL_{nt}(\expert):=\sum_{i=1}^n\log\osAlg_{\shortexp}(\eaction^\ith_{t}|\dset_{t-1}^\ith,\state^\ith_t),\end{align*}  and let 
+$\cL_n(\btheta)=\sum_{t=1}^\totlen \cL_{nt}(\btheta)$, $\cL_n(\expert)=\sum_{t=1}^\totlen \cL_{nt}(\expert)$. We claim that   with probability at least $1-\delta$ 
+\begin{align}
+&~ \sum_{t=1}^\totlen\E_{\dset_\totlen}\Big[\HelDs(\sAlg_\Par(\cdot|\dset_{t-1},\state_t),\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t))\Big]\notag\\
+\leq &~
+\frac{\cL_{n}(\expert)-\cL_{n}(\Par)}{n}+2\frac{\totlen\log \cN_{\Parspace}(1/(\Numobs\totlen)^2)}{n}+2\frac{\totlen\log(\totlen/\delta)}{n}+\frac{4}{n}\label{eq:pf_hellinger_control_general}
+\end{align}
+for all $\Par\in\Parspace,i\in[T]$, where $\dset_\totlen$ follows  distribution $\P_\inst^{\sAlg_0}(\cdot)$, $\inst\sim\prior$. For now, we assume this claim holds. Moreover, it follows from Lemma~\ref{lm:exp_concen} and the fact $\cL_\Numobs(\EstPar)\geq\cL_\Numobs(\TruePar)$ that
+\begin{align}
+    \frac{\cL_\Numobs(\expert)-\cL_\Numobs(\EstPar)}{\Numobs}
+    &\leq
+      \frac{\cL_\Numobs(\expert)-\cL_\Numobs(\TruePar)}{\Numobs}=\sum_{t=1}^\totlen
+      \frac{\cL_{\Numobs t}(\expert)-\cL_{\Numobs t}(\TruePar)}{\Numobs}\notag\\
+      &\leq
+      \frac{T\log(T/\delta)}{\Numobs}+\sum_{t=1}^\totlen\log\E_{\adset_\totlen}\Big[{\frac{\osAlg_{\shortexp}(\eaction_t|\dset_{t-1},\state_t)}{\sAlg_\TruePar(\eaction_t|\dset_{t-1},\state_t)}}\Big]\notag\\
+&\leq
+ \frac{T\log(T/\delta)}{\Numobs}+\totlen\geneps
+\label{eq:pf_hellinger_control_general2}
+\end{align}
+with probability at least $1-\delta$.
+
+
+
+
+Choosing $\Par=\EstPar$ in Eq.~\eqref{eq:pf_hellinger_control_general} and combining it with Eq.~\eqref{eq:pf_hellinger_control_general2} and a union bound, we obtain
+\begin{align*}
+&~\sum_{t=1}^\totlen\E_{\dset_\totlen}\Big[\HelDs(\sAlg_\EstPar(\cdot|\dset_{t-1},\state_t),\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t))\Big]\\
+\leq &~
+\totlen\geneps
++
+2\Big(\frac{\totlen\log \cN_{\Parspace}(1/(\Numobs\totlen)^2)+2\totlen\log(2\totlen/\delta)+2}{n}\Big)\\
+\leq&~ \totlen\geneps+c\totlen\Big(\frac{\log \cN_{\Parspace}(1/(\Numobs\totlen)^2)+\log(\totlen/\delta)}{n}\Big)
+\end{align*}
+with probability at least $1-\delta$ for some universal constant $c>0$.  This completes the proof. 
+
+\paragraph{Proof of Eq.~\eqref{eq:pf_hellinger_control_general}}
+Let $\Parspace_{0}$ be a $1/(\Numobs\totlen)^2$-covering set of $\Parspace$ with covering number $\Covnum=|\Parspace_{i}|$. 
+For $k\in[\Covnum],t\in[T],i\in[\Numobs]$, define  $$
+\ell^i_{kt}
+=\log 
+\frac{\osAlg_{\shortexp}(\eaction^\ith_t|\dset_{t-1}^\ith,\state^\ith_t)}{\sAlg_{\Par_k}(\eaction^\ith_t|\dset_{t-1}^\ith,\state^\ith_t)}
+,$$
+where $(\dset_\totlen^\ith,\eaction^\ith)$ are the trajectory and expert actions collected in the $i$-th instance. Using Lemma~\ref{lm:exp_concen} with $X_s=-\ell^s_{kt}$ and a union bound over $(k,t)$, conditioned on the trajectories $(\dset^1_\totlen,\ldots,\dset^{n}_\totlen)$, we have
+\begin{align*}
+    \frac{1}{2}\sum_{i=1}^\Numobs \ell_{kt}^i+\log(\Covnum \totlen/\delta)\geq
+    \sum_{i=1}^n-\log\E\Big[\exp\Big(-\frac{\ell_{kt}^{i}}{2}\Big)\Big]
+\end{align*}
+for all $k\in[\Covnum],t\in[\totlen]$
+with probability at least $1-\delta$. Note that
+\begin{align*}
+   \E\Big[\exp\Big(-\frac{\ell_{kt}^{i}}{2}\Big)\Big|\dset_{t-1}^\ith,\state_t^\ith\Big]
+   =&~
+\E_{\sD}\Bigg[\sqrt{\frac{\sAlg_{\Par_k}(\eaction^\ith_t|\dset_{t-1}^\ith,\state^\ith_t)}{\osAlg_{\shortexp}(\eaction^\ith_t|\dset_{t-1}^\ith,\state^\ith_t)}}\Bigg|\dset_{t-1}^\ith,\state_t^\ith\Bigg]\\
+=&~
+\sum_{\action\in\actionsp_t}\sqrt{\sAlg_{\Par_k}(\action|\dset_{t-1}^\ith,\state^\ith_t) \osAlg_{\shortexp}(\action|\dset_{t-1}^\ith,\state^\ith_t)},
+\end{align*}
+where the last inequality uses the assumption that the actions $\eaction^\ith$ are generated using the expert $\osAlg_{\shortexp}(\cdot|\dset_{t-1}^\ith,\state^\ith_t)$. Therefore, for any $\btheta\in\Theta$ covered by $\btheta_k$, we have
+\begin{align*}
+&~
+    -\log\E\Big[\exp\Big(-\frac{\ell_{kt}^{i}}{2}\Big)\Big]\\
+    \geq&~ 1-
+ \E_{\dset^\ith}\Big[\sum_{\action\in\actionsp_t}\sqrt{\sAlg_{\Par_k}(\action|\dset_{t-1}^\ith,\state^\ith_t) \osAlg_{\shortexp}(\action|\dset_{t-1}^\ith,\state^\ith_t)}\Big]
+    \\
+    =&~
+    1-
+\E_{\dset^\ith}\Big[\sum_{\action\in\actionsp_t}\sqrt{\sAlg_{\Par}(\action|\dset_{t-1}^\ith,\state^\ith_t) \osAlg_{\shortexp}(\action|\dset_{t-1}^\ith,\state^\ith_t)}\Big]\\
+&\qquad~- \E_{\dset^\ith}\Big[\sum_{\action\in\actionsp_t}\sqrt{\osAlg_{\shortexp}(\action|\dset_{t-1}^\ith,\state^\ith_t)}\Big(\sqrt{\sAlg_{\Par_k}(\action|\dset_{t-1}^\ith,\state^\ith_t)}-\sqrt{\sAlg_{\Par}(\action|\dset_{t-1}^\ith,\state^\ith_t)}\Big)\Big]
+\\
+\geq &~
+    \frac{1}{2} \E_{\dset^\ith}\Big[\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1}^\ith,\state^\ith_t),\sAlg_{\Par}(\cdot|\dset_{t-1}^\ith,\state^\ith_t))\Big] 
+    \\
+    &\qquad~-\E_{\dset^\ith}\Big[\sum_{\action\in\actionsp}\Big(\sqrt{\sAlg_{\Par}(\cdot|\dset_{t-1}^\ith,\state^\ith_t)}-\sqrt{\sAlg_{\Par_k}(\cdot|\dset_{t-1}^\ith,\state^\ith_t)}\Big)^2\Big]^{1/2}
+\\
+\geq &~
+ \frac{1}{2} \E_{\dset^\ith}\Big[\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1}^\ith,\state^\ith_t),\sAlg_{\Par}(\cdot|\dset_{t-1}^\ith,\state^\ith_t))\Big] 
+    -\|\sAlg_{\Par}(\cdot|\dset_{t-1}^\ith,\state^\ith_t)-\sAlg_{\Par_k}(\cdot|\dset_{t-1}^\ith,\state^\ith_t)\|_1^{1/2}
+\\
+\geq&~
+ \frac{1}{2} \E_{\dset^\ith}\Big[\HelDs(\osAlg_{\shortexp}(\cdot|\dset_{t-1}^\ith,\state^\ith_t),\sAlg_{\Par}(\cdot|\dset_{t-1}^\ith,\state^\ith_t))\Big] 
+  -\frac{\sqrt{2}}{\Numobs\totlen}
+\end{align*}
+for all $i\in[n],t\in[\totlen]$, 
+where the first inequality uses $-\log x\geq 1-x$, the second inequality follows from Cauchy-Schwartz inequality, the third inequality uses $(\sqrt{x}-\sqrt{y})^2\leq |x-y|$ for $x,y\geq0$, the last inequality uses the fact that $\Par$ is covered by $\Par_k$ and Lemma~\ref{lm:cover_num_corr}. Since any $\Par\in\Parspace$ is covered by $\Par_k$ for some $k\in[\Covnum]$, and for this $k$ summing over $t\in[T]$ gives 
+$$\sum_{i=1}^\Numobs\sum_{t=1}^\totlen\ell_{kt}^i=\cL_\Numobs(\expert)-\cL_\Numobs(\Par_k) \leq \cL_\Numobs(\expert)-\cL_\Numobs(\Par)+\frac{1}{\Numobs\totlen}\leq \cL_\Numobs(\expert)-\cL_\Numobs(\Par)+1.$$ 
+Therefore, with probability at least $1-\delta$, we have
+\begin{align*}
+&~\frac{1}{2}\Big(\cL_\Numobs(\expert)-\cL_\Numobs(\Par)+1 \Big)+\totlen\log(\Covnum \totlen/\delta)+\sqrt{2}\\
+\geq&~ \frac{\Numobs}{2}\sum_{t=1}^\totlen\E_{\dset_\totlen}\Big[\HelDs(\sAlg_\Par(\cdot|\dset_{t-1},\state_t),\sAlg_\expert(\cdot|\dset_{t-1},\state_t))\Big]
+\end{align*}
+for all $\Par\in\Parspace$, where $\dset_\totlen$  follows $\P_\prior^{\sAlg_0}$. Multiplying both sides by $2/\Numobs$ and letting $\Covnum=\cN_{\Parspace}(1/(\Numobs\totlen)^2)$ yields Eq.~\eqref{eq:pf_hellinger_control_general}.
+\end{proof}

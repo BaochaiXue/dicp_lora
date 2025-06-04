@@ -1,0 +1,14 @@
+\section{Clipped transformer}\label{sec:clip-transformer}
+
+
+In this section, we define the clipped transformer, a standard transformer architecture with additional clip operations after each MLP layer. This clipped architecture is introduced solely to control the transformer class covering numbers. 
+
+\begin{definition}[Clipped Transformer]
+\label{def:decoder-tf-clip}
+An $L$-layer decoder-based $\clipval$-clipped transformer, denoted as $\TF_\btheta^{\clipval}(\cdot)$, is a composition of $L$ self-attention layers, each followed by an MLP layer and an clip operation: $\bH^{(L)}=\TF_{\btheta}(\bH^{(0)})$, where $\bH^{(0)} = \clip_{\clipval}(\bH) \in\R^{D\times N}$ is the input sequence, and for $\ell\in\set{1,\dots,L}$, 
+\begin{talign*}
+\bH^{(\ell)} = \clip_{\clipval}\Big( \MLP_{\bthetamlp^{(\ell)}}\paren{ \MAttn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \Big),~~~~~ \clip_{\clipval}(\bh) = [\proj_{\| \bh \|_2 \le \clipval}(\bh_i)]_i. 
+\end{talign*}
+Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$.
+%We will frequently consider ``\emph{attention-only}'' decoder-based transformers with $\bW_1^\lth,\bW_2^\lth=\bzero$, which we denote as $\TFz_\btheta(\cdot)$ for shorthand, with $\btheta=\btheta^{(1:L)}\defeq \bMAtt^{(1:L)}$.
+\end{definition}
