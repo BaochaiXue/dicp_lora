@@ -1432,18 +1432,6 @@
   Song Mei\thanks{UC Berkeley. Email: \texttt{songmei@berkeley.edu}}\hspace{.35em}\thanks{Equal contribution.}
 }
 
-\def\shownotes{0}  
-\ifnum\shownotes=1
-\newcommand{\authnote}[2]{{\scriptsize $\ll$\textsf{#1 notes: #2}$\gg$}}
-\else
-\newcommand{\authnote}[2]{}
-\fi
-\newcommand{\yub}[1]{{\color{red}\authnote{Yu}{#1}}}
-\newcommand{\cfn}[1]
-{{\color{blue}\authnote{Song}{#1}}}
-\newcommand{\lc}[1]{{\color{blue}\authnote{Licong}{#1}}}
-\newcommand{\todo}[1]{{\color{blue}$\ll$\textsf{\footnotesize TODO:
-      {#1}$\gg$}}}
 
 \makeatletter
 \def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
@@ -1631,55 +1619,6 @@ For any expert algorithm $\sAlg_{\shortexp}$, we define its reduced algorithm wh
 
 
 
-\begin{comment}
-\sm{I will start from here.}
-
-\subsection{General framework}
-Suppose the data collected for pretraining have the following form:
-\begin{itemize}[leftmargin=1.5em]
-\item   Sample a problem instance $\inst\sim\prior$. The learner does not observe $\inst$. 
-\item Sample an interaction trajectory $D=\{(\state_1,\action_1,\reward_1),\ldots,(\state_\totlen,\action_\totlen,\reward_\totlen)\}$ with $\inst$ from context algorithm $\sAlg_0$. Concretely, $\state_i\in\statesp_t,\action_i\in\actionsp_t$ are the state and action selected at time $t$, where the state space $\statesp_t$ and action space $\actionsp_t$ are determined by $\inst$. $\reward_t$ is the observed reward   at time $t$ given $(\state_t,\action_t)$. 
-
-Denote the distribution of the trajectory by $\P^{\sAlg_0}_{\inst}(\cdot)$. 
-$\state_1$ is generated from $\P_{\inst,0}(\cdot)$. For each step $t\geq1$, given the history $\dset_{t-1}=\{(\state_1,\action_1,\reward_1),\ldots,(\state_{t-1},\action_{t-1},\reward_{t-1})\}$ and $\state_t$, the action $\action_t$ is sampled from the policy $\P^{\sAlg_0}_{\inst,t}(\cdot|\dset_{t-1},\state_t)=:\sAlg_0(\cdot|\dset_{t-1},\state_t)$. Given the action $\action_i$, we then  observe the reward $\reward_t\sim\P^r_{\inst,t}(\cdot|\state_t,\action_t
-)$ and the next state $\state_{t+1}$ is  generated following the transition
-$\P^s_{\inst,t}(\cdot|\state_t,\action_t)$. To sum up, we have (denoting $\P^s_{\inst,0}(\state_1|\state_0,\action_0)\defeq \P_{\inst,0}(\state_1)$)
-\begin{align*}
-\P_{\inst}^{\sAlg_0}(\dset_\totlen) =
-\prod_{t=1}^{\totlen}\P^s_{\inst,t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \P_{\inst,t}^{\sAlg_0}(\action_t|\dset_{t-1},\state_t)\P^r_{\inst,t}(\reward_t|\state_t,\action_t).
-
-\end{align*}
-\item In addition to the interaction trajectory, at each step $t\geq 1$, an action $\eaction_t\in\actionsp_t$ is also generated from an expert algorithm (policy) $\sAlg_{\shortexp}$ with probability $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)$. Some special cases we consider are 
-\begin{itemize}
-\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|\dset_{t-1},\state_t)=:\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t)$, where the policy only depends  on the  trajectory  up to time $t$. As an example, this contains online RL/bandit algorithms such as UCB.
-\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|s_t, \inst)=:\sAlg_{\shortexp}(\cdot|s_t, \inst)$. As an example, this can implement the (ground truth) optimal action $\action^*_t$ at state $s_t$ in in $M$.
-\item $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)=\P^{\sAlg_{\shortexp}}(\cdot|\dset_\totlen)=:\sAlg_{\shortexp}(\cdot|\dset_\totlen)$. As an example, this can implement the approximated (ground truth) optimal action $\widehat\action^*_t$ estimated from  the whole trajectory.
-\end{itemize}  
-Denote the dataset containing the trajectory and the addtional actions by $\adset_\totlen$. Then
-\begin{align*}
-\P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \P^{\sAlg_{\shortexp}}_{\inst,t}(\eaction_t|\dset_{\totlen},\inst).
-\end{align*}
-In addition, if the expert algorithm coincides with the algorithm used to collect the trajectory $\sAlg_{\shortexp}=\sAlg_0$, we may simply set $\eaction_t=\action_t$ to avoid sampling twice. 
-\end{itemize}
-
-
-
-\paragraph{Posterior averaging} 
-For the second and the third case, we also define~\yub{important}
-\begin{align*}
-\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t):=\E[\sAlg_{\shortexp}(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t], 
-\end{align*}
-where the expectation on the right hand side is taken over the posterior distribution
-\begin{align*}
-\P(\dset_\totlen,\inst|\dset_{t-1},\state_t) \; \propto_M \;
-\prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)\cdot\P_\inst^{\sAlg_0}(\dset_\totlen|\dset_{t-1},\state_t).
-\end{align*}
-
-\paragraph{Additional notation}
-We use $\eaction=(\eaction_1,\ldots,\eaction_\totlen)$ to denote the additional actions selected following $\sAlg_{\Par}(\cdot|\dset_{t-1},\state_t)$ (or $\sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t)$) for $t\in[\totlen]$.
-Given a problem instance $\inst$, let $\P^{\sAlg_0,\sAlg_\Par}_{\inst}$ denotes the joint distribution of the offline trajectory $\dset_\totlen$ and the actions selected $\eaction$.   If in addition $\inst$ is generated from the prior distribution $\prior$, we denote the joint distribution of $(\inst,\dset_\totlen,\eaction)$  as $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$. We define $\P^{\sAlg_0}_{\prior}(\inst,\dset_\totlen)$, $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}(\inst,\dset_\totlen,\eaction)$ in a similar way. We use the same notation for the joint distribution and its marginal distribution when there is no confusion, for example, $\P_\prior^{\sAlg_0,\sAlg_\Par}(\dset_\totlen,\eaction)$ denotes the marginal distribution of  $(\dset_\totlen,\eaction)$ in the distribution $\P_\prior^{\sAlg_0,\sAlg_\Par}(\inst,\dset_\totlen,\eaction)$.  In all the results we assume the small probability $\delta<1/2$. \lc{this condition implies $\log(2/\delta)=O(\log(1/\delta))$.}
-
-\end{comment}
 
 
 
@@ -2365,7 +2304,7 @@ averaged historical rewards.
 We provide additional experiments and plots in this section. In all experiments, we choose the number of samples $\Numobs=100$K. 
 
 
-Additional plots of suboptimality $\<\action_t^*-\action_t,\bw^*\>$ over time are shown in Figure~\ref{fig:subopt_1} for the two experiments in Section~\ref{sec:experiments}. In both cases, the transformer is able to imitate the expected expert policy $\osAlg_{\shortexp}$, as its suboptimality closely matches   $\osAlg_{\shortexp}$ (LinUCB and TS for the left and right panel, respectively).  While the empirical average (Emp) has lower suboptimality early on, its gap does not converge to zero. In contrast, both LinUCB and Thompson sampling are near-optimal up to $\tcO(1)$ factors in terms of their (long-term) regret.\lc{Is this correct?} 
+Additional plots of suboptimality $\<\action_t^*-\action_t,\bw^*\>$ over time are shown in Figure~\ref{fig:subopt_1} for the two experiments in Section~\ref{sec:experiments}. In both cases, the transformer is able to imitate the expected expert policy $\osAlg_{\shortexp}$, as its suboptimality closely matches   $\osAlg_{\shortexp}$ (LinUCB and TS for the left and right panel, respectively).  While the empirical average (Emp) has lower suboptimality early on, its gap does not converge to zero. In contrast, both LinUCB and Thompson sampling are near-optimal up to $\tcO(1)$ factors in terms of their (long-term) regret. 
 
 \begin{figure}[ht]
 \centering  
