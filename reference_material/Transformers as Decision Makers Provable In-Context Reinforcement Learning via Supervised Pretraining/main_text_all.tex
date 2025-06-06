@@ -73,35 +73,6 @@ This paper provides theoretical insights into in-context reinforcement learning 
 \begin{center}
 \emph{How can supervised pretraining on Transformers learn in-context reinforcement learning?}
 \end{center}
-% \yub{TODO: polish this question} \sm{changed "when" to "how"}
-
-
-%% Yu's original paragraph
-% This paper tackles this important open question in the scope of in-context reinforcement learning (ICRL)---An emerging approach for using sequence-to-sequence models (such as transformers) to perform RL in newly encountered environments. In ICRL, the model takes in the current state and past interaction history with the environment (the \emph{context}), and outputs an action. The underlying hypothesis in ICRL is that pretrained transformers can act as \emph{RL algorithms} that progressively improve their policy based on past observations. Approaches like Algorithm Distillation \citep{laskin2022context} and Decision-Pretrained Transformers \citep{lee2023supervised} demonstrated early successes in ICRL; in particular,  they find that \emph{supervised pretraining} can find transformers that perform good ICRL. However, many concrete theoretical questions remain open about the ICRL capabilities of transformers, including and not limited to (1) what RL algorithms can transformers implement in-context; (2) what performance guarantees (e.g. regret) can such transformers achieve when used iteratively as an online RL algorithm; and (3) when can supervised pretraining find such a good transformer. These motivate the following question:
-% \begin{center}
-% \emph{How can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
-
-
-
-
-% Concretely, in ICRL, the transformer takes in a current state as well as a sequence of past interactions with an environment (such as a bandit or an MDP), which we call the \emph{context}, and is required to output an action. These approaches include the algorithm distillation (AD) approach \citep{laskin2022context} and decision-pretrained transformers (DPT) \citep{lee2023supervised} which demonstrated early successes. Specifically, these works find \emph{supervised pretraining} works well in finding good ICRL transformers. However, a more fundamental understanding is lacking of (1) what ICRL algorithms can the transformer architecture implement, (2) what regret guarantees they can obtain, and (3) when supervised pretraining works in finding such transformers. This motivates the following open question:
-% \begin{center}
-% \emph{When can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
-
-
-
-% \yub{Finding expressive models for sequential decision making problems, such as RL, has been a central challenge, with modern architectures involving neural nets obtaining many successes.}~\yub{Sequence models, such as transformers for RL has been explored more recently (cite DT, AD, DPT, and also the review papers for FMDM).}~\yub{Despite the progress, how to best utilize sequence models to do powerful RL remains not well-understood in theory, and is still an active research area.}
-
-% \yub{NOTE: There are two motivations for ICRL with sequence models: 1. find good architectures for decision making; 2. learn a model to do fast adaptation to new tasks (e.g. meta-RL~\citep{wang2016learning}). Right now, I am using 1 to motivate, but 2 may be a more concrete objective.}
-
-% % ~\yub{The basic premise is that sequence models / Transformers can express more sophisticated target functions than their non-sequence counterparts.}
-
-% \yub{A recent line of work proposes to use Transformers to do in-context reinforcement learning (ICRL), in which case TF aims to play in an unseen environment based on a handful of interations with this environment.} \yub{Concretely, in ICRL, the transformer takes in a current state as well as a sequence of past interactions with an environment (such as a bandit or an MDP) which we call the \emph{context}, and is required to output an action.}~\yub{This approach (ICRL) has been recently studied in the works of AD and DPT who showed some early success...}~\yub{Specifically, they find \emph{supervised pretraining} works well in finding such TFs.}~\yub{and they establish some preliminary theory such as such as connections to PS (maybe not needed)}~\yub{\textbf{However, a more fundamental understanding is lacking on (1) what ICRL algorithms can the transformer architecture implement, (2) what guarantees (e.g. regret) can they obtain, and (3) when supervised pretraining works in finding such transformers.}} This motivates the following open question:
-% \begin{center}
-% \emph{When can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
 
 
 In this paper, we initiate a theoretical study of the ICRL capability of transformers under supervised pretraining to address the open questions outlined above. We show that (1) Transformers can implement prevalent RL algorithms, including LinUCB and Thompson sampling for stochastic linear bandits, and UCB-VI for tabular Markov decision processes; (2) The algorithms learned by transformers achieve near-optimal regret bounds in their respective settings; (3) Supervised pretraining find such algorithms as long as the sample size scales with the covering number of transformer class and distribution ratio between expert and offline algorithms. %\lc{offline or context algorithm?}
@@ -115,24 +86,6 @@ In this paper, we initiate a theoretical study of the ICRL capability of transfo
 \item Preliminary experiments validate that transformers can perform ICRL in our setup (Section~\ref{sec:experiments}).
 \item Technically, we prove efficient approximation of LinUCB by showing transformers can implement accelerated gradient descent for solving ridge regression (\cref{sec:pf_thm:approx_smooth_linucb}), enabling fewer attention layers than the vanilla gradient descent approach in \cite{bai2023transformers}. To enable efficient Thompson sampling implementation, we prove transformers can compute matrix square roots through the Pade decomposition (\cref{sec:pf_thm:approx_thompson_linear-formal}). These approximation results are interesting in their own right. 
 \end{itemize}
-% \yub{We have two main contributions, transformers and statistical framework. In main sections, we do statistical framework first. In contribution list here, shall we reverse the order and state TF first? (TF can do LinUCB)}
-% \sm{Experiments? }~\yub{added}
-
-% \paragraph{Related work} Our work is intimately related to the lines of work on meta-reinforcement learning, in-context learning, transformers for decision-making, and the approximation theory of transformers. Due to limited space, we discuss these related works in~\cref {sec:related-work}.
-
-% \begin{itemize}
-%     \item Framework (supervised pretraining; context algorithm, expert algorithm), instantiation to bandit and MDP. 
-    
-%     \item Algorithm (MLE) and statistical results. Variations (source of the expert algorithm). Talk about application to both bandit and MDP.
-%     \yub{Maybe connections to imitation learning.}
-    
-%     \item Transformer constructions (bandit, MDP).
-
-%     \yub{We have two main contributions, transformers and statistical framework. In main sections, we do statistical framework first. In contribution list here, shall we reverse the order and state TF first? (TF can do LinUCB)}
-%     \item Experiments.
-
-%     \sm{Approximation: AGD, matrix square root. }
-% \end{itemize}
 
 \subsection{Related work}\label{sec:related-work}
 
@@ -160,25 +113,7 @@ zhang2023trained, ahn2023transformers, raventos2023pretraining}. In particular, 
 
 
 
-% \sm{Add} \lc{add "throughout the proof, we assume the small probability $\delta_0,\delta<1/2$" to somewhere in the paper.}
-
-
-
-% \begin{itemize}
-% \item Meta-learning: \cite{schmidhuber1987evolutionary, schmidhuber1992learning, bengio1990learning, naik1992meta, ishii2002control, schaul2010metalearning, thrun2012learning}. Reward maximization Meta-RL: \cite{wang2016learning}, \cite{duan2016rl}. Hyperparameter Meta-RL: \cite{hochreiter2001learning}, \cite{finn2017model}, \cite{nichol2018first}. Offline meta-RL \cite{dorfman2021offline}, \cite{mitchell2021offline}, \cite{li2020focal}, \cite{pong2022offline}. AD: \cite{laskin2022context}, DPT: \cite{lee2023supervised}. 
-
-% \item ICL: \cite{brown2020language}, \cite{garg2022can}, \cite{von2023transformers}, \cite{li2023transformers}, \cite{akyurek2022learning}, \cite{xie2021explanation}. \cite{bai2023transformers}, \cite{zhang2023trained}, \cite{ahn2023transformers}, \cite{xie2021explanation}. 
-
-% \item Transformers for DM: \cite{chen2021decision}, \cite{janner2021offline}, \cite{lee2022multi}, \cite{reed2022generalist}, \cite{brohan2022rt}, \cite{shafiullah2022behavior}. \cite{yang2023foundation}, \cite{yang2022dichotomy}, \cite{brandfonbrener2022does}. 
-% \item Imitation learning: \cite{rajaraman2020toward, rashidinejad2021bridging}. Meta-RL theory \cite{wang2020global}. \sm{More imitation learning literature? }
-% \end{itemize}
-
-
 \section{Framework for In-Context Reinforcement Learning}\label{sec:framework}
-
-% \yub{should this section be actually our contribution instead of prelim? (since we subsume AD and DPT) If so, we can remove ``prelim'' in title, and attract more attention to this section.}
-
-% \paragraph{Decision making environment} 
 
 
 Let $\cM$ be the space of decision-making environments, where each environment $\inst \in \cM$ shares the same number of rounds $\totlen$ and state-action-reward spaces $\{ \statesp_t,  \actionsp_t, \rewardsp_t \}_{t \in [\totlen]}$. Each $\inst = \{\transmodel_\inst^{t-1}, \rewmodel_\inst^t \}_{t \in [\totlen]}$ has its own transition model $\transmodel_\inst^t: \statesp_{t} \times \actionsp_{t} \to \Delta(\statesp_{t+1})$ (with $\statesp_0$, $\actionsp_0 = \{ \emptyset \}$ so $\transmodel_\inst^0(\cdot) \in \Delta(\statesp_1)$ gives the initial state distribution) and reward functions $\rewmodel_\inst^{t}: \statesp_{t} \times \actionsp_{t} \to \Delta(\rewardsp_t)$. We equip $\cM$ with a distribution $\prior \in \Delta(\cM)$, the environment prior. While this setting is general, we later give concrete examples taking $\cM$ as $\totlen$ rounds of bandits or $K$ episodes of $H$-step MDPs with $\totlen = K H$. 
@@ -188,15 +123,11 @@ Let $\cM$ be the space of decision-making environments, where each environment $
 \textstyle \P_{\inst}^{\sAlg}(\dset_\totlen) =
 \prod_{t=1}^{\totlen}\transmodel_{\inst}^{t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \sAlg(\action_t|\dset_{t-1},\state_t)\rewmodel_{\inst}^t(\reward_t|\state_t,\action_t).
 \end{align*}
-% \lc{introduce $\transmodel^0_\inst$ ($\state_1\sim\init$).} \sm{I added a parathesis in the paragraph above}
 In supervised pretraining, we use a \textit{context algorithm} $\sAlg_0$ (which we also refer to as the offline algorithm) to collect the offline trajectories $\dset_\totlen$. For each trajectory $\dset_\totlen$, we also assume access to expert actions $\eaction = ( \eaction_t \in \actionsp_t )_{t \in \totlen} \sim \sAlg_{\shortexp}(\cdot | \dset_\totlen, \inst)$, sampled from an expert algorithm $\sAlg_{\shortexp}: \trajsp_\totlen \times \inst \to \prod_{t \in [\totlen]} \Delta(\actionsp_t)$. This expert could omnisciently observe the full trajectory $\dset_\totlen$ and environment $\inst$ to recommend actions. Let $\adset_\totlen = \dset_\totlen \cup \{ \eaction \}$ be the augmented trajectory. Then we have
 \begin{align*}
 \textstyle \P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_{\shortexp}^t (\eaction_t|\dset_{\totlen},\inst).
 \end{align*}
 We denote $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ as the joint distribution of $(\inst,\adset_\totlen)$ where $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\shortexp}_{\inst}$, and $\P^{\sAlg_0}_{\prior}$ as the joint distribution of $(\inst,\dset_\totlen)$ where $\inst \sim \prior$ and $\dset_\totlen \sim \P^{\sAlg_0}_{\inst}$. 
-
-% When the actions $\eaction = \{ \eaction_t \in \actionsp_t \}_{t \in \totlen} \sim \prod_{t = 1}^T \sAlg_\Par^t( \cdot | \trajsp_{t-1}, \state_t)$ are sampled from algorithms of transformers $\sAlg_\Par$, we write $\P^{\sAlg_0,\sAlg_\Par}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_\Par^t (\eaction_t|\trajsp_{t-1}, \state_t )$. We further denote $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$ to be the joint distribution of $(\inst,\adset_\totlen)$ when $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\Par}_{\inst}$, and define $\P^{\sAlg_0}_{\prior}$ and $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ similarly. 
-
 
 \paragraph{Three special cases of expert algorithms} We consider three special cases of the expert algorithm $\sAlg_{\shortexp}$, corresponding to three supervised pretraining setups:
 \begin{itemize}[leftmargin=1.5em]
@@ -205,11 +136,6 @@ We denote $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ as the joint distribution of $
 \item[(c)]{\it Approximate DPT. } The algorithm depends on the full trajectory $\dset_{\totlen}$ but not the environment $\inst$: $\sAlg_{\shortexp}^t(\cdot|\dset_\totlen, \inst) =\sAlg_{\shortexp}^t(\cdot|\dset_\totlen)$. For example, $\sAlg_{\shortexp}$ could estimate the optimal action $\widehat \action^*_t$ from the entire trajectory $\dset_\totlen$. 
 \end{itemize}  
 For any expert algorithm $\sAlg_{\shortexp}$, we define its reduced algorithm where the $t$-th step is $$\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t) := \E_\prior^{\sAlg_0}[\sAlg_{\shortexp}^t(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t].$$ The expectation on the right is over $\P_{\prior}^{\sAlg_0} ( \dset_\totlen, \inst |\dset_{t-1},\state_t) =\prior(\inst) \cdot \P_\inst^{\sAlg_0}(\dset_\totlen) / \P_\inst^{\sAlg_0}(\dset_{t-1},\state_t).$ Note that the reduced expert algorithm $\osAlg_{\shortexp}$ generally depends on the context algorithm $\sAlg_0$. However, for cases (a) and (b), $\osAlg_{\shortexp}$ is independent of the context algorithm $\sAlg_0$. Furthermore, in case (a), we have $\osAlg_{\shortexp}^t = \sAlg_{\shortexp}^t$. 
-
-% When $\inst$ is generated from the prior distribution $\prior$, we denote the joint distribution of $(\inst,\dset_\totlen,\eaction)$  as $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$. We define $\P^{\sAlg_0}_{\prior}(\inst,\dset_\totlen)$, $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}(\inst,\dset_\totlen,\eaction)$ in a similar way. We use the same notation for the joint distribution and its marginal distribution when there is no confusion, for example, $\P_\prior^{\sAlg_0,\sAlg_\Par}(\dset_\totlen,\eaction)$ denotes the marginal distribution of  $(\dset_\totlen,\eaction)$ in the distribution $\P_\prior^{\sAlg_0,\sAlg_\Par}(\inst,\dset_\totlen,\eaction)$. 
-
-
-% In addition, if the expert algorithm coincides with the algorithm used to collect the trajectory $\sAlg_{\shortexp}=\sAlg_0$, we may simply set $\eaction_t=\action_t$ to avoid sampling twice. 
 
 \begin{comment}
 \sm{I will start from here.}
