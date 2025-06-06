@@ -1,0 +1,1940 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  5 JUN 2025 20:04
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**"/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex"
+(/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2024/06/29 v1.4n Standard LaTeX document class
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count196
+\c@section=\count197
+\c@subsection=\count198
+\c@subsubsection=\count199
+\c@paragraph=\count266
+\c@subparagraph=\count267
+\c@figure=\count268
+\c@table=\count269
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen141
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count270
+\l__pdf_internal_box=\box52
+) (./main_text_all.aux)
+\openout1 = `main_text_all.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 34.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 34.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 34.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 34.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:66: Undefined control sequence.
+l.66 The transformer architecture~\citep
+                                        {vaswani2017attention} for sequence ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:66: Undefined control sequence.
+l.66 ...ence, achieving success in language~\citep
+                                                  {devlin2018bert,brown2020l...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:66: Undefined control sequence.
+l.66 ...0language,openai2023gpt} and vision~\citep
+                                                  {dosovitskiy2020image}. Mo...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:66: Undefined control sequence.
+l.66 ...ers for reinforcement learning (RL)~\citep
+                                                  {chen2021decision, janner2...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (1.51935pt too wide) in paragraph at lines 66--67
+\OT1/cmr/m/n/10 laskin2022context, lee2023supervised,yang2023foundation. While promis-ing em-
+ []
+
+
+
+[1
+
+{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}]
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:72: Undefined control sequence.
+l.72 ...ches such as Algorithm Distillation \citep
+                                                  {laskin2022context} and De...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:72: Undefined control sequence.
+l.72 ...nd Decision-Pretrained Transformers \citep
+                                                  {lee2023supervised} have d...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (0.3062pt too wide) in paragraph at lines 72--73
+\OT1/cmr/m/n/10 such as Al-go-rithm Dis-til-la-tion laskin2022context and Decision-Pretrained Trans-
+ []
+
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:111: LaTeX Error: Something's wrong--perhaps a missing \item.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.111 \item W
+             e propose a general framework for supervised pretraining approa...
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+LaTeX Warning: Reference `sec:framework' on page 2 undefined on input line 111.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:111: Undefined control sequence.
+l.111 ...ethods like Algorithm Distillation \citep
+                                                  {laskin2022context}, where...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:111: Undefined control sequence.
+l.111 ...s Decision-Pretrained Transformers \citep
+                                                  {lee2023supervised}, where...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Reference `sec:supervised-pretraining' on page 2 undefined on input line 112.
+
+
+
+[2]
+
+LaTeX Warning: Reference `sec:ICRL' on page 3 undefined on input line 114.
+
+
+LaTeX Warning: Reference `sec:LinUCB-statement' on page 3 undefined on input line 114.
+
+
+LaTeX Warning: Reference `sec:TS-statement' on page 3 undefined on input line 114.
+
+
+LaTeX Warning: Reference `sec:Tabular-MDP-statement' on page 3 undefined on input line 114.
+
+
+LaTeX Warning: Reference `sec:experiments' on page 3 undefined on input line 115.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:116: Undefined control sequence.
+l.116 ...scent for solving ridge regression (\cref
+                                                  {sec:pf_thm:approx_smooth_...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:116: Missing $ inserted.
+<inserted text> 
+                $
+l.116 ...r solving ridge regression (\cref{sec:pf_
+                                                  thm:approx_smooth_linucb})...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 116.
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:116: Extra }, or forgotten $.
+l.116 ...n (\cref{sec:pf_thm:approx_smooth_linucb}
+                                                  ), enabling fewer attentio...
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+
+LaTeX Warning: Citation `bai2023transformers' on page 3 undefined on input line 116.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:116: Undefined control sequence.
+l.116 ...ots through the Pade decomposition (\cref
+                                                  {sec:pf_thm:approx_thompso...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:117: LaTeX Error: Command \end{itemize} invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.117 \end{itemize}
+                   
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:117: Missing $ inserted.
+<inserted text> 
+                $
+l.117 \end{itemize}
+                   
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (1304.55542pt too wide) in paragraph at lines 116--117
+\OT1/cmr/m/n/10 gres-sion (sec:pf$[]\OML/cmm/m/it/10 hm \OT1/cmr/m/n/10 : \OML/cmm/m/it/10 approx[]mooth[]inucb\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; enablingfewerattentionlayersthanthevanillagradientdescentapproachin\OT1/cmr/m/n/10 [[]]\OML/cmm/m/it/10 :ToenableefficientThompsonsamplingimplementation; weprovetransformerscancomputematrixsquarerootsthroughthePadedecomposition\OT1/cmr/m/n/10 ([])\OML/cmm/m/it/10 :Theseapproximationresultsareinterestingintheirownright:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
+
+ []
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:117: Missing } inserted.
+<inserted text> 
+                }
+l.117 \end{itemize}
+                   
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:139: Undefined control sequence.
+l.139 ...ng and meta-reinforcement learning \citep
+                                                  {schmidhuber1987evolutiona...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:139: Undefined control sequence.
+l.139 ...s the dynamics of the shared tasks \citep
+                                                  {fu2016one, nagabandi2018l...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:139: Undefined control sequence.
+l.139 ...arning}, a task context identifier \citep
+                                                  {rakelly2019efficient, hum...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:139: Undefined control sequence.
+l.139 ...19varibad}, exploration strategies \citep
+                                                  {gupta2018meta}, or the in...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:139: Undefined control sequence.
+l.139 ...itialization of the network policy \citep
+                                                  {finn2017model, hochreiter...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `wang2020global' on page 3 undefined on input line 139.
+
+
+Overfull \hbox (1.08409pt too wide) in paragraph at lines 139--140
+\OT1/cmr/m/n/10 reinforcement learn-ing schmid-hu-ber1987evolutionary, schmid-hu-ber1992learning,
+ []
+
+
+Overfull \hbox (73.91772pt too wide) in paragraph at lines 139--140
+\OT1/cmr/m/n/10 ben-gio1990learning, naik1992meta, ishii2002control, schaul2010metalearning, thrun2012learning.
+ []
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:141: Undefined control sequence.
+l.141 ...ning the learning algorithm itself \citep
+                                                  {wang2016learning, duan201...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `wang2016learning' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `duan2016rl' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `dorfman2021offline' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `mitchell2021offline' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `li2020focal' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `pong2022offline' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `laskin2022context' on page 3 undefined on input line 141.
+
+
+LaTeX Warning: Citation `lee2023supervised' on page 3 undefined on input line 141.
+
+
+Overfull \hbox (12.50089pt too wide) in paragraph at lines 141--142
+\OT1/cmr/m/n/10 rithm it-self wang2016learning, duan2016rl, dorf-man2021offline, mitchell2021offline,
+ []
+
+
+Overfull \hbox (1.93602pt too wide) in paragraph at lines 141--142
+\OT1/cmr/m/n/10 li2020focal, pong2022offline, laskin2022context, lee2023supervised. Among these
+ []
+
+
+LaTeX Warning: Citation `brown2020language' on page 3 undefined on input line 146.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:146: Undefined control sequence.
+l.146 ...retrained transformers perform ICL \citep
+                                                  {garg2022can, li2023transf...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `xie2021explanation' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `garg2022can' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `von2023transformers' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `akyurek2022learning' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `bai2023transformers' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `bai2023transformers' on page 3 undefined on input line 147.
+
+
+LaTeX Warning: Citation `zhang2023trained' on page 3 undefined on input line 147.
+
+
+Overfull \hbox (7.38864pt too wide) in paragraph at lines 146--148
+\OT1/cmr/m/n/10 ICL garg2022can, li2023transformers, von2023transformers, akyurek2022learning,
+ []
+
+
+Overfull \hbox (12.7509pt too wide) in paragraph at lines 146--148
+\OT1/cmr/m/n/10 xie2021explanation, bai2023transformers, zhang2023trained, ahn2023transformers,
+ []
+
+
+
+[3]
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:149: Undefined control sequence.
+l.149 ...ing transformers to make decisions \citep
+                                                  {chen2021decision, janner2...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:149: Undefined control sequence.
+l.149 ...ticular, Decision Transformer (DT) \citep
+                                                  {chen2021decision, janner2...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `yang2022dichotomy' on page 4 undefined on input line 149.
+
+
+LaTeX Warning: Citation `paster2022you' on page 4 undefined on input line 149.
+
+
+LaTeX Warning: Citation `vstrupl2022upside' on page 4 undefined on input line 149.
+
+
+LaTeX Warning: Citation `brandfonbrener2022does' on page 4 undefined on input line 149.
+
+
+LaTeX Warning: Citation `vaswani2017attention' on page 4 undefined on input line 153.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ... language models like BERT and GPT \citep
+                                                  {devlin2018bert, brown2020...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ...rmers has been extensively studied~\citep
+                                                  {yun2019transformers, pere...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ...ous algorithms, including automata \citep
+                                                  {liu2022transformers}, Tur...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ...2022transformers}, Turing machines \citep
+                                                  {wei2022statistically}, va...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ...tistically}, variational inference \citep
+                                                  {mei2023deep}, and gradien...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:153: Undefined control sequence.
+l.153 ...mei2023deep}, and gradient descent \citep
+                                                  {bai2023transformers, akyu...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (49.11208pt too wide) in paragraph at lines 153--154
+\OT1/cmr/m/n/10 tamishra2020computational, zhang2022unveiling, liu2022transformers, wei2022statistically,
+ []
+
+
+Overfull \hbox (11.71384pt too wide) in paragraph at lines 153--154
+\OT1/cmr/m/n/10 fu2023can, bai2023transformers, akyurek2022learning, von2023transformers. Deep
+ []
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:159: Undefined control sequence.
+l.159 ...is of maximum-likelihood estimator \citep
+                                                  {geer2000empirical}. The e...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:159: Undefined control sequence.
+l.159 ...n learning appeared in early works \citep
+                                                  {ross2011reduction, ross20...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+LaTeX Warning: Citation `rajaraman2020toward' on page 4 undefined on input line 159.
+
+
+LaTeX Warning: Citation `rajaraman2021provably' on page 4 undefined on input line 159.
+
+
+LaTeX Warning: Citation `rashidinejad2021bridging' on page 4 undefined on input line 159.
+
+
+
+[4]
+Overfull \hbox (18.41629pt too wide) in paragraph at lines 177--177
+[]\OT1/cmr/bx/n/14.4 Framework for In-Context Re-in-force-ment Learn-
+ []
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \cM 
+                    
+l.184 Let $\cM
+              $ be the space of decision-making environments, where each env...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \inst 
+                      
+l.184 ...vironments, where each environment $\inst
+                                                   \in \cM$ shares the same ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...ts, where each environment $\inst \in \cM
+                                                  $ shares the same number o...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \totlen 
+                        
+l.184 ...shares the same number of rounds $\totlen
+                                                  $ and state-action-reward ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...d state-action-reward spaces $\{ \statesp
+                                                  _t,  \actionsp_t, \rewards...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...-reward spaces $\{ \statesp_t,  \actionsp
+                                                  _t, \rewardsp_t \}_{t \in ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...s $\{ \statesp_t,  \actionsp_t, \rewardsp
+                                                  _t \}_{t \in [\totlen]}$. ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...ctionsp_t, \rewardsp_t \}_{t \in [\totlen
+                                                  ]}$. Each $\inst = \{\tran...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \inst 
+                      
+l.184 ...rdsp_t \}_{t \in [\totlen]}$. Each $\inst
+                                                   = \{\transmodel_\inst^{t-...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ... [\totlen]}$. Each $\inst = \{\transmodel
+                                                  _\inst^{t-1}, \rewmodel_\i...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...len]}$. Each $\inst = \{\transmodel_\inst
+                                                  ^{t-1}, \rewmodel_\inst^t ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing { inserted.
+<to be read again> 
+                   ^
+l.184 ...en]}$. Each $\inst = \{\transmodel_\inst^
+                                                  {t-1}, \rewmodel_\inst^t \...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...st = \{\transmodel_\inst^{t-1}, \rewmodel
+                                                  _\inst^t \}_{t \in [\totle...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...{\transmodel_\inst^{t-1}, \rewmodel_\inst
+                                                  ^t \}_{t \in [\totlen]}$ h...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing { inserted.
+<to be read again> 
+                   ^
+l.184 ...\transmodel_\inst^{t-1}, \rewmodel_\inst^
+                                                  t \}_{t \in [\totlen]}$ ha...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...-1}, \rewmodel_\inst^t \}_{t \in [\totlen
+                                                  ]}$ has its own transition...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing } inserted.
+<inserted text> 
+                }
+l.184 ..., \rewmodel_\inst^t \}_{t \in [\totlen]}$
+                                                   has its own transition mo...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing } inserted.
+<inserted text> 
+                }
+l.184 ..., \rewmodel_\inst^t \}_{t \in [\totlen]}$
+                                                   has its own transition mo...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \transmodel 
+                            
+l.184 ...has its own transition model $\transmodel
+                                                  _\inst^t: \statesp_{t} \ti...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...s own transition model $\transmodel_\inst
+                                                  ^t: \statesp_{t} \times \a...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing { inserted.
+<to be read again> 
+                   ^
+l.184 ... own transition model $\transmodel_\inst^
+                                                  t: \statesp_{t} \times \ac...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...tion model $\transmodel_\inst^t: \statesp
+                                                  _{t} \times \actionsp_{t} ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...el_\inst^t: \statesp_{t} \times \actionsp
+                                                  _{t} \to \Delta(\statesp_{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ... \times \actionsp_{t} \to \Delta(\statesp
+                                                  _{t+1})$ (with $\statesp_0...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing } inserted.
+<inserted text> 
+                }
+l.184 ...\actionsp_{t} \to \Delta(\statesp_{t+1})$
+                                                   (with $\statesp_0$, $\act...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \statesp 
+                         
+l.184 ...o \Delta(\statesp_{t+1})$ (with $\statesp
+                                                  _0$, $\actionsp_0 = \{ \em...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \actionsp 
+                          
+l.184 ...sp_{t+1})$ (with $\statesp_0$, $\actionsp
+                                                  _0 = \{ \emptyset \}$ so $...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \transmodel 
+                            
+l.184 ...onsp_0 = \{ \emptyset \}$ so $\transmodel
+                                                  _\inst^0(\cdot) \in \Delta...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ... = \{ \emptyset \}$ so $\transmodel_\inst
+                                                  ^0(\cdot) \in \Delta(\stat...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing { inserted.
+<to be read again> 
+                   ^
+l.184 ...= \{ \emptyset \}$ so $\transmodel_\inst^
+                                                  0(\cdot) \in \Delta(\state...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...smodel_\inst^0(\cdot) \in \Delta(\statesp
+                                                  _1)$ gives the initial sta...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing } inserted.
+<inserted text> 
+                }
+l.184 ...el_\inst^0(\cdot) \in \Delta(\statesp_1)$
+                                                   gives the initial state d...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \rewmodel 
+                          
+l.184 ...ribution) and reward functions $\rewmodel
+                                                  _\inst^{t}: \statesp_{t} \...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...on) and reward functions $\rewmodel_\inst
+                                                  ^{t}: \statesp_{t} \times ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing { inserted.
+<to be read again> 
+                   ^
+l.184 ...n) and reward functions $\rewmodel_\inst^
+                                                  {t}: \statesp_{t} \times \...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ... functions $\rewmodel_\inst^{t}: \statesp
+                                                  _{t} \times \actionsp_{t} ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ..._\inst^{t}: \statesp_{t} \times \actionsp
+                                                  _{t} \to \Delta(\rewardsp_...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...\times \actionsp_{t} \to \Delta(\rewardsp
+                                                  _t)$. We equip $\cM$ with ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Missing } inserted.
+<inserted text> 
+                }
+l.184 ...es \actionsp_{t} \to \Delta(\rewardsp_t)$
+                                                  . We equip $\cM$ with a di...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \cM 
+                    
+l.184 ...} \to \Delta(\rewardsp_t)$. We equip $\cM
+                                                  $ with a distribution $\pr...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \prior 
+                       
+l.184 ...e equip $\cM$ with a distribution $\prior
+                                                   \in \Delta(\cM)$, the env...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+l.184 ...ith a distribution $\prior \in \Delta(\cM
+                                                  )$, the environment prior....
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \cM 
+                    
+l.184 ... later give concrete examples taking $\cM
+                                                  $ as $\totlen$ rounds of b...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \totlen 
+                        
+l.184 ...oncrete examples taking $\cM$ as $\totlen
+                                                  $ rounds of bandits or $K$...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:184: Undefined control sequence.
+<recently read> \totlen 
+                        
+l.184 ...$ episodes of $H$-step MDPs with $\totlen
+                                                   = K H$.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \dset 
+                      
+l.186 ...ved state-action-reward tuples, by $\dset
+                                                  _t=\{(\state_1,\action_1,\...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...tion-reward tuples, by $\dset_t=\{(\state
+                                                  _1,\action_1,\reward_1),\l...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...d tuples, by $\dset_t=\{(\state_1,\action
+                                                  _1,\reward_1),\ldots,(\sta...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...by $\dset_t=\{(\state_1,\action_1,\reward
+                                                  _1),\ldots,(\state_t,\acti...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ate_1,\action_1,\reward_1),\ldots,(\state
+                                                  _t,\action_t,\reward_t)\} ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ion_1,\reward_1),\ldots,(\state_t,\action
+                                                  _t,\reward_t)\} \in \trajs...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ard_1),\ldots,(\state_t,\action_t,\reward
+                                                  _t)\} \in \trajsp_t = \pro...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...tate_t,\action_t,\reward_t)\} \in \trajsp
+                                                  _t = \prod_{s \le t} (\sta...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...\in \trajsp_t = \prod_{s \le t} (\statesp
+                                                  _s \times \actionsp_s \tim...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...od_{s \le t} (\statesp_s \times \actionsp
+                                                  _s \times \rewardsp_s)$ an...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...esp_s \times \actionsp_s \times \rewardsp
+                                                  _s)$ and write $\dset = \d...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \dset 
+                      
+l.186 ...p_s \times \rewardsp_s)$ and write $\dset
+                                                   = \dset_{\totlen}$ for sh...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...es \rewardsp_s)$ and write $\dset = \dset
+                                                  _{\totlen}$ for short. An ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...dsp_s)$ and write $\dset = \dset_{\totlen
+                                                  }$ for short. An algorithm...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \sAlg 
+                      
+l.186 ...{\totlen}$ for short. An algorithm $\sAlg
+                                                  $ maps a partial trajector...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \dset 
+                      
+l.186 ... $\sAlg$ maps a partial trajectory $\dset
+                                                  _{t-1} \in \trajsp_{t-1}$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...rtial trajectory $\dset_{t-1} \in \trajsp
+                                                  _{t-1}$ and state $\state_...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \state 
+                       
+l.186 ...t-1} \in \trajsp_{t-1}$ and state $\state
+                                                  _t \in \statesp_t$ to a di...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...p_{t-1}$ and state $\state_t \in \statesp
+                                                  _t$ to a distribution over...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \sAlg 
+                      
+l.186 ...to a distribution over the actions $\sAlg
+                                                  (\cdot | \dset_{t-1}, \sta...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ion over the actions $\sAlg(\cdot | \dset
+                                                  _{t-1}, \state_t) \in \Del...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ctions $\sAlg(\cdot | \dset_{t-1}, \state
+                                                  _t) \in \Delta(\actionsp_t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...set_{t-1}, \state_t) \in \Delta(\actionsp
+                                                  _t)$. Given an environment...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \inst 
+                      
+l.186 ...actionsp_t)$. Given an environment $\inst
+                                                  $ and algorithm $\sAlg$, t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \sAlg 
+                      
+l.186 ... environment $\inst$ and algorithm $\sAlg
+                                                  $, the distribution over a...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+<recently read> \dset 
+                      
+l.186 ...istribution over a full trajectory $\dset
+                                                  _\totlen$ is fully specified:
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Undefined control sequence.
+l.186 ...ion over a full trajectory $\dset_\totlen
+                                                  $ is fully specified:
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Missing { inserted.
+<to be read again> 
+                   $
+l.186 ...on over a full trajectory $\dset_\totlen$
+                                                   is fully specified:
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:186: Missing } inserted.
+<inserted text> 
+                }
+l.186 ...on over a full trajectory $\dset_\totlen$
+                                                   is fully specified:
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:187: LaTeX Error: Environment align* undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.187 \begin{align*}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:188: Missing $ inserted.
+<inserted text> 
+                $
+l.188 \textstyle
+                 \P_{\inst}^{\sAlg}(\dset_\totlen) =
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:188: Undefined control sequence.
+l.188 \textstyle \P_{\inst
+                          }^{\sAlg}(\dset_\totlen) =
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:188: Undefined control sequence.
+l.188 \textstyle \P_{\inst}^{\sAlg
+                                  }(\dset_\totlen) =
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:188: Undefined control sequence.
+l.188 \textstyle \P_{\inst}^{\sAlg}(\dset
+                                         _\totlen) =
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:188: Undefined control sequence.
+l.188 \textstyle \P_{\inst}^{\sAlg}(\dset_\totlen
+                                                 ) =
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 \prod_{t=1}^{\totlen
+                          }\transmodel_{\inst}^{t-1}(\state_{t}|\state_{t-1}...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 \prod_{t=1}^{\totlen}\transmodel
+                                      _{\inst}^{t-1}(\state_{t}|\state_{t-1}...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Double subscript.
+l.189 \prod_{t=1}^{\totlen}\transmodel_
+                                       {\inst}^{t-1}(\state_{t}|\state_{t-1}...
+I treat `x_1_2' essentially like `x_1{}_2'.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 \prod_{t=1}^{\totlen}\transmodel_{\inst
+                                             }^{t-1}(\state_{t}|\state_{t-1}...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...{\totlen}\transmodel_{\inst}^{t-1}(\state
+                                                  _{t}|\state_{t-1},\action_...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...ransmodel_{\inst}^{t-1}(\state_{t}|\state
+                                                  _{t-1},\action_{t-1}) \sAl...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...st}^{t-1}(\state_{t}|\state_{t-1},\action
+                                                  _{t-1}) \sAlg(\action_t|\d...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...ate_{t}|\state_{t-1},\action_{t-1}) \sAlg
+                                                  (\action_t|\dset_{t-1},\st...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...\state_{t-1},\action_{t-1}) \sAlg(\action
+                                                  _t|\dset_{t-1},\state_t)\r...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...t-1},\action_{t-1}) \sAlg(\action_t|\dset
+                                                  _{t-1},\state_t)\rewmodel_...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...{t-1}) \sAlg(\action_t|\dset_{t-1},\state
+                                                  _t)\rewmodel_{\inst}^t(\re...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...(\action_t|\dset_{t-1},\state_t)\rewmodel
+                                                  _{\inst}^t(\reward_t|\stat...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...n_t|\dset_{t-1},\state_t)\rewmodel_{\inst
+                                                  }^t(\reward_t|\state_t,\ac...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...t-1},\state_t)\rewmodel_{\inst}^t(\reward
+                                                  _t|\state_t,\action_t).
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...te_t)\rewmodel_{\inst}^t(\reward_t|\state
+                                                  _t,\action_t).
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:189: Undefined control sequence.
+l.189 ...odel_{\inst}^t(\reward_t|\state_t,\action
+                                                  _t).
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:190: LaTeX Error: \begin{document} ended by \end{align*}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.190 \end{align*}
+                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:190: Missing $ inserted.
+<inserted text> 
+                $
+l.190 \end{align*}
+                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \sAlg 
+                      
+l.192 ...e use a \textit{context algorithm} $\sAlg
+                                                  _0$ (which we also refer t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \dset 
+                      
+l.192 ...o collect the offline trajectories $\dset
+                                                  _\totlen$. For each trajec...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...t the offline trajectories $\dset_\totlen
+                                                  $. For each trajectory $\d...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing { inserted.
+<to be read again> 
+                   $
+l.192 ... the offline trajectories $\dset_\totlen$
+                                                  . For each trajectory $\ds...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing } inserted.
+<inserted text> 
+                }
+l.192 ... the offline trajectories $\dset_\totlen$
+                                                  . For each trajectory $\ds...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \dset 
+                      
+l.192 ...dset_\totlen$. For each trajectory $\dset
+                                                  _\totlen$, we also assume ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...tlen$. For each trajectory $\dset_\totlen
+                                                  $, we also assume access t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing { inserted.
+<to be read again> 
+                   $
+l.192 ...len$. For each trajectory $\dset_\totlen$
+                                                  , we also assume access to...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing } inserted.
+<inserted text> 
+                }
+l.192 ...len$. For each trajectory $\dset_\totlen$
+                                                  , we also assume access to...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \eaction 
+                         
+l.192 ...assume access to expert actions $\eaction
+                                                   = ( \eaction_t \in \actio...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ... to expert actions $\eaction = ( \eaction
+                                                  _t \in \actionsp_t )_{t \i...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...ns $\eaction = ( \eaction_t \in \actionsp
+                                                  _t )_{t \in \totlen} \sim ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...action_t \in \actionsp_t )_{t \in \totlen
+                                                  } \sim \sAlg_{\shortexp}(\...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ... \actionsp_t )_{t \in \totlen} \sim \sAlg
+                                                  _{\shortexp}(\cdot | \dset...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...t )_{t \in \totlen} \sim \sAlg_{\shortexp
+                                                  }(\cdot | \dset_\totlen, \...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...len} \sim \sAlg_{\shortexp}(\cdot | \dset
+                                                  _\totlen, \inst)$, sampled...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...m \sAlg_{\shortexp}(\cdot | \dset_\totlen
+                                                  , \inst)$, sampled from an...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ..._{\shortexp}(\cdot | \dset_\totlen, \inst
+                                                  )$, sampled from an expert...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \sAlg 
+                      
+l.192 ..., sampled from an expert algorithm $\sAlg
+                                                  _{\shortexp}: \trajsp_\tot...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...rom an expert algorithm $\sAlg_{\shortexp
+                                                  }: \trajsp_\totlen \times ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...ert algorithm $\sAlg_{\shortexp}: \trajsp
+                                                  _\totlen \times \inst \to ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...rithm $\sAlg_{\shortexp}: \trajsp_\totlen
+                                                   \times \inst \to \prod_{t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...{\shortexp}: \trajsp_\totlen \times \inst
+                                                   \to \prod_{t \in [\totlen...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...en \times \inst \to \prod_{t \in [\totlen
+                                                  ]} \Delta(\actionsp_t)$. T...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ... \prod_{t \in [\totlen]} \Delta(\actionsp
+                                                  _t)$. This expert could om...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \dset 
+                      
+l.192 ...iently observe the full trajectory $\dset
+                                                  _\totlen$ and environment ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...bserve the full trajectory $\dset_\totlen
+                                                  $ and environment $\inst$ ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing { inserted.
+<to be read again> 
+                   $
+l.192 ...serve the full trajectory $\dset_\totlen$
+                                                   and environment $\inst$ t...
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Missing } inserted.
+<inserted text> 
+                }
+l.192 ...serve the full trajectory $\dset_\totlen$
+                                                   and environment $\inst$ t...
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \inst 
+                      
+l.192 ...ry $\dset_\totlen$ and environment $\inst
+                                                  $ to recommend actions. Le...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+<recently read> \adset 
+                       
+l.192 ...$\inst$ to recommend actions. Let $\adset
+                                                  _\totlen = \dset_\totlen \...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...to recommend actions. Let $\adset_\totlen
+                                                   = \dset_\totlen \cup \{ \...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...mend actions. Let $\adset_\totlen = \dset
+                                                  _\totlen \cup \{ \eaction ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Double subscript.
+l.192 ...end actions. Let $\adset_\totlen = \dset_
+                                                  \totlen \cup \{ \eaction \...
+I treat `x_1_2' essentially like `x_1{}_2'.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ...ions. Let $\adset_\totlen = \dset_\totlen
+                                                   \cup \{ \eaction \}$ be t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:192: Undefined control sequence.
+l.192 ..._\totlen = \dset_\totlen \cup \{ \eaction
+                                                   \}$ be the augmented traj...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:193: LaTeX Error: Environment align* undefined.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.193 \begin{align*}
+                    
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Missing $ inserted.
+<inserted text> 
+                $
+l.194 \textstyle
+                 \P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{...
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 \textstyle \P^{\sAlg
+                          _0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 \textstyle \P^{\sAlg_0,\sAlg
+                                  _{\shortexp}}_{\inst}(\adset_\totlen)=\P^{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 \textstyle \P^{\sAlg_0,\sAlg_{\shortexp
+                                             }}_{\inst}(\adset_\totlen)=\P^{...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...yle \P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst
+                                                  }(\adset_\totlen)=\P^{\sAl...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset
+                                                  _\totlen)=\P^{\sAlg_0}_{\i...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...\sAlg_{\shortexp}}_{\inst}(\adset_\totlen
+                                                  )=\P^{\sAlg_0}_{\inst}(\ds...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...rtexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg
+                                                  _0}_{\inst}(\dset_\totlen)...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst
+                                                  }(\dset_\totlen)\prod_{t=1...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194: Undefined control sequence.
+l.194 ...adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset
+                                                  _\totlen)\prod_{t=1}^\totl...
+(That makes 100 errors; please try again.) 
+Here is how much of TeX's memory you used:
+ 518 strings out of 473190
+ 9820 string characters out of 5715801
+ 405574 words of memory out of 5000000
+ 23835 multiletter control sequences out of 15000+600000
+ 565225 words of font info for 57 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 35i,11n,50p,1447b,297s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+/Users/xinjiezhang/Desktop/dicp_lora/reference_material/Transformers as Decision Makers Provable In-Context Reinforcement Learning via Supervised Pretraining/main_text_all.tex:194:  ==> Fatal error occurred, no output PDF file produced!
