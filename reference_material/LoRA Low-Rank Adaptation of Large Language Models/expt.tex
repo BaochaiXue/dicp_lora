@@ -25,7 +25,7 @@ These special tokens have trainable word embeddings and are generally not in the
 Where to place such tokens can have an impact on performance.
 We focus on ``prefixing'', which prepends such tokens to the prompt, and ``infixing'', which appends to the prompt; both are discussed in~\citet{li_prefix-tuning_2021}.
 We use $l_{p}$ (resp. $l_{i}$) denote the number of prefix (resp. infix) tokens.
-The number of trainable parameters is $|\Theta| = d_{model} \times (l_p + l_i)$. 
+The number of trainable parameters is $|\Theta| = d_{model} \times (l_p + l_i)$.
 
 \textbf{Prefix-layer tuning (PreLayer)} is an extension to prefix-embedding tuning.
 Instead of just learning the word embeddings (or equivalently, the activations after the embedding layer) for some special tokens, we learn the activations after every Transformer layer.
@@ -155,7 +155,7 @@ GPT-2 L (LoRA) & 0.77M & \textbf{70.4\textsubscript{$\pm$.1}} & \textbf{8.89\tex
 
 
 
- 
+
 
 
 
@@ -184,8 +184,8 @@ GPT-2 L (LoRA) & 0.77M & \textbf{70.4\textsubscript{$\pm$.1}} & \textbf{8.89\tex
   GPT-3 ($\text{Adapter}^{\text{H}}$)& 7.1M  & 71.9 & 89.8 & 53.0/28.9/44.8  \\
   GPT-3 ($\text{Adapter}^{\text{H}}$)& 40.1M & 73.2 & \textbf{91.5} & 53.2/29.0/45.1  \\
   \midrule
-  GPT-3 (LoRA)                       & 4.7M & 73.4 & \textbf{91.7} & \textbf{53.8/29.8/45.9} \\ 
-  GPT-3 (LoRA)                       & 37.7M & \textbf{74.0} & \textbf{91.6} & 53.4/29.2/45.1 \\ 
+  GPT-3 (LoRA)                       & 4.7M & 73.4 & \textbf{91.7} & \textbf{53.8/29.8/45.9} \\
+  GPT-3 (LoRA)                       & 37.7M & \textbf{74.0} & \textbf{91.6} & 53.4/29.2/45.1 \\
   \bottomrule
   \end{tabular}
   \caption{Performance of different adaptation methods on GPT-3 175B. We report the logical form validation accuracy on WikiSQL, validation accuracy on MultiNLI-matched, and Rouge-1/2/L on SAMSum. LoRA performs better than prior approaches, including full fine-tuning. The results on WikiSQL have a fluctuation around $\pm0.5\%$, MNLI-m around $\pm0.1\%$, and SAMSum around $\pm0.2$/$\pm0.2$/$\pm0.1$ for the three metrics.}
@@ -201,7 +201,7 @@ Due to the high training cost, we only report the typical standard deviation for
 See~\autoref{app:hps_gpt3} for details on the hyperparameters used.
 
 
-    
+
 
 
 

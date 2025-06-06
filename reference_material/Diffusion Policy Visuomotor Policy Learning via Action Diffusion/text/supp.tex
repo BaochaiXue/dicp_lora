@@ -1,22 +1,16 @@
 \section{Diffusion Policy Implementation Details}
 
 \subsection{Normalization}
-Properly normalizing action data is critical to achieve best performance for Diffusion Policy. 
-Scaling the min and max of each action dimension independently to $[-1,1]$ works well for most tasks. 
-Since DDPMs clip prediction to $[-1,1]$ at each iteration to ensure stability, the common zero-mean unit-variance normalization will cause some region of the action space to be inaccessible. 
+Properly normalizing action data is critical to achieve best performance for Diffusion Policy.
+Scaling the min and max of each action dimension independently to $[-1,1]$ works well for most tasks.
+Since DDPMs clip prediction to $[-1,1]$ at each iteration to ensure stability, the common zero-mean unit-variance normalization will cause some region of the action space to be inaccessible.
 When the data variance is small (e.g., near constant value), shift the data to zero-mean without scaling to prevent numerical issues.
 We leave action dimensions corresponding to rotation representations (e.g. Quaternion) unchanged.
 
-% \shuran{this section is very confusing}
-% We found that diffusion policy can be sensitive to action normalization. Independently normalize each action dimensions to $[-1,1]$ works well for most of the tasks. \shuran{how? don't know what do you mean by box-normalization, just right out the function a = a-mean/var} 
-% When the data variance is small (e.g., near constant value), we set $var = 1$ to prevent numerical issues.  
-% However, for tasks where multiple dimensions correspond to the same physical quantity (x,y,z for the two arms in Robomimic Transport tasks) \shuran{what does it mean? There is exist dependencies between two action parameter? even with the example, I don't understand what it is} , it is better to normalize the corresponding dimensions jointly to $[-1,1]$ \shuran{what is normalize jointly?? don't understand, write the equation}. For rotation representations such as Quaternion where the data are already constrained to $[-1,1]$, we leave the data normalized \shuran{leave data normalized?? do you mean -- we do not further normalize those parameters}. 
 
-% \subsection{Noise Schedule}
-% The noise schedule is defined by the Gaussian Noise $\epsilon^k$, $\alpha$, and $\gamma$ as a function of $k$. It is a key design decision for DDPMs has been actively studied \cite{ho2020denoising, nichol2021improved}. Adjusting the noise schedule weights diffusion iterations where different level of noise are added, biasing the noise prediction network to capture information of different frequencies. We empirically found that the Square Cosine Schedule proposed in iDDPM \cite{nichol2021improved} works the best for our tasks. 
 
 \subsection{Rotation Representation}
-For all environments with velocity control action space, we followed the standard practice \cite{robomimic} to use 3D axis-angle representation for the rotation component of action. Since velocity action commands are usually close to 0, the singularity and discontinuity of the axis-angle representation don't usually cause problems. We used the 6D rotation representation proposed in \citet{zhou2019continuity} for all environments (real-world and simulation) with positional control action space. 
+For all environments with velocity control action space, we followed the standard practice \cite{robomimic} to use 3D axis-angle representation for the rotation component of action. Since velocity action commands are usually close to 0, the singularity and discontinuity of the axis-angle representation don't usually cause problems. We used the 6D rotation representation proposed in \citet{zhou2019continuity} for all environments (real-world and simulation) with positional control action space.
 
 \subsection{Image Augmentation}
 Following \citet{robomimic}, we employed random crop augmentation during training. The crop size for each task is indicated in Tab. \ref{tab:hparam_cnn}. During inference, we take a static center crop with the same size.
@@ -36,15 +30,15 @@ We used batch size of 256 for all state-based experiments and 64 for all image-b
 \caption{
 \textbf{Hyperparameters for CNN-based Diffusion Policy}
 \label{tab:hparam_cnn}
-Ctrl: position or velocity control 
-To: observation horizon 
-Ta: action horizon 
-Tp: action prediction horizon 
-ImgRes: environment observation resolution (Camera views x W x H) 
-CropRes: random crop resolution 
-\#D-Params: diffusion network number of parameters in millions 
-\#V-Params: vision encoder number of parameters in millions 
-Lr: learining rate 
+Ctrl: position or velocity control
+To: observation horizon
+Ta: action horizon
+Tp: action prediction horizon
+ImgRes: environment observation resolution (Camera views x W x H)
+CropRes: random crop resolution
+\#D-Params: diffusion network number of parameters in millions
+\#V-Params: vision encoder number of parameters in millions
+Lr: learining rate
 WDecay: weight decay
 D-Iters Train: number of training diffusion iterations
 D-Iters Eval: number of inference diffusion iterations (enabled by DDIM \cite{song2021ddim})
@@ -56,15 +50,15 @@ D-Iters Eval: number of inference diffusion iterations (enabled by DDIM \cite{so
 \caption{
 \textbf{Hyperparameters for Transformer-based Diffusion Policy}
 \label{tab:hparam_transformer}
-Ctrl: position or velocity control 
-To: observation horizon 
-Ta: action horizon 
-Tp: action prediction horizon 
-\#D-Params: diffusion network number of parameters in millions 
-\#V-Params: vision encoder number of parameters in millions 
+Ctrl: position or velocity control
+To: observation horizon
+Ta: action horizon
+Tp: action prediction horizon
+\#D-Params: diffusion network number of parameters in millions
+\#V-Params: vision encoder number of parameters in millions
 Emb Dim: transformer token embedding dimension
 Attn Drp: transformer attention dropout probability
-Lr: learining rate 
+Lr: learining rate
 WDecay: weight decay (for transformer only)
 D-Iters Train: number of training diffusion iterations
 D-Iters Eval: number of inference diffusion iterations (enabled by DDIM \cite{song2021ddim})
@@ -119,49 +113,38 @@ For each task $i$ (column) reported in Tab. \ref{tab:table_low_dim}, Tab. \ref{t
 
 \subsubsection{Evaluation}
 We used a fixed training time of 12 hours for each method, and selected the last checkpoint for each, with the exception of IBC, where the checkpoint with minimum training set action prediction MSE error due to IBC's training stability issue. The difficulty of training and checkpoint selection for IBC is demonstrated in main text Fig. 7.
-%
 Each method is evaluated for 20 episodes, all starting from the same set of initial conditions. To ensure the consistency of initial conditions, we carefully adjusted the pose of the T block and the robot according to overlayed images from the top-down camera.
-%
 Each evaluation episode is terminated by either keeping the end-effector within the end-zone for more than 0.5 second, or by reaching the 60 sec time limit.
 The IoU metric is directly computed in the top-down camera pixel space.
 
 \subsection{Sauce Pouring and Spreading}
-\subsubsection{Demonstrations} 
-50 demonstrations are collected, and 90\% are used for training for each task. 
+\subsubsection{Demonstrations}
+50 demonstrations are collected, and 90\% are used for training for each task.
 For pouring, initial locations of the pizza dough and sauce bowl are varied. After each demonstration, sauce is poured back into the bowl, and the dough is wiped clean.
-For spreading, location of the pizza dough as well as the poured sauce shape are varied. For resetting, we manually gather sauce towards the center of the dough, and wipe the remaining dough clean. 
+For spreading, location of the pizza dough as well as the poured sauce shape are varied. For resetting, we manually gather sauce towards the center of the dough, and wipe the remaining dough clean.
 The rotational components for tele-op commands are discarded during  spreading and sauce transferring to avoid accidentally scooping or spilling sauce.
 
 \subsubsection{Evaluation}
 Both Diffusion Policy and LSTM-GMM are trained for 1000 epochs. The last checkpoint is used for evaluation.
 
-Each method is evaluated from the same set of random initial conditions, where positions of the pizza dough and sauce bowl are varied. We use a similar protocol as in \textbf{Push-T} to set up initial conditions. We do not try to match initial shape of poured sauce for spreading. Instead, we make sure the amount of sauce is fixed during all experiments. 
+Each method is evaluated from the same set of random initial conditions, where positions of the pizza dough and sauce bowl are varied. We use a similar protocol as in \textbf{Push-T} to set up initial conditions. We do not try to match initial shape of poured sauce for spreading. Instead, we make sure the amount of sauce is fixed during all experiments.
 
 The evaluation episodes are terminated by moving the spoon upward (away form the dough) for 0.5 seconds, or when the operator deems the policy's behavior is unsafe.
 
 The coverage metric is computed by first projecting the RGB image from both the left and right cameras onto the table space through homography, then computing the coverage in each projected image. The maximum coverage between the left and right cameras is reported.
 
-% \section{Evaluation Protocol Details}
-% \subsection{Mug Flipping:} We start each experiment by dropping the mug approximately 10cm above the center of the table. Each episode is terminated when the operator determines that the gripper has sufficiently cleared the mug or the policy has not made any progress for sufficiently long. Success is defined by mug being in the desired orientation. 
 
-% \subsection{Mug Flipping}
-% \subsubsection{Setup}
-% \textbf{add a picture for setup}
-% The Mug Flipping task is added to showcase Diffusion Policy's ability to handle tasks with complex orientation constraints and rich multi-modal demonstrations. This task's goal is to reorient a flat-on-its-side mug anywhere on the table to be 1) upside-down and 2) its handle pointing to the left. This is a non-trivial classical motion planning problem as we need to jointly find a grasp together with robot configurations for both pick and place under all kinematic constraints. There are also initial conditions that require multiple reorienting steps due to kinematic limits. For such cases, we employ an additional pushing strategy to align the handle properly after reorienting. Due to the limitations of our mid-level controller, the policy / demonstrator needs to output a smooth end-effector path that avoids driving the QP against kinematic constraints. Thus, the demonstrations are highly multi-modal: grasp vs push, different types of grasps (forehand vs backhand) or local grasp adjustments (rotation around mug's principle axis), and are particularly challenging for baseline approaches to capture. 
 
-% \subsubsection{Demonstrations} 
-% 250 episodes are demonstrated, and 95\% are used for training. The demonstrations are performed by an expert who is familiar with the kinematic limitations. For each initial condition, the expert first mentally plans for a viable sequence of grasps and pushes. During execution, the expert locally adjusts the end effector to avoid singularities and kinematic limits. 
 
-% \subsubsection{Result Analysis} Diffusion policy is able to complete this task with 90\% success rate over 20 trials. The richness of captured behaviors is best appreciated with the video. Although never demonstrated, the policy is also able to sequence multiple pushes for handle alignment or regrasps for dropped mug when necessary. For comparison, we also train a LSTM-GMM policy trained with a subset of the same data. For 20 in-distribution initial conditions, the LSTM-GMM policy never aligns properly with respect to the mug, and fails to grasp in all trials.
 
 
 \section{Realworld Setup Details}
 
 \subsubsection{UR5 robot station}
 \label{sec:ur5_setup}
-Experiments for the \textbf{Push-T} task are performed on the UR5 robot station. 
+Experiments for the \textbf{Push-T} task are performed on the UR5 robot station.
 
-The UR5 robot accepts end-effector space positional command at 125Hz, which is linearly interpolated from the 10Hz command from either human demonstration or the policy. The interpolation controller limits the end-effector velocity to be below 0.43 m/s and its position to be within the region 1cm above the table for safety reason. Position-controlled policies directly predicts the desired end-effector pose, while velocity-controlled policies predicts the difference the current positional setpoint and the previous setpoint. 
+The UR5 robot accepts end-effector space positional command at 125Hz, which is linearly interpolated from the 10Hz command from either human demonstration or the policy. The interpolation controller limits the end-effector velocity to be below 0.43 m/s and its position to be within the region 1cm above the table for safety reason. Position-controlled policies directly predicts the desired end-effector pose, while velocity-controlled policies predicts the difference the current positional setpoint and the previous setpoint.
 
 The UR5 robot station has 5 realsense D415 depth camera recording 720p RGB videos at 30fps. Only 2 of the cameras are used for policy observation, which are down-sampled to 320x240 at 10fps.
 
@@ -170,10 +153,9 @@ During demonstration, the operator teleoperates the robot via a 3dconnexion Spac
 \subsection{Franka Robot Station}
 \label{sec:franka_setup}
 Experiments for \textbf{Sauce Pouring and Spreading, Bimanual Egg Beater, Bimanual Mat Unrolling, and
-Bimanual Shirt Folding} tasks are performed on the Franka robot station. 
+Bimanual Shirt Folding} tasks are performed on the Franka robot station.
 
-For the non-haptic control, a custom mid-level controller is implemented to generate desired joint positions from desired end effector poses from the learned policies. At each time step, we solve a differential kinematics problem (formulated as a Quadratic Program) to compute the desired joint velocity to track the desired end effector velocity. The resulting joint velocity is Euler integrated into joint position, which is tracked by a joint-level controller on the robot. This formulation allows us to impose constraints such as collision avoidance for the two arms and the table, safety region for end effector and joint limits. It also enables regulating redundant DoF in the null space of the end effector commands. This mid-level controller is particularly valuable for safeguarding the learned policy during hardware deployment. 
-% On the other hand, since the optimization is greedy per time step, naively commanding large end-effector displacements can easily drive the QP into a corner on the constraint manifold.
+For the non-haptic control, a custom mid-level controller is implemented to generate desired joint positions from desired end effector poses from the learned policies. At each time step, we solve a differential kinematics problem (formulated as a Quadratic Program) to compute the desired joint velocity to track the desired end effector velocity. The resulting joint velocity is Euler integrated into joint position, which is tracked by a joint-level controller on the robot. This formulation allows us to impose constraints such as collision avoidance for the two arms and the table, safety region for end effector and joint limits. It also enables regulating redundant DoF in the null space of the end effector commands. This mid-level controller is particularly valuable for safeguarding the learned policy during hardware deployment.
 
 For haptic teleoperation control, another custom mid-level controller is implemented, but formulated as a pure torque-controller. The controller is formulated using Operational Space Control \citet{khatib1987osc} as a Quadratic Program operating at 200 Hz, where position, velocity, and torque limits are added as constraints, and the primary spatial objective and secondary null-space posture objectives are posed as costs.
 This, coupled with a good model of the Franka Panda arm, including reflected rotor inertias, allows us to perform
@@ -185,7 +167,7 @@ this control strategy and only use a single controller for our given objectives.
 
 The operator uses a SpaceMouse or VR controller input device(s) to control the robot's end effector(s), and the grippers are controlled by a trigger button on the respective device. Tele-op and learned policies run at 10Hz, and the mid-level controller runs around 1kHz. Desired end effector pose commands are interpolated by the mid-level controller. This station has 2 realsense D415 RGBD camera streaming VGA RGB images at 30fps, which are downsampled to 320x240 at 10fps as input to the learned policies.
 
-\subsection{Initial and Final States of Bimanual Tasks} 
+\subsection{Initial and Final States of Bimanual Tasks}
 \label{sec:bimanual_ini_fial}
 The following figures show the initial and final state of four bimanual tasks. Green and red boxes indicate successful and failed rollouts respectively. Since mat and shirt are very flat objects, we used a homographic projection to better visualize the initial and final states.
 
@@ -194,8 +176,6 @@ The following figures show the initial and final state of four bimanual tasks. G
     \includegraphics[width=\linewidth]{figure/ijrr24_unroll_mat_ini.jpg}
     \caption{Initial states for Mat Unrolling}
     \label{fig:unroll_mat_ini}
-% \end{figure}
-% \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/ijrr24_unroll_mat_last.jpg}
     \caption{Final states for Mat Unrolling}
@@ -208,8 +188,6 @@ The following figures show the initial and final state of four bimanual tasks. G
     \includegraphics[width=\linewidth]{figure/ijrr24_egg_beater_ini.jpg}
     \caption{Initial states for Egg Beater}
     \label{fig:egg_beater_ini}
-% \end{figure}
-% \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/ijrr24_egg_beater_last.jpg}
     \caption{Final states for Egg Beater}
@@ -222,8 +200,6 @@ The following figures show the initial and final state of four bimanual tasks. G
     \includegraphics[width=\linewidth]{figure/ijrr24_fold_shirt_ini.jpg}
     \caption{Initial states for Shirt Folding}
     \label{fig:fold_shirt_ini}
-% \end{figure}
-% \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figure/ijrr24_fold_shirt_last.jpg}
     \caption{Final states for Shirt Folding}

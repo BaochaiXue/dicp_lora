@@ -49,13 +49,11 @@ $^1$Seoul National University, $^2$LG AI Research\\
 \section{Introduction}
 \label{sec:intro}
 
-% Transformer, in-context learning
 Since the introduction of Transformers \citep{TF}, their versatility in handling diverse tasks has been widely recognized across various domains \citep{GPT3, ViT, GPT4}.
 A key aspect of their success is in-context learning \citep{GPT3}, which enables models to acquire knowledge rapidly without explicit parameter updates through gradient descent.
 Recently, this capability has been explored in reinforcement learning (RL) \citep{DT, PPO, MGDT, GATO}, where acquiring skills in a sample-efficient manner is crucial.
 This line of research naturally extends to meta-RL, which focuses on leveraging prior knowledge to quickly adapt to novel tasks.
 
-% Algorithm Distillation
 In this context, \citet{AD} introduce Algorithm Distillation (AD), an in-context RL approach where Transformers sequentially model the entire learning histories of a specific RL algorithm across various tasks.
 The goal is for the models to replicate the exploration-exploitation behaviors of the source RL algorithm, enabling them to tackle novel tasks purely in-context.
 Beyond replication, \citet{AD} show that this approach can enhance sample efficiency by bypassing intermediate learning steps or distilling histories from multiple actors.
@@ -83,20 +81,17 @@ This combination of an off-the-shelf RL algorithm with the in-context learning c
 \end{figure}
 
 
-% Limitation of previous works
 However, prior in-context RL approaches have a notable limitation: they tend to replicate the suboptimal behaviors of the source algorithm.
 The source RL algorithm updates its policy gradually through gradient descent, sometimes deliberately preventing abrupt changes \citep{TRPO,PPO}.
 As a result, it may take multiple iterations to fully integrate newly discovered information, leading to repeated suboptimal actions during this process.
 Without a mechanism to deviate from the source algorithm's behavior, existing in-context RL methods \citep{AD,IDT,Headless-AD} inherit these inefficiencies.
 
-% Our approach
 To address this limitation, we introduce \emph{Distillation for In-Context Planning (DICP)}, an in-context model-based RL framework where the dynamics model is learned in-context alongside policy improvement.
 Unlike in-context policy improvement, in-context learning of the dynamics model does not inherit the suboptimal behaviors of the source algorithm, as modeling the environment's dynamics is independent of the inefficiency.
 By planning with this in-context learned dynamics model, our framework provides the agent with an additional mechanism to overcome the suboptimal behaviors of the source algorithm.
-Furthermore, simulating potential outcomes before executing actions allows for more deliberate decision-making based on predicted future returns. 
+Furthermore, simulating potential outcomes before executing actions allows for more deliberate decision-making based on predicted future returns.
 To the best of our knowledge, ours is the first model-based approach on in-context RL using Transformers to imitate the source algorithm.
 
-% Experiment
 To demonstrate the effectiveness of our framework, we conduct experiments in both discrete and continuous environments, including Darkroom variants \citep{AD} and Meta-World benchmark suite \citep{MW}.
 The results indicate that our approach significantly surpasses both in-context model-free counterparts (\textit{e.g.}, AD \citep{AD}, DPT \citep{DPT}, and IDT \citep{IDT}) and existing meta-RL methods (\textit{e.g.}, RL$^2$ \citep{RL2}, MAML \citep{MAML}, PEARL \citep{PEARL}, MACAW \citep{MACAW}, FOCAL \citep{FOCAL},  BOReL \citep{BOReL}, MoSS \citep{MoSS}, and IDAQ \citep{IDAQ}).
 Notably, our method achieves state-of-the-art results on the Meta-World ML1 and ML10 benchmarks, while requiring significantly fewer environmental interactions compared to the baselines.
@@ -122,7 +117,7 @@ Various methods have been explored for this problem, including gradient-based \c
 Furthermore, recent in-context RL approaches \citep{AD, DPT, IDT, Headless-AD}, including our own, fall within the category of offline meta-RL.
 
 \paragraph*{Model-based meta-RL.}
-In the prior research on model-based meta-RL, 
+In the prior research on model-based meta-RL,
 \cite{VariBAD,HyperX,BOReL} focus on learning to infer belief states about environment dynamics, while \citet{MoSS} aim to infer task representations.
 \citet{IDAQ} quantify uncertainty using an ensemble of meta-training dynamics when facing novel meta-test tasks.
 \citet{ReBAL,TFsearch,MAMBA} learn to construct dynamics models for planning.
@@ -223,7 +218,7 @@ Here, $\gL_\textrm{Im}$ corresponds to one of $\gL_{\textrm{AD}}$, $\gL_{\textrm
             \begin{algorithmic}[1]
             \STATE \textbf{Input:} Current observation $o_t$, learning history $h_{t-1}$, sequence model $\theta$
             \STATE Set beam size $K$, sample size $L$
-            \STATE $\gB \gets \{\}$ 
+            \STATE $\gB \gets \{\}$
             \FOR{$l=1 \dots L$}
                 \STATE $\hat{a}_t \sim f_\theta(\; \cdot \mid o_t, h_{t-1})$
                 \STATE $\hat{r}_t,\hat{o}_{t+1}, \hat{R}_t \sim g_\theta(\; \cdot \mid o_t, \hat{a}_t, h_{t-1})$\label{alg:icp:act1}
@@ -637,7 +632,6 @@ The hyperparameters are provided in Table~\ref{tab:hyp-tf}, along with additiona
     \begin{minipage}{0.64\textwidth}
         \begin{center}
             \includegraphics[width=\textwidth, trim={84pt 84pt 0pt 0pt}, clip]{figures/architecture-2.pdf}
-        % \vspace{0.50cm}
         \caption*{(c) DICP-IDT}
         \end{center}
     \end{minipage}
@@ -773,7 +767,7 @@ The difference becomes even less significant when using architectures like IDT, 
 \section{Additional Experiments}
 \label{sec:add_exp}
 
-We conducted experiments across all 50 environments of Meta-World ML1, using PPO \citep{PPO} as the source algorithm with the same hyperparameters as those used in Table~\ref{tab:results}. 
+We conducted experiments across all 50 environments of Meta-World ML1, using PPO \citep{PPO} as the source algorithm with the same hyperparameters as those used in Table~\ref{tab:results}.
 Each method is evaluated with 20K environment steps during the meta-test phase.
 As shown in Table~\ref{tab:results-all}, our method outperforms model-free counterparts.
 The mean learning curve is displayed in Fig.~\ref{fig:curve}.
@@ -841,7 +835,7 @@ Consequently, DPT requires access to the optimal actions during training.
 The authors suggest several sources for gathering the meta-training dataset, including (i) randomly sampled trajectories directly from the environment, (ii) trajectories generated by a source RL algorithm, and (iii) trajectories of an expert policy.
 In this work, we concentrate on the second source to minimize reliance on direct access to environment dynamics and expert policies.
 While the authors also discuss deploying DPT when offline datasets of the \emph{meta-test} tasks are available, our focus is on scenarios where only offline datasets for \emph{meta-train} tasks are available for a fair comparison.
-In this scheme, the loss function of DPT is defined as 
+In this scheme, the loss function of DPT is defined as
 \begin{equation}
     \gL_{\textrm{DPT}}(\theta) = - \sum_{i=1}^n \sum_{t=1}^{T} \log f_\theta(a_t^\star \mid o_t^i, h_{t-1}^i),
     \label{eq:dpt}
@@ -857,13 +851,13 @@ The architecture of IDT consists of three modules:
 (i) the Making-Decisions module predicts high-level decisions,
 (ii) the Decisions-to-Go module decodes these high-level decisions into low-level actions, and
 (iii) the Reviewing-Decisions module encodes the resulting low-level actions back into high-level decisions.
-The loss function for IDT is structured similarly to that of AD, while the loss can be divided across the three modules: 
+The loss function for IDT is structured similarly to that of AD, while the loss can be divided across the three modules:
 \begin{align}
     \gL_{\textrm{IDT}}(\theta) &= - \sum_{i=1}^n \sum_{t=1}^{T} \log f_\theta (a_t^i \mid o_t^i, h_{t-1}^i) \nonumber \\
     &= - \sum_{i=1}^n \sum_{t=1}^{T} \left[
     \log f_\theta(a_t^i \mid z_t, o_t^i) +
-    \log f_\theta(z_t \mid o_t^i, \hat{z}_{t-1}) + 
-    \log f_\theta(\hat{z}_{t-1} \mid h_{t-1}^i) \right], 
+    \log f_\theta(z_t \mid o_t^i, \hat{z}_{t-1}) +
+    \log f_\theta(\hat{z}_{t-1} \mid h_{t-1}^i) \right],
     \label{eq:idt}
 \end{align}
 where $z_t$ is a high-level decision and $\hat{z}_{t-1}$ is an encoded context by the Reviewing-Decisions module.

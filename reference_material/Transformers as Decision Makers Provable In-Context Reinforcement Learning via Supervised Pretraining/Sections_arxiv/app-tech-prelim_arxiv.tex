@@ -15,7 +15,7 @@ In this work, we will apply the following standard concentration inequality (see
 
 
 \begin{lemma}\label{lm:cover_num_corr}
-   Adopt the notations in Definition~\ref{def:cover_number_general}. Then for any $\Par\in\Parspace$, there exists $\Par_0\in\Parspace_0$ such that $\| \sAlg_{\Par_0}(\cdot|\dset_{t-1},\state_t)-\sAlg_{\Par}(\cdot|\dset_{t-1},\state_t)\|_{1}\leq 2\rho$. 
+   Adopt the notations in Definition~\ref{def:cover_number_general}. Then for any $\Par\in\Parspace$, there exists $\Par_0\in\Parspace_0$ such that $\| \sAlg_{\Par_0}(\cdot|\dset_{t-1},\state_t)-\sAlg_{\Par}(\cdot|\dset_{t-1},\state_t)\|_{1}\leq 2\rho$.
 \end{lemma}
 
 
@@ -36,43 +36,35 @@ where the second line uses a Taylor expansion of $e^x$, the fourth line uses the
 \end{proof}
 
 
-% Suppose in addition the token vectors $\bh^{(\ell)}$ are clipped such that the values in all entries are between $[-\clipval,\clipval]$ after each layer of transformer. 
-We have the following upper bound on the covering number of the transformer class $\{\TF^\clipval_{\tfpar}:\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}\}$.  %~\yub{moved (feel free to move back)}\lc{need to be moved to other places.}
+We have the following upper bound on the covering number of the transformer class $\{\TF^\clipval_{\tfpar}:\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}\}$.  %
 \begin{lemma}\label{lm:cover_num_bound}
-For the space of transformers $\{\TF^\clipval_{\tfpar}:\tfpar\in\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}\}$ with 
-% \sm{We didn't define $M^{(\ell)}$}
+For the space of transformers $\{\TF^\clipval_{\tfpar}:\tfpar\in\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}\}$ with
 \begin{align*}
-\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}:= \Big\{\tfpar=(\tfpar^{[\layer]}_\attn,\tfpar^{[\layer]}_\mlp):\max_{\ell\in[\layer]}\head^\lth\leq \head, \max_{\ell\in[\layer]}\hidden^\lth\leq \hidden, \nrmp{\tfpar}\leq\normb \Big\}, 
+\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}:= \Big\{\tfpar=(\tfpar^{[\layer]}_\attn,\tfpar^{[\layer]}_\mlp):\max_{\ell\in[\layer]}\head^\lth\leq \head, \max_{\ell\in[\layer]}\hidden^\lth\leq \hidden, \nrmp{\tfpar}\leq\normb \Big\},
 \end{align*}where $\head^\lth,\hidden^\lth$ denote the number  of heads and hidden neurons in the $\ell$-th layer respectively, the covering number of the set of induced algorithms $\{\sAlg_\tfpar,\tfpar\in\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}\}$ (c.f. Eq.~\ref{eqn:transformer-algorithm}) satisfies
 \begin{align*}
     \log \cN_{\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}}(\rho)
     &\leq c\layer^2\embd(\head\embd+\hidden)\log\Big(2+\frac{\max\{\normb,\layer,\clipval\}}{\rho}\Big)
-\end{align*} for some universal constant $c>0$. 
+\end{align*} for some universal constant $c>0$.
 
-% Moreover, if the number of heads $M$ and the hidden dimension $D'$ are bounded in each layer by some $M_\ell,D'_\ell >0$  for $\ell\in[L]$, we have a refined bound 
-% \begin{align*}
-%   \log \cN_{\tfparspace_{\layer,\head,\hidden,\normb}}(\rho)   &\leq cLD\Big[\sum_{\ell\in[L]} (M_\ell D+D'_\ell)\Big]\log\Big(2+\frac{\max\{\normb,\layer,\clipval\}}{\rho}\Big).  
-% \end{align*}
-% \lc{This proof works only for clipped TFs. Later in TF constructions need to show the token matrix has bounded norm with high probability in each layer. }
 
 \end{lemma}
-\textbf{Remark of Lemma~\ref{lm:cover_num_bound}.} Note that the transformer classes ${\tfparspace}_{D, \layer,\head,\hidden,\normb},\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ have the same expressivity as one can augment any $\TF_\tfpar\in \bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ such that the resulting $\TF_{\tfpar,\mathrm{aug}}\in{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ by adding heads or hidden neurons with fixed zero weights. Therefore, the same bound in Lemma~\ref{lm:cover_num_bound} follows for ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$, and  throughout the paper we do not distinguish ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and $\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and use them interchangeably. We also use $\head^\lth,\hidden^\lth$ to  represent the number  of heads and hidden neurons in the $\ell$-th layer of transformers, respectively. 
+\textbf{Remark of Lemma~\ref{lm:cover_num_bound}.} Note that the transformer classes ${\tfparspace}_{D, \layer,\head,\hidden,\normb},\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ have the same expressivity as one can augment any $\TF_\tfpar\in \bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ such that the resulting $\TF_{\tfpar,\mathrm{aug}}\in{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ by adding heads or hidden neurons with fixed zero weights. Therefore, the same bound in Lemma~\ref{lm:cover_num_bound} follows for ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$, and  throughout the paper we do not distinguish ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and $\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and use them interchangeably. We also use $\head^\lth,\hidden^\lth$ to  represent the number  of heads and hidden neurons in the $\ell$-th layer of transformers, respectively.
 
 \begin{proof}[Proof of Lemma~\ref{lm:cover_num_bound}]
-%\label{sec:pf_lm:cover_num_bound}
-We start with introducing Proposition J.1 in~\cite{bai2023transformers}. 
+We start with introducing Proposition J.1 in~\cite{bai2023transformers}.
 \begin{proposition}[Proposition J.1 in~\cite{bai2023transformers}]\label{prop:bai_j1}
 The function $\TF^\clipval$ is $(\layer\normb^{\layer}_{H}\normb_{\Theta})$-Lipschitz w.r.t. $\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}$ for any fixed input $\tfmat$. Namely, for any $\tfpar_1,\tfpar_2\in\tfparspace_{D, \layer,\head,\hidden,\normb}$, we have
 \begin{align*}
     \ltwopbig{\TF^\clipval_{\tfpar_1}(\tfmat)-\TF^\clipval_{\tfpar_2}(\tfmat)}{\infty}\leq \layer\normb^{\layer}_{H}\normb_{\Theta}\nrmp{\tfpar_1-\tfpar_2},
 \end{align*}
-where $\ltwop{\bA}{\infty}:=\sup_{t\in[T]}\ltwo{\bA_{\cdot t}}$  for any matrix $\bA\in\R^{K\times T}$, and $\normb_\Theta:=\normb\clipval(1+\normb\clipval^2+\normb^3\clipval^2),\normb_H:=(1+\normb^2)(1+\normb^2\clipval^3)$. 
+where $\ltwop{\bA}{\infty}:=\sup_{t\in[T]}\ltwo{\bA_{\cdot t}}$  for any matrix $\bA\in\R^{K\times T}$, and $\normb_\Theta:=\normb\clipval(1+\normb\clipval^2+\normb^3\clipval^2),\normb_H:=(1+\normb^2)(1+\normb^2\clipval^3)$.
 \end{proposition}
-As in the Proof of Theorem 20 in~\cite{bai2023transformers}, we can verify using Example 5.8 in~\cite{wainwright2019high} that the $\delta$-covering number 
+As in the Proof of Theorem 20 in~\cite{bai2023transformers}, we can verify using Example 5.8 in~\cite{wainwright2019high} that the $\delta$-covering number
 \begin{align}\log N(\delta;\normb_{\nrmp{\cdot}}(r),\nrmp{\cdot})\leq \layer(3\head\embd^2+2\embd\hidden)\log(1+2r/\delta),\label{eq:cover_norm_ball}
 \end{align}where $\normb_{\nrmp{\cdot}}(r)$ denotes any ball of radius $r$ under the norm $\nrmp{\cdot}$.  Moreover, we have the following continuity result on the log-softmax function
 \begin{lemma}[Continuity of log-softmax]\label{lm:log_softmax}
-    For any $\bu,\bv\in\R^d$, we have 
+    For any $\bu,\bv\in\R^d$, we have
     \begin{align*}
     \linf{\log \Big(\frac{e^\bu}{\lone{e^\bu}}\Big)-\log \Big(\frac{e^\bv}{\lone{e^\bv}}\Big)}\leq 2\linf{\bu-\bv}
     \end{align*}
@@ -92,9 +84,9 @@ Define $\bw:=\bu-\bv$. Then
     &\quad\linf{\log \Big(\frac{e^\bu}{\lone{e^\bu}}\Big)-\log \Big(\frac{e^\bv}{\lone{e^\bv}}\Big)}\\
     &\leq
     \linf{\bu-\bv}+|{\log \lone{e^\bu}-\log \lone{e^\bv}}|\\
-    &= 
+    &=
     \linf{\bu-\bv}+\int_{0}^1 \<\frac{e^{\bv+t\bw}}{\lone{e^{\bv+t\bw}}},\bw\> dt\\
-     &\leq 
+     &\leq
     \linf{\bu-\bv}+\int_{0}^1 \lone{\frac{e^{\bv+t\bw}}{\lone{e^{\bv+t\bw}}}}\cdot\linf{\bw} dt\\
     &=2\linf{\bu-\bv},
     \end{align*} where the third line uses the Newton-Leibniz formula.
@@ -102,9 +94,8 @@ Define $\bw:=\bu-\bv$. Then
 
 \end{proof}
 
-% \subsection{Convergence of GD and AGD}
 
-We present the following standard results on the convergence of GD and AGD. We refer the reader to~\cite{nesterov2003introductory} for the proof of these results. 
+We present the following standard results on the convergence of GD and AGD. We refer the reader to~\cite{nesterov2003introductory} for the proof of these results.
 
 \begin{proposition}[Convergence guarantee of GD and AGD]\label{prop:conv_gd_agd}
 Suppose $L(\bw)$ is a $\alpha$-strongly convex and $\beta$-smooth function on $\R^d$. Denote the condition number $\kappa:=\beta/\alpha$ and $\bw^*:=\argmin_{\bw}L(\bw)$.
@@ -118,7 +109,7 @@ The gradient descent iterates $\bw^{\sst+1}_{\GD}:=\bw^{\sst}_{\GD}-\eta\nabla L
     L(\bw^{\sst}_{\GD})-L(\bw^*)
     &\leq \frac{\beta}{2} \exp(-\frac{\sst}{\kappa})\|\bw^{0}_{\GD}-\bw^*\|_2^2.
 \end{align*}
-    \item [(b).] 
+    \item [(b).]
     The accelerated gradient descent (AGD,~\cite{nesterov2003introductory}) iterates $\bw^{\sst+1}_{\AGD}:=\bv^{\sst}_{\GD}-\frac{1}{\beta} L(\bv^{\sst}_{\AGD}),~~ \bv^{\sst+1}_{\AGD}:=\bw^{\sst+1}_{\AGD}+\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\bw^{\sst+1}_{\AGD}-\bw^{\sst}_{\AGD})$ with $\bw^{0}_{\AGD}=\bv^{0}_{\AGD}=\bzero_d$ satisfies
     \begin{align*}
     \|\bw^{\sst}_{\AGD}-\bw^*\|_2^2
@@ -127,8 +118,6 @@ The gradient descent iterates $\bw^{\sst+1}_{\GD}:=\bw^{\sst}_{\GD}-\eta\nabla L
     L(\bw^{\sst}_{\AGD})-L(\bw^*)
     &\leq \frac{\alpha+\beta}{2} \exp(-\frac{\sst}{\sqrt\kappa})\|\bw^{0}_{\AGD}-\bw^*\|_2^2.
 \end{align*}
-% Moreover, if $L(\bw)$ is quadratic in $\bw$, then $ \|\bw^{t}_{\AGD}-\bw^*\|_2
-%     \leq\|\bw^{0}_{\AGD}-\bw^*\|_2$ for all $t\geq1$ (see e.g.,~\cite{assran2020convergence,attia2021algorithmic} for stability results of the AGD trajectory).
 \end{enumerate}
-    
+
 \end{proposition}
