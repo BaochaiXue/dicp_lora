@@ -14,7 +14,7 @@
 \newcommand{\xmark}{\text{\ding{55}}}
 \usepackage{multirow}
 \usepackage{verbatim}
-\usepackage{caption} 
+\usepackage{caption}
 
 \usepackage{enumitem}
 \usepackage{amsthm}
@@ -46,8 +46,8 @@
 
 
 \author{%
-  Edward Hu\thanks{Equal contribution.} 
-  \qquad Yelong Shen$^*$ 
+  Edward Hu\thanks{Equal contribution.}
+  \qquad Yelong Shen$^*$
   \qquad Phillip Wallis
   \qquad \textbf{Zeyuan Allen-Zhu} \\
   \textbf{Yuanzhi Li}
@@ -69,7 +69,7 @@
 An important paradigm of natural language processing consists of large-scale pre-training on general domain data and adaptation to particular tasks or domains.
 As we pre-train larger models, full fine-tuning, which retrains all model parameters, becomes less feasible.
 Using GPT-3 175B as an example -- deploying independent instances of fine-tuned models, each with 175B parameters, is prohibitively expensive.
-We propose \textbf{Lo}w-\textbf{R}ank \textbf{A}daptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks. 
+We propose \textbf{Lo}w-\textbf{R}ank \textbf{A}daptation, or LoRA, which freezes the pre-trained model weights and injects trainable rank decomposition matrices into each layer of the Transformer architecture, greatly reducing the number of trainable parameters for downstream tasks.
 Compared to GPT-3 175B fine-tuned with Adam, LoRA can reduce the number of trainable parameters by 10,000 times and the GPU memory requirement by 3 times.
 LoRA performs on-par or better than fine-tuning in model quality on RoBERTa, DeBERTa, GPT-2, and GPT-3, despite having fewer trainable parameters, a higher training throughput, and, unlike adapters, \textit{no additional inference latency}.
 We also provide an empirical investigation into rank-deficiency in language model adaptation, which sheds light on the efficacy of LoRA.
@@ -154,8 +154,8 @@ During full fine-tuning, the model is initialized to pre-trained weights $\Phi_0
     \max_{\Phi} \sum_{(x,y)\in\cZ} \sum_{t=1}^{|y|}  \text{log} \left(  P_{\Phi}(y_{t} | x, y_{<t}) \right)
 \label{eq:ft_obj}
 \end{align}
-One of the main drawbacks for full fine-tuning is that for \emph{each} downstream task, we learn a \emph{different} set of parameters $\Delta\Phi$ whose dimension $|\Delta\Phi|$ equals $|\Phi_0|$. 
-Thus, if the pre-trained model is large (such as GPT-3 with $|\Phi_0|\approx175 \text{~Billion}$), storing and deploying many independent instances of fine-tuned models can be challenging, if at all feasible. 
+One of the main drawbacks for full fine-tuning is that for \emph{each} downstream task, we learn a \emph{different} set of parameters $\Delta\Phi$ whose dimension $|\Delta\Phi|$ equals $|\Phi_0|$.
+Thus, if the pre-trained model is large (such as GPT-3 with $|\Phi_0|\approx175 \text{~Billion}$), storing and deploying many independent instances of fine-tuned models can be challenging, if at all feasible.
 
 In this paper, we adopt a more parameter-efficient approach, where the task-specific parameter increment $\Delta\Phi = \Delta\Phi(\Theta)$ is further encoded by a much smaller-sized set of parameters $\Theta$ with $|\Theta| \ll |\Phi_0|$.
 The task of finding $\Delta\Phi$ thus becomes optimizing over $\Theta$:
@@ -197,7 +197,7 @@ In a generic scenario without model parallelism, such as running inference on GP
   \begin{tabular}{c|ccc}
   \hline
   \toprule
-  
+
   Batch Size              &  32                 & 16        & 1    \\
   Sequence Length         &  512                & 256       & 128  \\
   $|\Theta|$              &  0.5M         & 11M & 11M     \\
@@ -349,9 +349,9 @@ However, this line of works can only scale up by using more special tokens in th
 A lot of machine learning problems have certain intrinsic low-rank structure~\citep{li2016recovery,cai2010singular,li2018algorithmic,grasedyck2013literature}.
 Moreover, it is known that for many deep learning tasks, especially those with a heavily over-parametrized neural network, the learned neural network will enjoy low-rank properties after training~\citep{oymak2019generalization}.
 Some prior works even explicitly impose the low-rank constraint when training the original neural network~\citep{sainath2013low,povey2018semi,zhang2014extracting,jaderberg2014speeding,zhao2016low,khodak2021initialization,denil2014predicting}; however, to the best of our knowledge, none of these works considers low-rank update to a frozen model for \emph{adaptation to downstream tasks}.
-In theory literature, it is known that neural networks outperform other classical learning methods, including the corresponding (finite-width) neural tangent kernels~\citep{als18dnn,li2018learning} when the underlying concept class has certain low-rank structure~\citep{ghorbani2020neural,AL2019-resnet,allen2020backward}. 
+In theory literature, it is known that neural networks outperform other classical learning methods, including the corresponding (finite-width) neural tangent kernels~\citep{als18dnn,li2018learning} when the underlying concept class has certain low-rank structure~\citep{ghorbani2020neural,AL2019-resnet,allen2020backward}.
 Another theoretical result in \citet{allen2020feature} suggests that low-rank adaptations can be useful for adversarial training.
-In sum, we believe that our proposed low-rank adaptation update is well-motivated by the literature. 
+In sum, we believe that our proposed low-rank adaptation update is well-motivated by the literature.
 
 \section{Understanding the Low-Rank Updates}
 \label{sec:science}
@@ -365,7 +365,7 @@ We perform a sequence of empirical studies to answer the following questions:
 2) Is the ``optimal'' adaptation matrix $\Delta W$ \emph{really rank-deficient}? If so, what is a good rank to use in practice?
 3) What is the connection between $\Delta W$ and $W$? Does $\Delta W$ highly correlate with $W$? How large is $\Delta W$ comparing to $W$?
 
-We believe that our answers to question (2) and (3) shed light on the fundamental principles of using pre-trained language models for downstream tasks, which is a critical topic in NLP. 
+We believe that our answers to question (2) and (3) shed light on the fundamental principles of using pre-trained language models for downstream tasks, which is a critical topic in NLP.
 
 
 
@@ -416,10 +416,10 @@ We adapt $\{W_q, W_v\}$, $\{W_q, W_k, W_v, W_c\}$, and just $W_q$ for a comparis
                                         & $W_q, W_v$            & 73.4   & 73.3   & 73.7   & 73.8   & 73.5    \\
                                         & $W_q, W_k, W_v, W_o$  & 74.1   & 73.7   & 74.0   & 74.0   & 73.9    \\
   \midrule
-  \multirow{3}{*}{MultiNLI ($\pm0.1$\%)}& $W_q$                 & 90.7   & 90.9   & 91.1   & 90.7   & 90.7    \\ 
-                                        & $W_q, W_v$            & 91.3   & 91.4   & 91.3   & 91.6   & 91.4    \\ 
+  \multirow{3}{*}{MultiNLI ($\pm0.1$\%)}& $W_q$                 & 90.7   & 90.9   & 91.1   & 90.7   & 90.7    \\
+                                        & $W_q, W_v$            & 91.3   & 91.4   & 91.3   & 91.6   & 91.4    \\
                                         & $W_q, W_k, W_v, W_o$  & 91.2   & 91.7   & 91.7   & 91.5   & 91.4    \\
-  
+
   \bottomrule
   \end{tabular}
   \caption{Validation accuracy on WikiSQL and MultiNLI with different rank $r$. To our surprise, a rank as small as one suffices for adapting both $W_q$ and $W_v$ on these datasets while training $W_q$ alone needs a larger $r$. We conduct a similar experiment on GPT-2 in~\autoref{app:gpt2_effect_r}.}
@@ -483,9 +483,9 @@ As a comparison, we also plot two random Gaussian matrices, which do not share a
 \label{sec:compare_delta_w_to_w}
 We further investigate the relationship between $\Delta W$ and $W$.
 In particular, does $\Delta W$ highly correlate with $W$? (Or mathematically, is $\Delta W$ mostly contained in the top singular directions of $W$?) Also, how ``large'' is $\Delta W$ comparing to its corresponding directions in $W$?
-This can shed light on the underlying mechanism for adapting pre-trained language models. 
+This can shed light on the underlying mechanism for adapting pre-trained language models.
 
-To answer these questions, we project $W$ onto the $r$-dimensional subspace of $\Delta W$ by computing $U^\top W V^\top$, with $U$/$V$ being the left/right singular-vector matrix of $\Delta W$. Then, we compare the Frobenius norm between $\|U^\top W V^\top\|_F$ and $\|W\|_F$. 
+To answer these questions, we project $W$ onto the $r$-dimensional subspace of $\Delta W$ by computing $U^\top W V^\top$, with $U$/$V$ being the left/right singular-vector matrix of $\Delta W$. Then, we compare the Frobenius norm between $\|U^\top W V^\top\|_F$ and $\|W\|_F$.
 As a comparison, we also compute $\|U^\top W V^\top\|_F$ by replacing $U,V$ with the top $r$ singular vectors of $W$ or a random matrix.
 
 
@@ -500,12 +500,12 @@ As a comparison, we also compute $\|U^\top W V^\top\|_F$ by replacing $U,V$ with
   \midrule
   $||U^\top W_qV^\top||_F = $        & 0.32   & 21.67     & 0.02     & 1.90  & 37.71                & 0.33    \\
   \midrule
-  $||W_q||_F = 61.95$                & \multicolumn{3}{c|}{$||\Delta W_q||_F = 6.91$}             
+  $||W_q||_F = 61.95$                & \multicolumn{3}{c|}{$||\Delta W_q||_F = 6.91$}
   & \multicolumn{3}{c}{$||\Delta W_q||_F = 3.57$}
   \\
   \bottomrule
   \end{tabular}
-  \caption{The Frobenius norm of $U^\top W_qV^\top$ where $U$ and $V$ are the left/right top $r$ singular vector directions of either (1) $\Delta W_q$, (2) $W_q$, or (3) a random matrix. The weight matrices are taken from the 48th layer of GPT-3. 
+  \caption{The Frobenius norm of $U^\top W_qV^\top$ where $U$ and $V$ are the left/right top $r$ singular vector directions of either (1) $\Delta W_q$, (2) $W_q$, or (3) a random matrix. The weight matrices are taken from the 48th layer of GPT-3.
   }
   \label{tab:w_delta_w_fro}
 \end{table}
@@ -513,7 +513,7 @@ As a comparison, we also compute $\|U^\top W V^\top\|_F$ by replacing $U,V$ with
 We draw \emph{several conclusions} from \autoref{tab:w_delta_w_fro}.
 First, $\Delta W$ has a stronger correlation with $W$ compared to a random matrix, indicating that $\Delta W$ amplifies some features that are already in $W$.
 Second, instead of repeating the top singular directions of $W$, $\Delta W$ only \emph{amplifies directions that are not emphasized in $W$}.
-Third, the amplification factor is rather huge: $21.5\approx 6.91/0.32$ for $r=4$. 
+Third, the amplification factor is rather huge: $21.5\approx 6.91/0.32$ for $r=4$.
 See~\autoref{app:amplification_factor} for why $r=64$ has a smaller amplification factor.
 We also provide a visualization in~\autoref{app:corr_w_delta_w} for how the correlation changes as we include more top singular directions from $W_q$.
 This suggests that the low-rank adaptation matrix potentially \emph{amplifies the important features for specific downstream tasks that were learned but not emphasized in the general pre-training model}.
@@ -609,20 +609,20 @@ The dataset is release under the BSD 3-Clause License.
 \textbf{SAMSum}
 is introduced in ~\cite{DBLP:journals/corr/abs-1911-12237} and contains $14,732$/$819$ training/test examples.
 It consists of staged chat conversations between two people and corresponding abstractive summaries written by linguists.
-We encode context as "{\textbackslash}n" concatenated utterances followed by a "{\textbackslash}n{\textbackslash}n", and target as $y = \{ \text{summary} \}$. 
+We encode context as "{\textbackslash}n" concatenated utterances followed by a "{\textbackslash}n{\textbackslash}n", and target as $y = \{ \text{summary} \}$.
 The dataset is released under the non-commercial licence: Creative Commons BY-NC-ND 4.0.
 
-\textbf{E2E NLG Challenge} 
+\textbf{E2E NLG Challenge}
 was first introduced in ~\cite{novikova2017e2e} as a dataset for training end-to-end, data-driven natural language generation systems and is commonly used for data-to-text evaluation. The E2E dataset consists of roughly $42,000$ training, $4,600$ validation, and $4,600$ test examples from the restaurant domain. Each source table used as input can have multiple references. Each sample input $(x, y)$ consists of a sequence of slot-value pairs, along with a corresponding natural language reference text.
 The dataset is released under Creative Commons BY-NC-SA 4.0.
 
-\textbf{DART} 
+\textbf{DART}
 is an open-domain data-to-text dataset described in \cite{nan2020dart}.
 DART inputs are structured as sequences of ENTITY | RELATION | ENTITY triples.
 With $~82K$ examples in total, DART is a significantly larger and more complex data-to-text task compared to E2E.
 The dataset is released under the MIT license.
 
-\textbf{WebNLG} 
+\textbf{WebNLG}
 is another commonly used dataset for data-to-text evaluation~\citep{gardent2017webnlg}. With $~22K$ examples in total WebNLG comprises 14 distinct categories, nine of which are seen during training. Since five of the 14 total categories are not seen during training, but are represented in the test set, evaluation is typically broken out by ``seen'' categories (S),  ``unseen'' categories (U) and ``all'' (A). Each input example is represented by a sequence of SUBJECT | PROPERTY | OBJECT triples.
 The dataset is released under Creative Commons BY-NC-SA 4.0.
 
@@ -654,7 +654,7 @@ See the hyperparameters used in our runs in~\autoref{tab:hyper_roberta}.
                               & Warmup Ratio & \multicolumn{8}{c}{0.06} \\
                               & LR Schedule & \multicolumn{8}{c}{Linear} \\
         \midrule
-        \multirow{5}{*}{\makecell{RoBERTa base \\ LoRA}} \ 
+        \multirow{5}{*}{\makecell{RoBERTa base \\ LoRA}} \
                               & Batch Size & 16 & 16 & 16 & 32 & 32 & 16 & 32 & 16 \\
                               & \# Epochs & 30 & 60 & 30 & 80 & 25 & 25 & 80 & 40 \\
                               & Learning Rate & 5E-04 & 5E-04 & 4E-04 & 4E-04 & 4E-04 & 5E-04 & 5E-04 & 4E-04 \\
@@ -662,7 +662,7 @@ See the hyperparameters used in our runs in~\autoref{tab:hyper_roberta}.
                               & LoRA $\alpha$ & \multicolumn{8}{c}{8} \\
                               & Max Seq. Len. & \multicolumn{8}{c}{512} \\
         \midrule
-        \multirow{5}{*}{\makecell{RoBERTa large \\ LoRA}} \ 
+        \multirow{5}{*}{\makecell{RoBERTa large \\ LoRA}} \
                               & Batch Size & 4 & 4 & 4 & 4 & 4 & 4 & 8 & 8 \\
                               & \# Epochs & 10 & 10 & 20 & 20 & 10 & 20 & 20 & 30 \\
                               & Learning Rate & 3E-04 & 4E-04 & 3E-04 & 2E-04 & 2E-04 & 3E-04 & 4E-04 & 2E-04 \\
@@ -670,7 +670,7 @@ See the hyperparameters used in our runs in~\autoref{tab:hyper_roberta}.
                               & LoRA $\alpha$ & \multicolumn{8}{c}{16} \\
                               & Max Seq. Len. & 128 & 128 & 512 & 128 & 512 & 512 & 512 & 512 \\
         \midrule
-        \multirow{5}{*}{\makecell{RoBERTa large \\ LoRA$\dagger$}} \ 
+        \multirow{5}{*}{\makecell{RoBERTa large \\ LoRA$\dagger$}} \
                               & Batch Size & \multicolumn{8}{c}{4} \\
                               & \# Epochs & 10 & 10 & 20 & 20 & 10 & 20 & 20 & 10 \\
                           & Learning Rate & 3E-04 & 4E-04 & 3E-04 & 2E-04 & 2E-04 & 3E-04 & 4E-04 & 2E-04 \\
@@ -678,14 +678,14 @@ See the hyperparameters used in our runs in~\autoref{tab:hyper_roberta}.
                               & LoRA $\alpha$ & \multicolumn{8}{c}{16} \\
                               & Max Seq. Len. & \multicolumn{8}{c}{128} \\
         \midrule
-        \multirow{4}{*}{\makecell{RoBERTa large \\ $\text{Adpt}^\text{P}$ (3M)$\dagger$}} \ 
+        \multirow{4}{*}{\makecell{RoBERTa large \\ $\text{Adpt}^\text{P}$ (3M)$\dagger$}} \
                               & Batch Size & \multicolumn{8}{c}{32} \\
                               & \# Epochs & 10 & 20 & 20 & 20 & 10 & 20 & 20 & 20 \\
                               & Learning Rate & 3E-05 & 3E-05 & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 \\
                               & Bottleneck $r$ & \multicolumn{8}{c}{64} \\
                               & Max Seq. Len. & \multicolumn{8}{c}{128} \\
         \midrule
-        \multirow{4}{*}{\makecell{RoBERTa large \\ $\text{Adpt}^\text{P}$ (0.8M)$\dagger$}} \ 
+        \multirow{4}{*}{\makecell{RoBERTa large \\ $\text{Adpt}^\text{P}$ (0.8M)$\dagger$}} \
                               & Batch Size & \multicolumn{8}{c}{32} \\
                               & \# Epochs & 5 & 20 & 20 & 20 & 10 & 20 & 20 & 20 \\
                               & Learning Rate & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 & 3E-04 \\
@@ -734,7 +734,7 @@ See the hyperparameters used in our runs in~\autoref{tab:hyper_deberta}.
                               & Warmup Ratio & \multicolumn{8}{c}{0.1} \\
                               & LR Schedule & \multicolumn{8}{c}{Linear} \\
         \midrule
-        \multirow{5}{*}{\makecell{DeBERTa XXL \\ LoRA}} \ 
+        \multirow{5}{*}{\makecell{DeBERTa XXL \\ LoRA}} \
                               & Batch Size & 8 & 8 & 32 & 4 & 6 & 8 & 4 & 4 \\
                               & \# Epochs & 5 & 16 & 30 & 10 & 8 & 11 & 11 & 10 \\
                               & Learning Rate & 1E-04 & 6E-05 & 2E-04 & 1E-04 & 1E-04 & 1E-04 & 2E-04 & 2E-04 \\
@@ -795,7 +795,7 @@ For all GPT-3 experiments, we train using AdamW~\citep{loshchilov2017decoupled} 
 We use a sequence length of 384 for WikiSQL~\citep{DBLP:journals/corr/abs-1709-00103}, 768 for MNLI~\citep{williams-etal-2018-broad}, and 2048 for SAMSum~\citep{DBLP:journals/corr/abs-1911-12237}.
 We tune learning rate for all method-dataset combinations.
 See~\autoref{app:hps_gpt3} for more details on the hyperparameters used.
-For prefix-embedding tuning, we find the optimal $l_p$ and $l_i$ to be 256 and 8, respectively, totalling $3.2M$ trainable parameters. 
+For prefix-embedding tuning, we find the optimal $l_p$ and $l_i$ to be 256 and 8, respectively, totalling $3.2M$ trainable parameters.
 We use $l_p=8$ and $l_i=8$ for prefix-layer tuning with $20.2M$ trainable parameters to obtain the overall best performance.
 We present two parameter budgets for LoRA: 4.7M ($r_q=r_v=1$ or $r_{v}=2$) and 37.7M ($r_q=r_v=8$ or $r_q=r_k=r_v=r_o=2$).
 We report the best validation performance from each run.
@@ -839,7 +839,7 @@ In \autoref{tab:gpt3_ft_results_detailed}, we show the evaluation results of LoR
 First of all, LoRA+PE significantly outperforms both LoRA and prefix-embedding tuning on WikiSQL, which indicates that LoRA is somewhat orthogonal to prefix-embedding tuning.
 On MultiNLI, the combination of LoRA+PE doesn't perform better than LoRA, possibly because LoRA on its own  already achieves performance comparable to the human baseline.
 Secondly, we notice that LoRA+PL performs slightly worse than LoRA even with more trainable parameters.
-We attribute this to the fact that prefix-layer tuning is very sensitive to the choice of learning rate and thus makes the optimization of LoRA weights more difficult in LoRA+PL. 
+We attribute this to the fact that prefix-layer tuning is very sensitive to the choice of learning rate and thus makes the optimization of LoRA weights more difficult in LoRA+PL.
 
 
 
@@ -940,14 +940,14 @@ Fine-Tune & - & 175B &  73.8 & 89.5 \\
                              & $l_p=256, l_i=8$ & 3.2 M & 63.1 & 88.6 \\
                              & $l_p=512, l_i=8$ & 6.4 M & 55.9 & 85.8 \\
 \midrule
-\multirow{5}{*}{PrefixLayer} 
+\multirow{5}{*}{PrefixLayer}
                              & $l_p=2, l_i=2$ & 5.1 M & 68.5 & 89.2 \\
                              & $l_p=8, l_i=0$ & 10.1 M & 69.8 & 88.2 \\
                              & $l_p=8, l_i=8$ & 20.2 M & 70.1 & 89.5 \\
                              & $l_p=32, l_i=4$ & 44.1 M & 66.4 & 89.6 \\
                              & $l_p=64, l_i=0$ & 76.1 M & 64.9 & 87.9 \\
 \midrule
-\multirow{5}{*}{$\text{Adapter}^{\text{H}}$} 
+\multirow{5}{*}{$\text{Adapter}^{\text{H}}$}
                              & $r=1$ & 7.1 M & 71.9 & 89.8 \\
                              & $r=4$ & 21.2 M & 73.2 & 91.0 \\
                              & $r=8$ & 40.1 M & 73.2 & 91.5 \\
@@ -982,11 +982,11 @@ Fine-Tune & - & 175B &  73.8 & 89.5 \\
 \subsection{Low-Data Regime}
 \label{app:low_data}
 To evaluate the performance of different adaptation approaches in the low-data regime. we randomly sample 100, 1k and 10k training examples from the full training set of MNLI to form the low-data MNLI-$n$ tasks.
-In \autoref{tab:gpt3-few-shot-mnli}, we show the performance of different adaptation approaches on MNLI-$n$. 
+In \autoref{tab:gpt3-few-shot-mnli}, we show the performance of different adaptation approaches on MNLI-$n$.
 To our surprise, PrefixEmbed and PrefixLayer performs very poorly on MNLI-100 dataset, with PrefixEmbed performing only slightly better than random chance (37.6\% vs. 33.3\%).
 PrefixLayer performs better than PrefixEmbed but is still significantly worse than Fine-Tune or LoRA on MNLI-100.
 The gap between prefix-based approaches and LoRA/Fine-tuning becomes smaller as we increase the number of training examples, which might suggest that prefix-based approaches are not suitable for low-data tasks in GPT-3.
-LoRA achieves better performance than fine-tuning on both MNLI-100 and MNLI-Full, and comparable results on MNLI-1k and MNLI-10K considering the ($\pm0.3$) variance due to random seeds. 
+LoRA achieves better performance than fine-tuning on both MNLI-100 and MNLI-Full, and comparable results on MNLI-1k and MNLI-10K considering the ($\pm0.3$) variance due to random seeds.
 \begin{table}[h]
 \centering
 \begin{tabular}{l|cccc}

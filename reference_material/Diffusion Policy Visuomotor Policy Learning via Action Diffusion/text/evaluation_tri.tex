@@ -1,6 +1,6 @@
 \section{Realworld Bimanual Tasks}
 \label{sec:eval_bimanual}
-Beyond single arm setup, we further demonstrate Diffusion Policy on several challenging bimanual tasks. To enable bimanual tasks, the majority of effort was spent on extending our robot stack to support multi-arm teleopration and control. Diffusion Policy worked out of the box for these tasks without hyperparameter tuning. 
+Beyond single arm setup, we further demonstrate Diffusion Policy on several challenging bimanual tasks. To enable bimanual tasks, the majority of effort was spent on extending our robot stack to support multi-arm teleopration and control. Diffusion Policy worked out of the box for these tasks without hyperparameter tuning.
 
 \subsection{Observation and Action Spaces}
 The proprioceptive observation space is extended to include the poses of both end-effectors and the gripper widths of both grippers. We also extend the observation space to include the actual and desired values of these quantities.
@@ -15,7 +15,7 @@ haptic-enabled control using 2
 Haption Virtuose\legalTM\ 6D HF TAO}
 devices using bilateral position-position coupling as described succinctly in the haptics section of \citet{siciliano2008springer}. This coupling is performed between a Haption device and a Franka Panda arm.
 More details on the controllers themselves may be found in Sec. \ref{sec:franka_setup}.
-The following provides more details on each task and policy performance.  
+The following provides more details on each task and policy performance.
 
 \subsection{Bimanual Egg Beater}
 
@@ -26,7 +26,7 @@ The bimanual egg beater task is illustrated and described in Fig. \ref{fig:real_
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figure/real_egg_beater_setup_compressed.pdf}
-\caption{\textbf{Bimanual Egg Beater Manipulation. } 
+\caption{\textbf{Bimanual Egg Beater Manipulation. }
 \label{fig:real_egg_beater}
 The robot needs to
 \textcircled{\raisebox{-0.9pt}{1}} push the bowl into position (only if too close to the left arm),
@@ -51,7 +51,7 @@ This task was teleoperated using the VR setup, as it did not require rich haptic
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figure/real_unroll_mat_setup_compressed.pdf}
-\caption{\textbf{Bimanual Mat Unrolling. } 
+\caption{\textbf{Bimanual Mat Unrolling. }
 \label{fig:real_unroll_mat}
 The robot needs to
 \textcircled{\raisebox{-0.9pt}{1}} pick up one side of the mat (if needed), using the left or right arm,
@@ -68,13 +68,12 @@ The robot needs to
 
 \subsection{Bimanual Shirt Folding.}
 The shirt folding task is described and illustrated in Fig. \ref{fig:real_fold_shirt}, using a short-sleeve T-shirt. This task was also teleoperated using the VR setup as it did not require rich
-feedback to perform the task. Due to the kinematic and workspace constraints, this task is notably longer and can take up to nine discrete steps. The last few steps require both grippers to come very close towards each other. Having our mid-level controller explicitly handling collision avoidance was especially important for both teleoperation and policy rollout. 
+feedback to perform the task. Due to the kinematic and workspace constraints, this task is notably longer and can take up to nine discrete steps. The last few steps require both grippers to come very close towards each other. Having our mid-level controller explicitly handling collision avoidance was especially important for both teleoperation and policy rollout.
 
 \begin{figure}[t]
 \centering
-% TODO(eric): Couldn't get the PDF to fit under 50 MB
 \includegraphics[width=\linewidth]{figure/real_fold_shirt_setup.jpg}
-\caption{\textbf{Bimanual Shirt Folding. } 
+\caption{\textbf{Bimanual Shirt Folding. }
 \label{fig:real_fold_shirt}
 The robot needs to
 \textcircled{\raisebox{-0.9pt}{1}} approach and grasp the closest sleeve with both arms,

@@ -1,28 +1,15 @@
-% \usepackage[utf8]{inputenc} % allow utf-8 input
-% \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 
-% \usepackage{times}
 \usepackage{parskip}
 \usepackage{subcaption}
-% \usepackage[font=small,labelfont=bf]{caption}
 
-% \newcommand\hmmax{0}
-% \newcommand\bmmax{0}
 
-%% Math
 \usepackage{amsmath}
 \usepackage{amsfonts,amscd,amssymb,bm,bbm,mathrsfs}
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{nicefrac}       %
 \usepackage{amsthm}
 \usepackage{mathtools}
 
-% This package controls font of math
-% \usepackage{mathabx}
-% This package removes ~ space in equations
-% \usepackage{amsxtra}
 
-% Restate equation
-% Suggestion: use these commands inside aligned environment
 \newcommand\labelAndRemember[2]
   {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
    \label{#1}#2}
@@ -37,20 +24,16 @@
 
 
 
-%% Algorithm
 \usepackage[algo2e,linesnumbered,vlined,ruled]{algorithm2e}
 \usepackage{algorithm}
 \usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
-%% Basics
 \usepackage{url}
 \usepackage[breaklinks=true]{hyperref}
 \usepackage{breakcites}
-% \usepackage[usenames,dvipsnames]{color}
 
-% Commented for ICLR version
 \hypersetup{
   colorlinks,
   citecolor=blue!70!black,
@@ -69,8 +52,7 @@
 \crefformat{figure}{Figure #2#1#3}
 \Crefformat{figure}{Figure #2#1#3}
 
-%% Table
-\usepackage{booktabs}       % professional-quality tables
+\usepackage{booktabs}       %
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{makecell}
@@ -81,58 +63,21 @@
 
 
 
-%% Display
-% \usepackage[usenames,dvipsnames]{color}
-% \usepackage[dvipsnames]{xcolor}
 \usepackage[normalem]{ulem}
 \usepackage{exscale}
 \usepackage{tikz}
 \usepackage{float}
 \usepackage{graphicx,graphics}
-% subfig}
 \graphicspath{ {./fig/} }
 \allowdisplaybreaks
 
-%% Theorems
-% \usepackage{chngcntr}
-% \usepackage{apptools}
-% \makeatletter
-% \def\thm@space@setup{\thm@preskip=3pt
-% \thm@postskip=0pt}
-% \makeatother
-% \newtheorem{theorem}{Theorem}
-% \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{corollary}[theorem]{Corollary}
-% \newtheorem{proposition}[theorem]{Proposition}
-% \newtheorem{definition}[theorem]{Definition}
-% \newtheorem{assumption}[theorem]{Assumption}
-% \theoremstyle{definition}
-% \newtheorem{remark}[theorem]{Remark}
-% \newtheorem{example}[theorem]{Example}
-
-% \AtAppendix{\theoremstyle{theorem}
-% \renewtheorem{lemma}{Lemma}[section]
-% \renewtheorem{corollary}{Corollary}[section]
-% \renewtheorem{proposition}{Proposition}[section]
-% \renewtheorem{definition}{Definition}[section]
-% \renewtheorem{assumption}{Assumption}[section]
-% \theoremstyle{definition}
-% \renewtheorem{remark}{Remark}[section]
-% \renewtheorem{example}{Example}[section]}
 
 
 
-%%% New theorem environment
-% Proof environments
-% The Theorems are numbered consecutively
-% Lemmas are numbered by section, and observations, claims, facts, and 
-% assumptions take their numbering. Propositions and definitions have their
-% own numbering by section.
-% \newtheorem{theorem}{Theorem}[section]
+
 \newtheorem{theorem}{Theorem}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{ass}{Assumption}[section]
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem*{remark*}{Remark}
 \newtheorem*{lemma*}{Lemma}
@@ -164,17 +109,11 @@
   \hspace*{1em}}{\qed\bigskip\\}
 \newenvironment{inner-proof}{\noindent{\bf Proof}\hspace{1em}}{
   $\bigtriangledown$\medskip\\}
-%% \newenvironment{proof-of-lemma}[1][{}]{\noindent{\bf Proof of Lemma {#1}}
-%%   \hspace*{1em}\renewcommand{\qedsymbol}{$\bigtriangledown$}}{\qed\bigskip\\}
 \newenvironment{proof-attempt}{\noindent{\bf Proof Attempt}
   \hspace*{1em}}{\qed\bigskip\\}
-%\newenvironment{proofof}[1]{\noindent{\bf Proof} of {#1}: \hspace*{1em}}{\qed\bigskip\\}
 \newenvironment{proofof}[1][{}]{\noindent{\bf Proof of \cref{#1}}
   \hspace*{1em}}{\qed\bigskip\\}
-  
-% \theoremsymbol{\ensuremath{\square}}
-% \newtheorem{proof}{Proof}
-%restate
+
 \newenvironment{thmbis}[1]
   {\renewcommand{\thetheorem}{\ref{#1}$'$}%
    \addtocounter{theorem}{-1}%
@@ -185,27 +124,20 @@
 \newcommand{\comm}[1]{{\color{red}#1}}
 \newcommand{\revise}[1]{{\color{blue}#1}}
 \newcommand{\remove}[1]{{\color{Gray}\sout{#1}}}
-      
-%% ------------------------------------------------
-%% ----------------Math symbols----------------
-%% ------------------------------------------------
+
 \renewcommand{\hat}{\widehat}
 \renewcommand{\bar}{\overline}
 \renewcommand{\epsilon}{\varepsilon}
 
 \usepackage{pifont}
-% \newcommand{\yes}{\checkmark}
 \newcommand{\no}{\ding{55}}
 \newcommand{\yes}{\ding{51}}
-%\newcommand{\id}{I}
 \newcommand{\id}{\bI}
-\newcommand{\tA}{\tilde{\mathcal{A}}} 
-\newcommand{\tC}{\tilde{C}}  
-\newcommand{\tX}{\tilde{X}}    
-\newcommand{\tZ}{\tilde{Z}} 
+\newcommand{\tA}{\tilde{\mathcal{A}}}
+\newcommand{\tC}{\tilde{C}}
+\newcommand{\tX}{\tilde{X}}
+\newcommand{\tZ}{\tilde{Z}}
 \newcommand{\tM}{\tilde{M}}
-% \newcommand{\cL}{\mathcal{L}}
-% \newcommand{\cO}{\mathcal{O}}
 \newcommand{\nS}{|\mathcal{S}|}
 \newcommand{\nA}{|\mathcal{A}|}
 \newcommand{\RR}{\mathbb{R}}
@@ -215,14 +147,12 @@
 \newcommand{\hX}{X}
 \newcommand{\hY}{Y}
 \newcommand{\hZ}{Z}
-% \newcommand{\II}[1]{\mathbb{1}\left\{#1\right\}}
 \newcommand{\II}{\mathbb{I}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\PP}{\mathbb{P}}
 \newcommand{\QQ}{\mathbb{Q}}
 \newcommand{\VV}{\mathbb{V}}
 \newcommand{\DD}{\mathbb{D}}
-% set \cL \bL 
 \newcounter{cnt}
 \setcounter{cnt}{0}
 \foreach \num in {1,2,...,26}{%
@@ -232,21 +162,18 @@
 }
 \renewcommand{\bR}{\mathbf{R}}
 \newcommand{\br}{\mathbf{r}}
-%% ------------------------------------------------
-%% ----------------Mathrm----------------
-%% ------------------------------------------------
 \newcommand{\tr}{\mathrm{tr}}
 \newcommand{\im}{\operatorname{Im}}
 \newcommand{\ind}{\mathrm{1}}
-\newcommand{\sgn}{\mathrm{sgn}} 
-\newcommand{\spa}{\mathrm{span}} 
-\newcommand{\orth}{\mathbf{orth}} 
-\newcommand{\prox}{\mathbf{prox}} 
+\newcommand{\sgn}{\mathrm{sgn}}
+\newcommand{\spa}{\mathrm{span}}
+\newcommand{\orth}{\mathbf{orth}}
+\newcommand{\prox}{\mathbf{prox}}
 \newcommand{\ket}[1]{\left\vert{#1}\right\rangle}
 \newcommand{\bra}[1]{\left\langle{#1}\right\vert}
 \newcommand{\braket}[2]{\left\langle{#1}\vert{#2}\right\rangle}
-\newcommand{\dom}{\mathrm{dom}} 
-\newcommand{\dist}{\mathrm{dist}} 
+\newcommand{\dom}{\mathrm{dom}}
+\newcommand{\dist}{\mathrm{dist}}
 \newcommand{\ivec}{\mathrm{vec}}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -260,12 +187,11 @@
 \newcommand{\geqsim}{\gtrsim}
 \newcommand{\minimize}{\mathop{\textrm{minimize}}}
 \newcommand{\maximize}{\mathop{\textrm{maximize}}}
-\newcommand{\st}{\mathop{\textrm{s.t.}\ }}  
-\newcommand{\T}{\top}  
+\newcommand{\st}{\mathop{\textrm{s.t.}\ }}
+\newcommand{\T}{\top}
 \newcommand{\iprod}[2]{\left\langle #1, #2 \right\rangle}
 \newcommand{\nrm}[1]{\left\|#1\right\|}
 \newcommand{\minop}[1]{\min\left\{#1\right\}}
-% \newcommand{\maxop}[1]{\max\left\{#1\right\}}
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\sqr}[1]{\left\|#1\right\|^2}
 \newcommand{\prob}[1]{\mathbb{P}\left(#1\right)}
@@ -274,7 +200,6 @@
 \newcommand{\condP}[2]{\mathbb{P}\left(\left.#1\right|#2\right)}
 \newcommand{\condV}[2]{\mathbb{V}\left[\left.#1\right|#2\right]}
 \newcommand{\bigO}[1]{\mathcal{O}\left(#1\right)}
-% \newcommand{\tbO}[1]{\tilde{\mathcal{O}}\left(#1\right)}
 \newcommand{\tbO}[1]{\widetilde{\mathcal{O}}\left(#1\right)}
 \newcommand{\tbbO}[1]{\tilde{\mathcal{O}}\big(#1\big)}
 \newcommand{\tbOm}[1]{\tilde{\Omega}\left(#1\right)}
@@ -282,18 +207,13 @@
 \newcommand{\ThO}[1]{\Theta\left(#1\right)}
 \newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
 \newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
-% \newcommand{\KL}[2]{\operatorname{KL}\left(\left.#1\right|\right)}
 \DeclarePairedDelimiterX{\ddiv}[2]{(}{)}{%
   #1\;\delimsize\|\;#2%
 }
 \newcommand{\KL}{\operatorname{KL}\ddiv}
-% \newcommand{\Dtwo}{\operatorname{D}_2\ddiv}
 \newcommand{\Dtwo}{\operatorname{D}_{\chi^2}\ddiv}
 \newcommand{\pos}[1]{\left[#1\right]_{+}}
-% \renewcommand{\neg}[1]{\left[#1\right]_{-}}
-% \newcommand{\Om}[1]{\Omega\left(#1\right)}
 \newcommand{\hnabla}{\widehat{\nabla}}
-% \newcommand{\TV}{\mathrm{TV}}
 \newcommand{\Unif}{\mathrm{Unif}}
 \newcommand{\Fil}{\mathfrak{F}}
 
@@ -301,46 +221,41 @@
 \newcommand{\condPt}[2]{\mathbb{P}_{\theta}\left(\left.#1\right|#2\right)}
 \newcommand{\condPb}[2]{\mathbb{P}_{\pi_b}\left(\left.#1\right|#2\right)}
 
-% Norms for convenience, along with sizes
-\newcommand{\norm}[1]{\left\|{#1}\right\|} % A norm with 1 argument
-\newcommand{\lone}[1]{\norm{#1}_1} % l1 norm
-\newcommand{\ltwo}[1]{\norm{#1}_2} % l2 norm
-\newcommand{\ltwop}[2]{\norm{#1}_{2,{#2}}} % l2p norm
+\newcommand{\norm}[1]{\left\|{#1}\right\|} %
+\newcommand{\lone}[1]{\norm{#1}_1} %
+\newcommand{\ltwo}[1]{\norm{#1}_2} %
+\newcommand{\ltwop}[2]{\norm{#1}_{2,{#2}}} %
 
 \newcommand{\lop}[1]{\norm{#1}_{\mathrm{op}}}
 \newcommand{\lops}[1]{\|{#1}\|_{\mathrm{op}}}
-\newcommand{\linf}[1]{\norm{#1}_\infty} % l-infinity norm
-\newcommand{\lzero}[1]{\norm{#1}_0} % l0 norm
-\newcommand{\dnorm}[1]{\norm{#1}_*} % Dual norm
-\newcommand{\lfro}[1]{\left\|{#1}\right\|_{\sf Fr}} % Frobenius norm
-\newcommand{\lnuc}[1]{\left\|{#1}\right\|_*} % Nuclear norm
+\newcommand{\linf}[1]{\norm{#1}_\infty} %
+\newcommand{\lzero}[1]{\norm{#1}_0} %
+\newcommand{\dnorm}[1]{\norm{#1}_*} %
+\newcommand{\lfro}[1]{\left\|{#1}\right\|_{\sf Fr}} %
+\newcommand{\lnuc}[1]{\left\|{#1}\right\|_*} %
 \newcommand{\matrixnorm}[1]{\left|\!\left|\!\left|{#1}
-  \right|\!\right|\!\right|} % Matrix norm with three bars
-\newcommand{\opnorm}[1]{\norm{#1}_{\rm op}} % Operator norm with three bars
-\newcommand{\normbigg}[1]{\bigg\|{#1}\bigg\|} % A norm with 1 argument and bigg
-                                              % brackets.
-\newcommand{\normbig}[1]{\big\|{#1}\big\|} % A norm with 1 argument and big
-                                           % brackets.
-\newcommand{\normBig}[1]{\Big\|{#1}\Big\|} % A norm with 1 argument and Big
-                                           % brackets
-\newcommand{\lonebigg}[1]{\normbigg{#1}_1} % l1 norm
-\newcommand{\ltwobigg}[1]{\normbigg{#1}_2} % l2 norm
-\newcommand{\ltwobig}[1]{\normbig{#1}_2} % l2 norm
-\newcommand{\ltwoBig}[1]{\normBig{#1}_2} % l2 norm
-\newcommand{\linfbigg}[1]{\normbigg{#1}_\infty} % l-infinity norm
-\newcommand{\norms}[1]{\|{#1}\|} % A norm with 1 argument and normal (small)
-\newcommand{\ltwopbigg}[2]{\normbigg{#1}_{2,{#2}}} % l2p norm
-\newcommand{\ltwopbig}[2]{\normbig{#1}_{2,{#2}}} % l2p norm
+  \right|\!\right|\!\right|} %
+\newcommand{\opnorm}[1]{\norm{#1}_{\rm op}} %
+\newcommand{\normbigg}[1]{\bigg\|{#1}\bigg\|} %
+\newcommand{\normbig}[1]{\big\|{#1}\big\|} %
+\newcommand{\normBig}[1]{\Big\|{#1}\Big\|} %
+\newcommand{\lonebigg}[1]{\normbigg{#1}_1} %
+\newcommand{\ltwobigg}[1]{\normbigg{#1}_2} %
+\newcommand{\ltwobig}[1]{\normbig{#1}_2} %
+\newcommand{\ltwoBig}[1]{\normBig{#1}_2} %
+\newcommand{\linfbigg}[1]{\normbigg{#1}_\infty} %
+\newcommand{\norms}[1]{\|{#1}\|} %
+\newcommand{\ltwopbigg}[2]{\normbigg{#1}_{2,{#2}}} %
+\newcommand{\ltwopbig}[2]{\normbig{#1}_{2,{#2}}} %
 
 
-                                 % brackets.
-\newcommand{\matrixnorms}[1]{|\!|\!|{#1}|\!|\!|} % Small matrix norm
-\newcommand{\matrixnormbigg}[1]{\bigg|\!\bigg|\!\bigg|{#1}\bigg|\!\bigg|\!\bigg|} % Small matrix norm
-\newcommand{\lones}[1]{\norms{#1}_1} % l1 norm with small brackets
-\newcommand{\ltwos}[1]{\norms{#1}_2} % l2 norm with small brackets
+\newcommand{\matrixnorms}[1]{|\!|\!|{#1}|\!|\!|} %
+\newcommand{\matrixnormbigg}[1]{\bigg|\!\bigg|\!\bigg|{#1}\bigg|\!\bigg|\!\bigg|} %
+\newcommand{\lones}[1]{\norms{#1}_1} %
+\newcommand{\ltwos}[1]{\norms{#1}_2} %
 \newcommand{\ltwob}[1]{\big\|#1\big\|_2}
-\newcommand{\linfs}[1]{\norms{#1}_\infty} % l-infinity norm with small brackets
-\newcommand{\lzeros}[1]{\norms{#1}_0} % l0 norm with small brackets
+\newcommand{\linfs}[1]{\norms{#1}_\infty} %
+\newcommand{\lzeros}[1]{\norms{#1}_0} %
 \newcommand{\lambdamax}[1]{\lambda_{\max}({#1})}
 \newcommand{\lambdamin}[1]{\lambda_{\min}({#1})}
 \newcommand{\vmax}[1]{v_{\max}({#1})}
@@ -349,12 +264,8 @@
 \renewcommand{\cO}{\mathcal{O}}
 \newcommand{\tO}{\widetilde{\cO}}
 \newcommand{\wt}{\widetilde}
-% \newcommand{\indic}[1]{\mathbf{1}\left\{#1\right\}} % Indicator function
-% \newcommand{\indic}[1]{1_{#1}}
 \newcommand{\indic}[1]{1\{#1\}}
-\newcommand{\indics}[1]{1\{#1\}} % Indicator function small
-% \newcommand{\bindic}[1]{\mathbf{1}\left\{#1\right\}} % Indicator
-% function
+\newcommand{\indics}[1]{1\{#1\}} %
 
 \newcommand{\<}{\left\langle}
 \renewcommand{\>}{\right\rangle}
@@ -380,8 +291,7 @@
 \newenvironment{talign*}
  {\let\displaystyle\textstyle\csname align*\endcsname}
  {\endalign}
- 
-%%%%%%%%%%%%%%%%%%%% Notation for transformers %%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \newcommand{\Hzero}{\bH^{(0)}}
 \newcommand{\bHzero}{\bH^{(0)}}
@@ -395,9 +305,7 @@
 \newcommand{\Lth}{{(L)}}
 \newcommand{\Lpth}{{(L+1)}}
 \newcommand{\zeroth}{{(0)}}
-% \newcommand{\sursf}{\widehat{\mathbf{\sigma}_{\rm S}}}
 \newcommand{\sursf}{\sigma}
-% \newcommand{\Attn}{\mathbf{Attn}}
 \newcommand{\Attn}{{\rm Attn}}
 \newcommand{\MAttn}{{\rm MAttn}}
 \newcommand{\AN}{{\rm AN}}
@@ -409,7 +317,6 @@
 \newcommand{\TFr}{{\rm TF}^{R}}
 \newcommand{\hatw}{\hat{w}}
 
-% \newcommand{\barsig}{\overline{\sigma}}
 \newcommand{\barsig}{\sigma}
 \newcommand{\Bh}{B_h}
 \newcommand{\Bv}{B_v}
@@ -457,7 +364,6 @@
 \newcommand{\Pin}{\mathsf{P}}
 \newcommand{\pin}{\mathsf{p}}
 
-% \newcommand{\ltwop}[1]{\nrm{#1}_{2,p}}
 \newcommand{\ltwoinf}[1]{\nrm{#1}_{2,\infty}}
 
 \renewcommand{\read}{{\sf read}}
@@ -522,11 +428,9 @@
 \newcommand{\out}{\mathrm{out}}
 \newcommand{\clog}{\iota}
 
-% \newcommand{\nrmp}[1]{\nrm{#1}_p}
 \newcommand{\tbh}{\wt{\bh}}
 \newcommand{\tbH}{\wt{\bh}}
 \newcommand{\bigabs}[1]{\big|#1\big|}
-% \cfn{change to op norm}
 
 \newcommand{\linkf}{g}
 \newcommand{\Clink}{L_g}
@@ -645,7 +549,6 @@
 \newcommand{\set}[1]{{\left\{ #1 \right\}}}
 \newcommand{\sets}[1]{{\{ #1 \}}}
 
-% Operator
 \newcommand{\defeq}{\mathrel{\mathop:}=}
 \newcommand{\eqdef}{=\mathrel{\mathop:}}
 \newcommand{\vect}[1]{\ensuremath{\mathbf{#1}}}
@@ -653,20 +556,14 @@
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\grad}{\nabla}
 \newcommand{\hess}{\nabla^2}
-% \newcommand{\argmin}{\mathop{\rm argmin}}
-% \newcommand{\argmax}{\mathop{\rm argmax}}
 \newcommand{\fracpar}[2]{\frac{\partial #1}{\partial  #2}}
-% \newcommand{\simiid}{{\sim_{\rm iid}}}
 \newcommand{\simiid}{\stackrel{\rm iid}{\sim}}
 
 \newcommand{\sigmin}{\sigma_{\min}}
-% \newcommand{\tr}{\mathrm{tr}}
 \renewcommand{\det}{\mathrm{det}}
 \newcommand{\rank}{\mathrm{rank}}
 \newcommand{\logdet}{\mathrm{logdet}}
 \newcommand{\trans}{^{\top}}
-% \newcommand{\diag}{\mathrm{diag}}
-% \newcommand{\poly}{\mathrm{poly}}
 \newcommand{\polylog}{\mathrm{polylog}}
 
 
@@ -681,15 +578,12 @@
 \newcommand{\Cov}{\mathrm{Cov}}
 
 
-% Big O
-% \newcommand{\cO}{\mathcal{O}}
 \newcommand{\tlO}{\mathcal{\tilde{O}}}
 \newcommand{\tlOmega}{\tilde{\Omega}}
 \newcommand{\tlTheta}{\tilde{\Theta}}
 
 
 
-% Set
 
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
@@ -698,14 +592,11 @@
 \newcommand{\C}{\mathbb{C}}
 
 
-% Matrix and Vector
 
 \newcommand{\A}{\mat{A}}
 \newcommand{\B}{\mat{B}}
-% \newcommand{\Q}{\mat{Q}}
 
 \newcommand{\I}{\mat{I}}
-% \newcommand{\D}{\mat{D}}
 \newcommand{\U}{\mat{U}}
 \newcommand{\V}{\mat{V}}
 \newcommand{\W}{\mat{W}}

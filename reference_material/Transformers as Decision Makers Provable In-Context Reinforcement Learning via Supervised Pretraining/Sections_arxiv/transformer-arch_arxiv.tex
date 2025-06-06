@@ -1,26 +1,10 @@
-\paragraph{Transformer architecture} We consider a sequence of $N$ input vectors $\set{\bh_i}_{i=1}^N\subset \R^D$, compactly written as an input matrix $\bH=[\bh_1,\dots,\bh_N]\in \R^{D\times N}$, where each $\bh_i$ is a column of $\bH$ (also a \emph{token}). Throughout this paper, we define $\sigma(t)\defeq \relu(t)=\max\sets{t,0}$ as the standard relu activation function. %\lc{add one sentence to explain why using relu instead of softmax is fine?}
+\paragraph{Transformer architecture} We consider a sequence of $N$ input vectors $\set{\bh_i}_{i=1}^N\subset \R^D$, compactly written as an input matrix $\bH=[\bh_1,\dots,\bh_N]\in \R^{D\times N}$, where each $\bh_i$ is a column of $\bH$ (also a \emph{token}). Throughout this paper, we define $\sigma(t)\defeq \relu(t)=\max\sets{t,0}$ as the standard relu activation function. %
 
-% Decoder TFs are the same as encoder TFs, except that the attention layers are replaced by masked attention layers with a specific decoder-based (causal) attention mask.
 
 
 \begin{definition}[Masked attention layer]
 \label{def:masked-attention}
 A masked attention layer with $M$ heads is denoted as $\Attn_{\btheta}(\cdot)$ with parameters $\btheta=\sets{ (\bV_m,\bQ_m,\bK_m)}_{m\in[M]}\subset \R^{D\times D}$. On any input sequence $\bH\in\R^{D\times N}$, we have $\bar{\bH} = \Attn_{\btheta}(\bH) = [\bar{\bh}_1, \ldots, \bar{\bh}_N] \in \R^{D \times N}$, where
-% \begin{talign}
-% \label{eqn:masked-attention}
-%     \bar{\bH} = \Attn_{\btheta}(\bH)\defeq \bH + \sum_{m=1}^M (\bV_m \bH) \times \Big( (\MSK_{1:N',1:N'}) \circ \sursf\paren{ (\bQ_m\bH)^\top (\bK_m\bH) } \Big) \in \R^{D\times N'},
-% \end{talign}
-% where $\circ$ denotes the entry-wise (Hadamard) product of two matrices, and $\MSK \in \R^{N \times N}$ is the mask matrix given by 
-% \[
-% \MSK = \begin{bmatrix}
-% 1 & 1/2 & 1/3 & \cdots & 1/N \\
-% 0 & 1/2 & 1/3 & \cdots & 1/N\\
-% 0 & 0 & 1/3 & \cdots & 1/N\\
-% \cdots & \cdots & \cdots & \cdots & \cdots \\
-% 0 & 0 & 0 & \cdots & 1/N
-% \end{bmatrix}. 
-% \]
-% In vector form, we have
 \begin{align*}
 \textstyle    \bar{\bh}_i = \brac{\Attn_{\btheta}(\bH)}_i = \bh_i + \sum_{m=1}^M \frac{1}{i}\sum_{j=1}^i \barsig\paren{ \<\bQ_m\bh_i, \bK_m\bh_j\> }\cdot \bV_m\bh_j \in \R^D.
 \end{align*}
@@ -31,37 +15,25 @@ We remark that the use of ReLU attention layers is for technical reasons. In pra
 \begin{definition}[MLP layer]
 \label{def:mlp}
 An MLP layer with hidden dimension $D'$ is denoted as $\MLP_{\btheta}(\cdot)$ with parameters $\btheta=(\bW_1,\bW_2)\in\R^{D'\times D}\times\R^{D\times D'}$. On any input sequence $\bH\in\R^{D\times N}$, we have $\bar{\bH} = \MLP_{\btheta}(\bH) = [\bar{\bh}_1, \ldots, \bar{\bh}_N] \in \R^{D \times N}$, where
-% $\MLP_{\btheta}(\bH)$ gives output
-% \begin{talign*}
-%     \bar{\bH} = \MLP_{\btheta}(\bH) \defeq \bH + \bW_2\barsig(\bW_1\bH),
-% \end{talign*}
-% where $\barsig: \R \to \R$ is the ReLU function. In vector form, we have 
 \[
 \bar{\bh}_i=\bh_i+\bW_2 \cdot \sigma(\bW_1\bh_i) \in \R^D.
 \]
 \end{definition}
-We next define $L$-layer decoder-based transformers. Each layer consists of a masked attention layer (see Definition \ref{def:masked-attention}) followed by an MLP layer (see Definition \ref{def:mlp}) and a clip operation. 
+We next define $L$-layer decoder-based transformers. Each layer consists of a masked attention layer (see Definition \ref{def:masked-attention}) followed by an MLP layer (see Definition \ref{def:mlp}) and a clip operation.
 
 
-% \begin{definition}[Clipped Transformer]
-% \label{def:decoder-tf-clip}
-% An $L$-layer decoder-based $\clipval$-clipped transformer, denoted as $\TF_\btheta^{\clipval}(\cdot)$, is a composition of $L$ self-attention layers, each followed by an MLP layer and a clip operation: $\bH^{(L)}=\TF_{\btheta}(\bH^{(0)})$, where $\bH^{(0)} = \clip_{\clipval}(\bH) \in\R^{D\times N}$ is the input sequence, and for $\ell\in\set{1,\dots,L}$, 
-% \begin{talign*}
-% \bH^{(\ell)} = \clip_{\clipval}\Big( \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \Big),~~~~~ \clip_{\clipval}(\bh) = [\proj_{\| \bh \|_2 \le \clipval}(\bh_i)]_i. 
-% \end{talign*}
-% Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$.
 
 
 \begin{definition}[Decoder-based Transformer]
 \label{def:decoder-tf}
-An $L$-layer decoder-based transformer, denoted as $\TF_\btheta^{\clipval}(\cdot)$, is a composition of $L$ masked attention layers, each followed by an MLP layer and a clip operation: $\TF_{\btheta}^{\clipval}(\bH) = \bH^{(L)} \in \R^{D \times N}$, where $\bH^{(L)}$ is defined iteratively by taking $\bH^{(0)} = \clip_{\clipval}(\bH) \in\R^{D\times N}$, and for $\ell\in [L]$, 
+An $L$-layer decoder-based transformer, denoted as $\TF_\btheta^{\clipval}(\cdot)$, is a composition of $L$ masked attention layers, each followed by an MLP layer and a clip operation: $\TF_{\btheta}^{\clipval}(\bH) = \bH^{(L)} \in \R^{D \times N}$, where $\bH^{(L)}$ is defined iteratively by taking $\bH^{(0)} = \clip_{\clipval}(\bH) \in\R^{D\times N}$, and for $\ell\in [L]$,
 \begin{talign*}
-\bH^{(\ell)} =\clip_{\clipval}\Big( \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \Big) \in \R^{D \times N},~~~~~ \clip_{\clipval}(\bH) = [\proj_{\| \bh \|_2 \le \clipval}(\bh_i)]_i. 
+\bH^{(\ell)} =\clip_{\clipval}\Big( \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \Big) \in \R^{D \times N},~~~~~ \clip_{\clipval}(\bH) = [\proj_{\| \bh \|_2 \le \clipval}(\bh_i)]_i.
 \end{talign*}
-Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$. We define the parameter class of transformers as $\Theta_{D, L, M, \hidden, B} \defeq \{ \btheta=(\bAtt^{(1:L)}, \bmlp^{(1:L)}): \nrmp{\btheta}\le B \}$, where the norm of a transformer $\TF_\btheta^{\clipval}$ is denoted as 
+Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$. We define the parameter class of transformers as $\Theta_{D, L, M, \hidden, B} \defeq \{ \btheta=(\bAtt^{(1:L)}, \bmlp^{(1:L)}): \nrmp{\btheta}\le B \}$, where the norm of a transformer $\TF_\btheta^{\clipval}$ is denoted as
 \begin{align}
 \label{eqn:tf-norm}
-    \nrmp{\btheta}\defeq \max_{\ell\in[L]} \Big\{  
+    \nrmp{\btheta}\defeq \max_{\ell\in[L]} \Big\{
     \max_{m\in[M]} \set{\lops{\bQ_m^\lth}, \lops{\bK_m^\lth} } + \sum_{m=1}^M \lops{\bV_m^\lth} +
     \lops{\bW_1^\lth} + \lops{\bW_2^\lth}
     \Big\}.
@@ -69,33 +41,15 @@ Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  
 \end{definition}
 We introduced clipped operations in transformers for technical reasons. For brevity, we will write $\TF_\btheta = \TF_\btheta^{\clipval}$ when there is no ambiguity. We will set the clipping value $\clipval$ to be sufficiently large so that the clip operator does not take effect in any of our approximation results.
 
-%\sm{We allow $\clipval$ to be very large so that xxx}
-
-
-% \begin{definition}[Decoder-based Transformer]
-% \label{def:decoder-tf}
-% An $L$-layer decoder-based transformer, denoted as $\TF_\btheta(\bH)$, is a composition of $L$ self-attention layers each followed by an MLP layer: $\bH^{(L)}=\TF_{\btheta}(\bH^{(0)})$, where $\bH^{(0)} = \bH \in\R^{D\times N}$ is the input sequence, and
-% \begin{talign*}
-% \bH^{(\ell)} = \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \in \R^{D \times N},~~~\ell\in\set{1,\dots,L}.
-% \end{talign*}
-% Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$. We define the parameter class of transformers as $\Theta_{D, L, M, \hidden, B} \defeq \{ \btheta=(\bAtt^{(1:L)}, \bmlp^{(1:L)}): \nrmp{\btheta}\le B \}$, where the norm of a transformer $\TF_\btheta$ is denoted as 
-% \begin{align}
-% \label{eqn:tf-norm}
-%     \nrmp{\btheta}\defeq \max_{\ell\in[L]} \Big\{  
-%     \max_{m\in[M]} \set{\lops{\bQ_m^\lth}, \lops{\bK_m^\lth} } + \sum_{m=1}^M \lops{\bV_m^\lth} +
-%     \lops{\bW_1^\lth} + \lops{\bW_2^\lth}
-%     \Big\}.
-% \end{align}
-% %We will frequently consider ``\emph{attention-only}'' decoder-based transformers with $\bW_1^\lth,\bW_2^\lth=\bzero$, which we denote as $\TFz_\btheta(\cdot)$ for shorthand, with $\btheta=\btheta^{(1:L)}\defeq \bMAtt^{(1:L)}$.
-% \end{definition}
-
-% When we need to control the covering number of transformers $\{ \TF_\btheta: \btheta \in \Theta_{D, L, M, \hidden, B} \}$, we will consider the clipped transformer architecture, defined in Definition~\ref{def:decoder-tf-clip}. 
 
 
 
 
-\paragraph{Algorithm induced by Transformers} We equip the transformer with an embedding mapping $\embedmap: \cup_{t \in [\totlen]} \statesp_t \cup \cup_{t \in [\totlen]} (\actionsp_t \times \rewardsp_t) \to \R^D$.  This assigns any state $\state_t \in \statesp_t$ a $D$-dimensional embedding vector $\embedmap(\state_t) \in \R^D$, and any action-reward pair $(\action_t, \reward_t) \in \actionsp_t \times \rewardsp_t$ a $D$-dimensional embedding $\embedmap(\action_t, \reward_t) \in \R^D$. The embedding function $\embedmap$ should encode the time step $t$ of the state, action, and reward. With abuse of notation, we denote $\embedmap(\dset_{t-1}, \state_t) = [\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)]$. We define a concatenation operator $\cat: \R^{D \times *} \to \R^{D \times *}$ that concatenates its inputs $\cat(\bh_1, \ldots, \bh_N) = [\bh_1, \ldots, \bh_N]$ in most examples, but it could also insert special tokens at certain positions (in MDPs we add an additional token at the end of each episode). For a partial trajectory and current state $(\dset_{t-1}, \state_t)$, we input $\bH = \cat(\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)) \in \R^{D \times *}$ into the transformer. This produces output $\bar{\bH} = \TF_{\btheta}^{\clipval}(\bH) = [\bar{\bh}_1, \bar{\bh}_2 \ldots, \bar{\bh}_{-2},\bar{\bh}_{-1}]$ with the same shape as $\bH$. To extract a distribution over the action space $\actionsp_t$ with $| \actionsp_t | = \Numact$ actions, we assume a fixed linear extraction mapping $\extractmap \in \R^{\Numact \times D}$. The induced algorithm is then defined as: $\sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) = \softmax(\extractmap \cdot \bar{\bh}_{-1})$. The overall algorithm induced by the transformer is: 
+
+
+
+\paragraph{Algorithm induced by Transformers} We equip the transformer with an embedding mapping $\embedmap: \cup_{t \in [\totlen]} \statesp_t \cup \cup_{t \in [\totlen]} (\actionsp_t \times \rewardsp_t) \to \R^D$.  This assigns any state $\state_t \in \statesp_t$ a $D$-dimensional embedding vector $\embedmap(\state_t) \in \R^D$, and any action-reward pair $(\action_t, \reward_t) \in \actionsp_t \times \rewardsp_t$ a $D$-dimensional embedding $\embedmap(\action_t, \reward_t) \in \R^D$. The embedding function $\embedmap$ should encode the time step $t$ of the state, action, and reward. With abuse of notation, we denote $\embedmap(\dset_{t-1}, \state_t) = [\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)]$. We define a concatenation operator $\cat: \R^{D \times *} \to \R^{D \times *}$ that concatenates its inputs $\cat(\bh_1, \ldots, \bh_N) = [\bh_1, \ldots, \bh_N]$ in most examples, but it could also insert special tokens at certain positions (in MDPs we add an additional token at the end of each episode). For a partial trajectory and current state $(\dset_{t-1}, \state_t)$, we input $\bH = \cat(\embedmap(\state_1), \embedmap(\action_1, \reward_1), \ldots, \embedmap(\action_{t-1}, \reward_{t-1}), \embedmap(\state_t)) \in \R^{D \times *}$ into the transformer. This produces output $\bar{\bH} = \TF_{\btheta}^{\clipval}(\bH) = [\bar{\bh}_1, \bar{\bh}_2 \ldots, \bar{\bh}_{-2},\bar{\bh}_{-1}]$ with the same shape as $\bH$. To extract a distribution over the action space $\actionsp_t$ with $| \actionsp_t | = \Numact$ actions, we assume a fixed linear extraction mapping $\extractmap \in \R^{\Numact \times D}$. The induced algorithm is then defined as: $\sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) = \softmax(\extractmap \cdot \bar{\bh}_{-1})$. The overall algorithm induced by the transformer is:
 \begin{equation}\label{eqn:transformer-algorithm}
-\sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) = \softmax ( {\extractmap} \cdot {\TF_\btheta^{\clipval}} ( {\cat}( {\embedmap} ( \dset_{t-1}, \state_t)))_{-1}). 
+\sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) = \softmax ( {\extractmap} \cdot {\TF_\btheta^{\clipval}} ( {\cat}( {\embedmap} ( \dset_{t-1}, \state_t)))_{-1}).
 \end{equation}
-We will always choose a proper concatenation operator $\cat$ in examples, so that in the pretraining phase, all the algorithm outputs $\{ \sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) \}_{t \le \totlen}$ along the trajectory can be computed in a single forward propagation. 
+We will always choose a proper concatenation operator $\cat$ in examples, so that in the pretraining phase, all the algorithm outputs $\{ \sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) \}_{t \le \totlen}$ along the trajectory can be computed in a single forward propagation.

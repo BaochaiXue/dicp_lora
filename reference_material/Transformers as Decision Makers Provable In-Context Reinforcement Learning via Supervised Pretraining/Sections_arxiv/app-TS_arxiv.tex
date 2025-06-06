@@ -4,7 +4,6 @@ Throughout this section, we use $c>0$ to denote universal constants whose values
 Moreover, for notational simplicity, we use $\conO(\cdot)$ to hide universal constants, $\cO(\cdot)$ to hide polynomial terms in the problem parameters  $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$. We also use the bold font letter $\ba_t\in\R^d$ to denote the selected action $\action_t$ at time $t\in[\totlen]$.
 
 
-%\sm{Write a road map. Here I copied the roadmap for LinUCB proof section. This section is organized as follows. Section~\ref{sec:tf_embed_bandit} discusses the input-output format of transformers for the stochastic linear bandit environment. Section~\ref{sec:soft-LinUCB} describes the LinUCB and the soft LinUCB algorithms. Section~\ref{app:approx-ridge-estimator} introduces and proves a lemma on approximating the linear ridge regression estimator, which is important for proving Theorem~\ref{thm:approx_smooth_linucb}. We prove Theorem~\ref{thm:approx_smooth_linucb} in Section~\ref{sec:pf_thm:approx_smooth_linucb} and prove Theorem~\ref{thm:smooth_linucb} in Section~\ref{sec:pf_thm:smooth_linucb}. }
 This section is organized as follows. Section~\ref{app:ts_algorithm_formula} describes the Thompson sampling algorithm for stochastic linear bandits. Section~\ref{app:thompson_def_ass} introduces some additional definitions, assumptions, and the formal version of Theorem~\ref{thm:approx_thompson_linear} as in Theorem~\ref{thm:approx_thompson_linear-formal}.
 We prove Theorem~~\ref{thm:approx_thompson_linear-formal} in Section~\ref{sec:pf_thm:approx_thompson_linear-formal} and prove Theorem~\ref{thm:ts_linear_regret} in Section~\ref{sec:pf_prop:ts_linear_regret}. Lastly, the proof of Lemma~\ref{lm:lip_of_tps} used in the proof of Theorem~\ref{thm:approx_thompson_linear-formal} is provided in Section~\ref{sec:pf_lm:lip_of_tps}.
 
@@ -13,21 +12,20 @@ We prove Theorem~~\ref{thm:approx_thompson_linear-formal} in Section~\ref{sec:pf
 \subsection{Thompson sampling algorithm}\label{app:ts_algorithm_formula}
 Consider the stochastic linear bandit setup as in Section~\ref{sec:LinUCB-statement}, but instead we assume a  Gaussian prior distribution $\bw^\star\sim \cN(0,\Tpspar\id_d)$ and Gaussian noises $\{ \eps_t \}_{t \ge 0} \sim_{iid} \cN(0,\Tpsparn)$. Furthermore, we assume there exist $(b_a, B_a)$ such that $b_a\leq\ltwo{\ba_{t,k}}\leq B_a$. At each time $t\in[\totlen]$, Thompson sampling consists of the following steps:
 \begin{enumerate}
-    \item Computes 
+    \item Computes
     \[
     \Tpsmean_t:= \Big(\frac{\Tpsparn}{\Tpspar  }\id_{d}+\sum_{j=1}^{t-1}\ba_j\ba_j^\top \Big)^{-1}\sum_{j=1}^{t-1}\ba_j y_j,~~~
 \Tpscov_t:=\frac{\Tpsparn}{\Tpspar  }\id_{d}+\sum_{j=1}^{t-1}\ba_j\ba_j^\top.
 \]
-\item Selects the action $\ba_{t}=\ba_{t,k}$ with probability 
+\item Selects the action $\ba_{t}=\ba_{t,k}$ with probability
 \[
-\P_{\Tpssam_t\sim\cN(\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})}\Big(k =\argmax_{j \in[A]}\<\ba_{t,j},\Tpssam_t\> \Big). 
+\P_{\Tpssam_t\sim\cN(\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})}\Big(k =\argmax_{j \in[A]}\<\ba_{t,j},\Tpssam_t\> \Big).
 \]
 \end{enumerate}
 
-Note that Thompson sampling is equivalent to the posterior sampling procedure in our stochastic linear bandit setup, i.e., we select an action with probability that equals  the posterior probability of the action being optimal.  We allow $\Tpspar$ to be either some constant independent of $\totlen,d$,  or has the form $\Tpspar=\Tpspar_0/d$ for some constant $\Tpspar_0>0$.  The latter case is considered so that the bandit parameter vector $\bw^*$ has $\ell_2$ norm of order  $\tcO(1)$ with high probability. In this case, we use $\cO(\cdot)$ to hide polynomial terms in the problem parameters $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in  $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$. 
+Note that Thompson sampling is equivalent to the posterior sampling procedure in our stochastic linear bandit setup, i.e., we select an action with probability that equals  the posterior probability of the action being optimal.  We allow $\Tpspar$ to be either some constant independent of $\totlen,d$,  or has the form $\Tpspar=\Tpspar_0/d$ for some constant $\Tpspar_0>0$.  The latter case is considered so that the bandit parameter vector $\bw^*$ has $\ell_2$ norm of order  $\tcO(1)$ with high probability. In this case, we use $\cO(\cdot)$ to hide polynomial terms in the problem parameters $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in  $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$.
 
 
-% \lc{In Proposition~\ref{prop:ts_linear_regret} we only need $\lambda$ less than constant, but in the construction of TF $\lambda$ can not be too smaller because of the $\log(\tilde\lambda)$ dependence and the $poly(\tilde\lambda)$ dependence in step 2c.}
 
 
 \subsection{Definitions and assumptions}\label{app:thompson_def_ass}
@@ -35,14 +33,14 @@ Note that Thompson sampling is equivalent to the posterior sampling procedure in
 
 
 
-For any actions $\ba_{t,1},\ldots,\ba_{t,A}\in\R^{d}$, we define 
+For any actions $\ba_{t,1},\ldots,\ba_{t,A}\in\R^{d}$, we define
 \begin{align*}
-f_k(\ba_{t,1},\ldots,\ba_{t,A};\Tpsmean_t,\Tpsparn\Tpscov_t^{-1}):=\log\P_{\Tpssam_t\sim\cN(\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})}\Big(k =\argmax_{j\in[A]}\<\ba_{t,j},\Tpssam_t\>\Big). 
-\end{align*}  
+f_k(\ba_{t,1},\ldots,\ba_{t,A};\Tpsmean_t,\Tpsparn\Tpscov_t^{-1}):=\log\P_{\Tpssam_t\sim\cN(\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})}\Big(k =\argmax_{j\in[A]}\<\ba_{t,j},\Tpssam_t\>\Big).
+\end{align*}
 For any $k\in[A]$, $\bx_1,\ldots,\bx_A\in\R^{d}$, $y_1,\ldots,y_A\in\R$, we introduce $$
-g_k(\bx_1,\ldots,\bx_A,y_1,\ldots,y_A):=\log\P_{\bz\sim\cN(0,\id_d)} \Big(\<\bx_k-\bx_j,\bz\>+y_k-y_j\geq0,\text{~for all~}j\in[A] \Big). 
+g_k(\bx_1,\ldots,\bx_A,y_1,\ldots,y_A):=\log\P_{\bz\sim\cN(0,\id_d)} \Big(\<\bx_k-\bx_j,\bz\>+y_k-y_j\geq0,\text{~for all~}j\in[A] \Big).
 $$
-It can be verified that $$f_k(\ba_1,\ldots,\ba_A;\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})=g_k(\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,1},\ldots,\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,A},\<\Tpsmean_t,\ba_{t,1}\>,\ldots,\<\Tpsmean_t,\ba_{t,A}\>).$$  
+It can be verified that $$f_k(\ba_1,\ldots,\ba_A;\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})=g_k(\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,1},\ldots,\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,A},\<\Tpsmean_t,\ba_{t,1}\>,\ldots,\<\Tpsmean_t,\ba_{t,A}\>).$$
 
 For any $\trunprob\in[0,1]$, we also define the truncated log-probabilities
 \begin{align*}
@@ -50,8 +48,8 @@ f_{k,\trunprob}(\ba_{t1},\ldots,\ba_{t,A};\Tpsmean_t,\Tpsparn\Tpscov_t^{-1})&:=\
 g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_A)&:=\log \Big[ \P \Big(\<\bx_k-\bx_j,\bz\>+y_k-y_j\geq0,\text{~for all~}j\in[A] \Big) \vee \trunprob \Big].
 \end{align*}
 Define in addition the region $\Trunreg_{\Trunregp}:=\{\bx_1,\ldots,\bx_A,y_1,\ldots,y_k: \|\bx_i-\bx_j\|_2\geq\Trunregp,~~\text{for all~~} i\neq j\}$. We verify that on the set $\Trunreg_\Trunregp$, the function $g_{k,\trunprob}$ is Lipschitz continuous in any of its arguments (see Lemma~\ref{lm:lip_of_tps} for more).
- 
-We adopt the following definition in~\cite{bai2023transformers}. 
+
+We adopt the following definition in~\cite{bai2023transformers}.
 \begin{definition}[Approximability by sum of relus]\label{def:general_mlp_approx_new}
      A function $g: \mathbb{R}^d \rightarrow \mathbb{R}$ is $(\eps, R, \neuron, \weightn)$-approximable by sum of relus, if there exists a ``$(\neuron, \weightn)$-sum of relus'' function
 \begin{align*}
@@ -59,11 +57,6 @@ f_{\neuron, \weightn}(\mathbf{z})=\sum_{\ssm=1}^\neuron c_\ssm \sigma\left(\math
 \end{align*}
 such that $\sup _{\mathbf{z} \in[-R, R]^d}\left|g(\mathbf{z})-f_{\neuron,\weightn}(\mathbf{z})\right| \leq \eps$.
 
-% Similarly,  a function $g: \sZ_{\geq0}^d \rightarrow \mathbb{R}$ is $(\eps, R, M, C)$-approximable by sum of relus, if there exists 
-% \begin{align*}
-% f_{M, C}(\mathbf{z})=\sum_{m=1}^M c_m \sigma\left(\mathbf{a}_m^{\top}[\mathbf{z} ; 1]\right) \quad \text { with } \quad \sum_{m=1}^M\left|c_m\right| \leq C, \max _{m \in[M]}\left\|\mathbf{w}_m\right\|_1 \leq 1, \quad \mathbf{w}_m \in \mathbb{R}^{d+1}, c_m \in \mathbb{R},
-% \end{align*}
-% such that $\sup _{\mathbf{z} \in[0, R]^d\cap\sZ_{\geq0}^d}\left|g(\mathbf{z})-f_{M, C}(\mathbf{z})\right| \leq \eps$.
 \end{definition}
 
 
@@ -75,7 +68,7 @@ R_\delta:=2B_a\sqrt{\lambda}(1+2\sqrt{\log(2/\delta)}+\sqrt{d})=\tcO(\sqrt{\lamb
 $
 
 \end{assumption}
-Assumption~\ref{ass:thompson_mlp_approx_linear} states that the (truncated) log-policy of  Thompson sampling  can be approximated via a two-layer MLP on a compact set with  $\tcO(\sqrt{d})$-radius when $\lambda=\tcO(1)$ (or with $\tcO(1)$--radius when $\lambda=\lambda_0/d=\tcO(1/d)$).  %For Theorem~\ref{thm:approx_thompson_linear-formal} to hold,  alternative assumptions\lc{add reference here?} on the uniform approximability of many layers of MLP, in which only a smaller $\neuron$ is required,  may be made in place of Assumption~\ref{ass:thompson_mlp_approx_linear}. We present Assumption~\ref{ass:thompson_mlp_approx_linear} on a single MLP layer for conceptual simplicity.
+Assumption~\ref{ass:thompson_mlp_approx_linear} states that the (truncated) log-policy of  Thompson sampling  can be approximated via a two-layer MLP on a compact set with  $\tcO(\sqrt{d})$-radius when $\lambda=\tcO(1)$ (or with $\tcO(1)$--radius when $\lambda=\lambda_0/d=\tcO(1/d)$).  %
 
 \begin{assumption}[Difference between the actions]\label{ass:thompson_mlp_diff_action_linear}
  There exists some $\Trunregp>0$  such that for all instances $\inst$ and any time $t\in[T]$, we have $\|\ba_{t,j}-\ba_{t,k}\|_2\geq\Trunregp$ for all $1\leq j< k\leq A$.
@@ -87,12 +80,11 @@ With the definitions and assumptions at hand, we now present the formal statemen
 
 \begin{theorem}[Approximating the Thompson sampling, Formal statement of Theorem~\ref{thm:approx_thompson_linear}]\label{thm:approx_thompson_linear-formal}
 For any $0<\delta_0<1/2$, consider the same embedding mapping $\embedmap$ and extraction mapping $\extractmap$ as for soft LinUCB in \ref{sec:tf_embed_bandit},
-%\sm{Link}\lc{same as before},
-and consider the standard concatenation operator $\cat$. Under Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear}, for $\eps<(\Trunregp\wedge1)/4$, there exists a  transformer $\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$, 
+and consider the standard concatenation operator $\cat$. Under Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear}, for $\eps<(\Trunregp\wedge1)/4$, there exists a  transformer $\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$,
 \begin{align}
 &D=\tcO(T^{1/4}Ad),~L= \tcO(\sqrt{T}),~ M =\tcO(AT^{1/4}),~\hidden=\tcO(A(T^{1/4}d+\neuron))~,\notag\\
 &~~~\nrmp{\btheta}\leq \tcO(T+AT^{1/4}+\sqrt{ \neuron A}+\weightn),\label{eq:ts_tf_param-formal}
-\end{align} 
+\end{align}
 such that with probability at least $1-\delta_0$ over $(\inst, \dset_{\totlen}) \sim \P_{\prior}^{\sAlg}$ for any $\sAlg$, we have
 \[
 \log \sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t) - \log \sAlg_{\tfpar}(\ba_{t,k}|\dset_{t-1},\state_t) \leq \eps, ~~~ \text{for all } t\in[T],k\in[A].
@@ -100,18 +92,6 @@ such that with probability at least $1-\delta_0$ over $(\inst, \dset_{\totlen}) 
 Here  $\neuron,\weightn$ are the values defined in   Assumption~\ref{ass:thompson_mlp_approx_linear} with $\trunprob=\eps/(4A),\Trunregpa=\Trunregp,\delta=\delta_0$, and $\tcO(\cdot)$ hides polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$ and poly-logarithmic terms in $(\neuron,\weightn,\totlen,A,d,1/\delta_0,1/\eps)$.
 \end{theorem}
 
-% \begin{theorem}
-% [Regret of Thompson sampling and ICRL]\label{thm:ts_linear_regret-formal}
-%     Under the distributional assumptions stated in Section~\ref{example:ts}, Thompson sampling achieves the Bayes regret 
-%     \begin{align*}  \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]\leq Cd\sqrt{\totlen}\log(\totlen d)
-%     \end{align*}
-%     for some problem-dependent constant $C>0$. Suppose in addition Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear} are in force.   Moreover, let  $\tfparspace$ be the class of transformers satisfying Eq.~\eqref{eq:ts_tf_param} with $\eps=1/\totlen^3,\delta_0=\delta/(2n)$ and choose $\sAlg_\shortexp(\state_t,\inst)=\action^*_t=\argmax_{\ba\in\sA_t}\<\ba,\bw^*\>$ be the optimal action during pretraining. Then the solution to Eq.~\eqref{eq:general_mle} has the regret
-%   \begin{align*}
-%      \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)\Big]&\leq   Cd\sqrt{T}\log(Td)+ C\sqrt{\distratio_{\sAlg_\TS,\sAlg_0}} \cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} },\\
-%      % &\leq Cd\sqrt{T}\log(Td)+\tcO\Big(\totlen^2 \sqrt{\frac{\log(\Numobs/\delta)}{\Numobs}}\Big)
-%   \end{align*} with probability at least $1-\delta$ for some problem-dependent constant $C>0$.
-% \end{theorem}\lc{Lemma~\ref{lm:general_imit} does not apply directly here since we only have a high probability bound in Theorem~\ref{thm:approx_thompson_linear}. The choice of $\delta_0$ comes from a union bound over all trajectories.} 
-%See the proof in Section~\ref{sec:pf_prop:ts_linear_regret}. 
 
 
 
@@ -140,7 +120,7 @@ Here  $\neuron,\weightn$ are the values defined in   Assumption~\ref{ass:thompso
 \subsection{Proof of Theorem~\ref{thm:approx_thompson_linear-formal} (and hence Theorem~\ref{thm:approx_thompson_linear}) }\label{sec:pf_thm:approx_thompson_linear-formal}
 
 
-We construct a transformer implementing the following steps at each time $t\in[T]$ starting with $\bh^{\star}_{2t-1}=\bh^{\pre,\star}_{2t-1}$ for $\star\in\{\parta,\partb,\partc,\partd\}$ 
+We construct a transformer implementing the following steps at each time $t\in[T]$ starting with $\bh^{\star}_{2t-1}=\bh^{\pre,\star}_{2t-1}$ for $\star\in\{\parta,\partb,\partc,\partd\}$
 \begin{align}\label{eq:roadmap_ts}
    &~ \bh_{2t-1}=
     \begin{bmatrix}
@@ -153,7 +133,7 @@ We construct a transformer implementing the following steps at each time $t\in[T
 \end{bmatrix}
 \xrightarrow{\text{step 2}}
    \begin{bmatrix}
-    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t} 
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t}
         \\
 \widehat{\Tpscov_t^{1/2}\ba_{t,1}}
 \\\vdots\\
@@ -162,7 +142,7 @@ We construct a transformer implementing the following steps at each time $t\in[T
 \end{bmatrix}
 \xrightarrow{\text{step 3}}
    \begin{bmatrix}
-    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t} 
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t}
         \\
  \sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,1}}
 \\\vdots\\
@@ -193,8 +173,8 @@ We claim the following results which we will prove later.
 
 
 \begin{enumerate}[label=Step \arabic*,ref= \arabic*]
-    \item\label{ts_step1} Under the high probability event $\hpevent_{\delta_0}$, for any $\eps>0$, 
-    there exists a transformer $\TF_\btheta(\cdot)$ with 
+    \item\label{ts_step1} Under the high probability event $\hpevent_{\delta_0}$, for any $\eps>0$,
+    there exists a transformer $\TF_\btheta(\cdot)$ with
 \begin{align*}&L=\Big\lceil2\sqrt{2T}\sqrt{\frac{B_a^2+\widetilde\lambda}{\widetilde\lambda}}\log\Big(\frac{(2T(B_a^2+\widetilde\lambda)+\widetilde\lambda)TB_a(B_aB_w+\sqrt{2\Tpsparn\log(2T/{\delta_0}))}}{\widetilde\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),\\
 &~~~\max_{\ell\in[L]}M^{(l)}\leq4,~~\max_{\ell\in[L]}\hidden^\lth\leq 4d,~~~\nrmp{\btheta}\leq  10+(\tilde\lambda+2)/(B_a^2+\tilde\lambda), \end{align*}
 where $\widetilde\lambda:=\Tpsparn/\Tpspar$
@@ -202,15 +182,15 @@ where $\widetilde\lambda:=\Tpsparn/\Tpspar$
     \item\label{ts_step2}
     For any $\eps>0$, there exists s transformer $\TF_\btheta(\cdot)$ with     $$L=\tcO(\sqrt{T}),~~~\max_{\ell\in[L]} M^{(\ell)}=\tcO(AT^{1/4}),~~~\max_{\ell\in[L]} \hidden^{(\ell)}=\tcO(T^{1/4}Ad),~~~\nrmp{\btheta}\leq \tcO(T+AT^{1/4}) $$
  that implements step 2 in~\eqref{eq:roadmap_ts} such that $\|\widehat{\Tpscov_t^{1/2}\ba_{t,k}}-{\Tpscov_t^{1/2}\ba_{t,k}}\|_2\leq \eps$ for all $k\in[A]$.
-   \item\label{ts_step3} 
-   Under the high probability event $\hpevent_{\delta_0}$, 
-   for any $\eps>0$, assume Step~\ref{ts_step1},~\ref{ts_step2} above are implemented with the approximation error less than $\eps/B_a,\eps\tilde\lambda/\sqrt{4\Tpsparn}$ respectively, then there exists a transformer $\TF_\btheta(\cdot)$ with 
+   \item\label{ts_step3}
+   Under the high probability event $\hpevent_{\delta_0}$,
+   for any $\eps>0$, assume Step~\ref{ts_step1},~\ref{ts_step2} above are implemented with the approximation error less than $\eps/B_a,\eps\tilde\lambda/\sqrt{4\Tpsparn}$ respectively, then there exists a transformer $\TF_\btheta(\cdot)$ with
  \begin{align*}
   &L=\lceil2+2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)4\sqrt{\Tpsparn}\sqrt{T(B_a^2+\tilde\lambda)}B_a/\eps)\rceil=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}=4A,\\
-  &~~~\qquad\max_{\ell\in[L]} \hidden^\lth\leq 4Ad,~~~~ \nrmp{\btheta}\leq  \tcO(T+A) 
+  &~~~\qquad\max_{\ell\in[L]} \hidden^\lth\leq 4Ad,~~~~ \nrmp{\btheta}\leq  \tcO(T+A)
   \end{align*}
- that implements step 3 in~\eqref{eq:roadmap_ts} with   $\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}}-\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,k}\|_2 \leq\eps,|\<\widehat\Tpsmean_t,\ba_{t,k}\>-\<\Tpsmean_t,\ba_{t,k}\>|\leq\eps$ for all $k\in[A]$. 
- 
+ that implements step 3 in~\eqref{eq:roadmap_ts} with   $\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}}-\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,k}\|_2 \leq\eps,|\<\widehat\Tpsmean_t,\ba_{t,k}\>-\<\Tpsmean_t,\ba_{t,k}\>|\leq\eps$ for all $k\in[A]$.
+
   \item\label{ts_step4} Under  Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear} and the high probability event $\hpevent_{\delta_0}$, suppose the approximation error $\eps_3$ in Step~\ref{ts_step3} satisfies $\eps_3\leq R_{\delta_0}/2=\tcO(\sqrt{\lambda d})$, and  suppose the vector $$\bigvec:=(\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,1}},\ldots
         \sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,A}},
         \<\widehat{\Tpsmean_t},\ba_{t,1}\>\ldots
@@ -232,14 +212,14 @@ For any $\trunprob\in(0,1),\Trunregp>0$, $g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1
         \\
            &\qquad |g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_j,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots\bx_A,y_1,\ldots,y_j',\ldots,y_A)|
            \\
-        &\leq 
+        &\leq
        \frac{2A|y_j-y_j'|}{\Trunregp\trunprob}
     \end{align*}
     for any \begin{align*}&(\bx_1,\ldots,\bx_j,\ldots,\bx_A,y_1,\ldots,y_A),~~(\bx_1,\ldots,\bx_j',\ldots,\bx_A,y_1,\ldots,y_A)\in\Trunreg_\Trunregp ,\\&(\bx_1,\ldots,\bx_A,y_1,\ldots,y_j,\ldots,y_A),~~(\bx_1,\ldots,\bx_A,y_1,\ldots,y_j',\ldots,y_A)\in\Trunreg_\Trunregp
-    \end{align*} 
-  for all $k,j\in[A]$. 
+    \end{align*}
+  for all $k,j\in[A]$.
 \end{lemma}
-See the proof in Section~\ref{sec:pf_lm:lip_of_tps}. 
+See the proof in Section~\ref{sec:pf_lm:lip_of_tps}.
 
 Now, we complete the proof by combining Step~\ref{ts_step1}---~\ref{ts_step4} and using Lemma~\ref{lm:lip_of_tps}.
 
@@ -248,7 +228,7 @@ Let $\eps_1,\eps_2,\eps_3,\eps_4$ denote the approximation errors $\eps$ appeari
         \sqrt{\Tpsparn}{\Tpscov_t^{-1/2}\ba_{t,A}},
         \<{\Tpsmean_t},\ba_{t,1}\>\ldots
         \<{\Tpsmean_t},\ba_{t,A}\>).$$
-By Assumption~\ref{ass:thompson_mlp_diff_action_linear} and a triangular inequality,  we have $\bigvec,\bigvec^*\in\Trunreg_{\Trunregp/2}$. 
+By Assumption~\ref{ass:thompson_mlp_diff_action_linear} and a triangular inequality,  we have $\bigvec,\bigvec^*\in\Trunreg_{\Trunregp/2}$.
  By the Lipschitz continuity of $f(x)=\exp(x)$ on $(-\infty,1.5]$, we have
 \begin{align*}
 |\exp(\hat v_{tk})- \sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t)|&\leq|\exp(\hat v_{t,k})- \sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t)\vee\trunprob|+\trunprob \\
@@ -257,11 +237,11 @@ By Assumption~\ref{ass:thompson_mlp_diff_action_linear} and a triangular inequal
 &\leq
 e^{3/2}\Big(\eps_4+\frac{2A^2}{\trunprob}\Big(\sqrt{\frac{2\eps_3}{\Trunregp}}+\frac{2\eps_3}{\Trunregp}\Big)+\frac{2A^2\eps_3}{\Trunregp\trunprob}\Big)+\trunprob=:\eps_5,
 \end{align*}
-where the second inequality uses 
-$$g_{k,\trunprob}(\bigvec^*)=\log[\sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t)\vee\trunprob],$$ and the 
-third inequality uses Lemma~\ref{lm:lip_of_tps} and Step~\ref{ts_step4}. Therefore, 
+where the second inequality uses
+$$g_{k,\trunprob}(\bigvec^*)=\log[\sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t)\vee\trunprob],$$ and the
+third inequality uses Lemma~\ref{lm:lip_of_tps} and Step~\ref{ts_step4}. Therefore,
 \begin{align*}
- |\sum_{k=1}^A \exp(\hat v_{t,k})-1|\leq A\eps_5.   
+ |\sum_{k=1}^A \exp(\hat v_{t,k})-1|\leq A\eps_5.
 \end{align*}
 and the constructed transformer $\TF_\tfpar$ satisfies (assume $A\eps_5<1$)
 \begin{align*}
@@ -275,16 +255,16 @@ and the constructed transformer $\TF_\tfpar$ satisfies (assume $A\eps_5<1$)
 &\leq (A+1)\eps_5,
 \end{align*}
 where third line uses $\log(1+x)<x$.
-Finally, for the prespecified $\eps>0$,  choosing $\eps_1,\eps_2,\eps_3,\eps_4,\trunprob$ such that $\eps_5\leq\eps/(2A)$ gives 
-\begin{align*}  
+Finally, for the prespecified $\eps>0$,  choosing $\eps_1,\eps_2,\eps_3,\eps_4,\trunprob$ such that $\eps_5\leq\eps/(2A)$ gives
+\begin{align*}
 \log\sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t)-\log\sAlg_{\tfpar}(\ba_{t,k}|\dset_{t-1},\state_t)\leq\eps.
 \end{align*}
 
  This can be done via choosing $\eps_1= c_1\eps^4,\eps_2=c_2\eps^4,\eps_3=c_3\eps^4,\eps_4=c_4\eps,\trunprob=\eps/(4A)$, where $c_i~(i=1,2,3,4)$  hide values that could depend polynomially on $(A,1/\Trunregp)$, such that $\eps_5\leq\eps/(4A)$.
- 
 
- 
- 
+
+
+
  Combining the construction in  Step~\ref{ts_step1}---~\ref{ts_step4} yields Theorem~\ref{thm:approx_thompson_linear-formal}.
 
 
@@ -300,16 +280,16 @@ Finally, for the prespecified $\eps>0$,  choosing $\eps_1,\eps_2,\eps_3,\eps_4,\
 
 
 \paragraph{Proof of Step~\ref{ts_step2}}
-By the boundedness assumption of the actions, we have $$\tilde\lambda\leq\sigma_{\min}(\Tpscov_t)\leq\sigma_{\max}(\Tpscov_t)\leq T(B_a^2+\tilde\lambda).$$ 
-Define the condition number $\padecond=T(B_a^2+\tilde\lambda)/\tilde\lambda$ and $\prodeig:=\sqrt{T\tilde\lambda(B_a^2+\tilde\lambda)}$. 
+By the boundedness assumption of the actions, we have $$\tilde\lambda\leq\sigma_{\min}(\Tpscov_t)\leq\sigma_{\max}(\Tpscov_t)\leq T(B_a^2+\tilde\lambda).$$
+Define the condition number $\padecond=T(B_a^2+\tilde\lambda)/\tilde\lambda$ and $\prodeig:=\sqrt{T\tilde\lambda(B_a^2+\tilde\lambda)}$.
 Using the Pade decomposition for the  square root function in Theorem 3.1 and the discussion afterward in~\cite{lu1998pade}, we have
-\begin{align*} 
+\begin{align*}
 \Tpscov^{1/2}_t&=(\tilde\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top)^{1/2}=\sqrt{\prodeig}\Big(\id_d+\frac{(\Tpscov_t-\prodeig \id_d)}{\prodeig}\Big)^{1/2}\\
 &=
 \sqrt{\prodeig}\Big[\id_d+\sum_{j=1}^m \Big(\id_d+\frac{b_j^{(m)}(\Tpscov_t-\prodeig \id_d)}{\prodeig}\Big)^{-1}\frac{a_j^{(m)}(\Tpscov_t-\prodeig \id_d)}{\prodeig}\Big]+\Errmat_{m}
 \end{align*}
-for any $m\geq0$, 
-where 
+for any $m\geq0$,
+where
 $$
 a_j^{(m)}=\frac{2}{2 m+1} \sin ^2 \frac{j \pi}{2 m+1}, \quad b_j^{(m)}=\cos ^2 \frac{j \pi}{2 m+1},
 $$ and the error term $\Errmat_m$ satisfies \begin{align*}
@@ -333,7 +313,7 @@ Thus, using Pade decomposition, we can write $$
 \end{bmatrix}
 \xrightarrow{\text{step 2a}}
    \begin{bmatrix}
-    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t} 
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t}
         \\\bzero_{dA}\\
 {(\Tpscov_t-\prodeig\id_d)\ba_{t,1}}
 \\\vdots\\
@@ -342,21 +322,21 @@ Thus, using Pade decomposition, we can write $$
 \end{bmatrix}\nonumber
 \\ &~\xrightarrow{\text{step 2b}}
      \begin{bmatrix}
-    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t} 
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t}
         \\\bzero_{dA}\\
 {(\Tpscov_t-\prodeig\id_d)\ba_{t,1}}
 \\\vdots\\
        {(\Tpscov_t-\prodeig\id_d)\ba_{t,A}}
-        \\ 
+        \\
         \Big({\prodeig}\id_d+{b_1^{(m)}(\Tpscov_t-\prodeig \id_d)}\Big)^{-1}{a_1^{(m)}(\Tpscov_t-\prodeig \id_d)\ba_{t,1}}\\
         \vdots
-        \\ 
+        \\
           \Big({\prodeig}\id_d+{b_m^{(m)}(\Tpscov_t-\prodeig \id_d)}\Big)^{-1}{a_m^{(m)}(\Tpscov_t-\prodeig \id_d)\ba_{t,A}}
           \\\star\\ \bzero \\\posv
 \end{bmatrix}
 \xrightarrow{\text{step 2c}}
    \begin{bmatrix}
-    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t} 
+    \bh_{2t-1}^{\pre,\{\parta,\partb,\partc\}}\\\widehat{\Tpsmean_t}
         \\
 \widehat{\Tpscov_t^{1/2}\ba_{t,1}}
 \\\vdots\\
@@ -369,7 +349,7 @@ where $\star$ denotes additional terms in $\bh^\partd$ that are not of concern t
 \begin{enumerate}[label=Step 2\alph*,ref= 2\alph*]
         \item\label{ts_step2a}  There exists an attention-only transformer $\TF_\btheta(\cdot)$ with     $$L=2,~~~\max M^{\lth}=3A,~~~ \nrmp{\btheta}\leq T+2+{\prodeig}\leq\cO(T) $$
  that implements step 2a in~\eqref{eq:roadmap_ts_step2}.
-     \item\label{ts_step2b} Denote ${(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}$ by  $\intvec_{k}$ and $\Big({\prodeig}\id_d+{b_m^{(m)}(\Tpscov_t-\prodeig \id_d)}\Big)$ by $\intmat_m$. For any $\eps>0$,   there exists a  transformer $\TF_\btheta(\cdot)$ with    
+     \item\label{ts_step2b} Denote ${(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}$ by  $\intvec_{k}$ and $\Big({\prodeig}\id_d+{b_m^{(m)}(\Tpscov_t-\prodeig \id_d)}\Big)$ by $\intmat_m$. For any $\eps>0$,   there exists a  transformer $\TF_\btheta(\cdot)$ with
      \begin{align*}
      &L=2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)B_aT(B_a^2+\tilde\lambda)/(\tilde\lambda\eps))\rceil=\tcO(\sqrt{T}),\\  &
      \max_{\ell\in[L]}M^{(l)}=4Am=\tcO(T^{1/4}A),~\max_{\ell\in[L]}\hidden^\lth\leq \conO(Adm)=\tcO(T^{1/4}Ad),~ \nrmp{\btheta}\leq  \cO(Am)\leq  \tcO(T^{1/4}A)
@@ -402,16 +382,16 @@ For all $k\in[A]$, we choose $\bQ_{k1,k2,k3}^{(1)},\bK_{k1,k2,k3}^{(1)},\bV_{k1,
       1\\ -(2t-1)\\1\\\bzero
     \end{bmatrix},~~ \bK^{(1)}_{k3}\bh^{(0)}_{2j-1}=\begin{bmatrix}
       1\\  1\\ 2j-1\\\bzero
-    \end{bmatrix},~~ 
+    \end{bmatrix},~~
     \bK^{(1)}_{k3}\bh^{(0)}_{2j}=\begin{bmatrix}
         1\\1\\  2j\\\bzero
     \end{bmatrix},~~ \bV^{(1)}_{k3}\bh^{(0)}_{2t-1}=\begin{bmatrix}
         \bzero\\ (\tilde\lambda-\prodeig)\ba_{t,k} \\ \bzero
     \end{bmatrix},
 \end{align*}
-where for each $k\in[A]$, $\bV^{(1)}_{k1}\bh^{(0)}_{2j},\bV^{(1)}_{k3}\bh^{(0)}_{2t-1}$ are supported on the same $d$ entries of $\bh^\partd$. 
+where for each $k\in[A]$, $\bV^{(1)}_{k1}\bh^{(0)}_{2j},\bV^{(1)}_{k3}\bh^{(0)}_{2t-1}$ are supported on the same $d$ entries of $\bh^\partd$.
 It is readily verified that  summing over the attention heads and $k\in[A]$ gives the updates
-$$ \bzero_d\mapsto\frac{(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}{2t-1}$$ for all $k\in[A]$. We assume the updated vectors are supported on some $Ad$ coordinates of $\bh_{2t-1}^d$. Moreover, one can choose the matrices such that $\lops{\bQ^{(1)}_{k1,k2,k3}}\leq1,\lops{\bK^{(1)}_{k1,k2,k3}}\leq1,\lops{\bV^{(1)}_{k1,k2,k3}}\leq \max\{1,|\tilde\lambda-\prodeig|\}\leq1+\prodeig$. Therefore the norm of the first layer of the attention-only transformer $\nrmp{\btheta^{(1)}}\leq 2+\prodeig$. 
+$$ \bzero_d\mapsto\frac{(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}{2t-1}$$ for all $k\in[A]$. We assume the updated vectors are supported on some $Ad$ coordinates of $\bh_{2t-1}^d$. Moreover, one can choose the matrices such that $\lops{\bQ^{(1)}_{k1,k2,k3}}\leq1,\lops{\bK^{(1)}_{k1,k2,k3}}\leq1,\lops{\bV^{(1)}_{k1,k2,k3}}\leq \max\{1,|\tilde\lambda-\prodeig|\}\leq1+\prodeig$. Therefore the norm of the first layer of the attention-only transformer $\nrmp{\btheta^{(1)}}\leq 2+\prodeig$.
 
 The second layer is used to multiply the updated vectors by a factor of $2t-1$, namely, to perform the map
 $$ \frac{(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}{2t-1}\mapsto{(\Tpscov_t-\prodeig\id_d)\ba_{t,k}}$$ for all $k\in[A]$, where the output vectors are supported on coordinates different from the input vectors (therefore we need $2Ad$ coordinates for embedding in step 2a). This can be achieved by choosing $\lops{\bQ^{(2)}}\leq T, \lops{\bK^{(2)}}\leq T, \lops{\bV^{(2)}}\leq1$
@@ -421,7 +401,7 @@ such that \begin{align*}
          (2t-1)^2\\-T(2t-1)^2\\  1\\ \bzero
     \end{bmatrix},~~ \bK^{(2)}_{1}\bh^{(1)}_{2j-1}=\begin{bmatrix}
         1\\1\\ T(2j-1)^2\\\bzero
-    \end{bmatrix},~~ 
+    \end{bmatrix},~~
     \bK^{(1)}_{k3}\bh^{(1)}_{2j}=\begin{bmatrix}
       1\\  1\\  T(2j)^2\\\bzero
     \end{bmatrix},\\&~~ \bV^{(2)}_{1}\bh^{(1)}_{2t-1}=\begin{bmatrix}
@@ -433,14 +413,14 @@ such that \begin{align*}
 
 
 \paragraph{Proof of step~\ref{ts_step2b}}
-The construction is similar to the construction in Step~\ref{slinucb_step2} of the proof of Theorem~\ref{thm:approx_smooth_linucb}. Hence we only provide a sketch of proof here. Note that 
+The construction is similar to the construction in Step~\ref{slinucb_step2} of the proof of Theorem~\ref{thm:approx_smooth_linucb}. Hence we only provide a sketch of proof here. Note that
 \begin{align*}
     a_j^{(m)}\intmat_j^{-1}\intvec_k=\argmin_{\bx\in\R^d}\frac{1}{2(2t-1)}\bx^\top\intmat_j\bx-\frac{1}{2t-1}\<\bx, a_j^{(m)}\intvec_{k}\>=:\argmin_{\bx\in\R^d} L_{k,j}(\bx)
 \end{align*}
 is the global minimizer of a $\tilde\lambda/(2t-1)$-convex and $(B_a^2+\tilde\lambda)$-smooth function with the conditional number $\padecond\leq 2T(B_a^2+\tilde\lambda)/\tilde\lambda$. Since $$\|a_j^{(m)}\intmat_j^{-1}\intvec_k\|_2\leq|a_j^{(m)}|\lops{\intmat_j^{-1}}\|\intvec_k\|_2\leq B_aT(B_a^2+\tilde\lambda)/\tilde\lambda.$$
 Therefore by Proposition~\ref{prop:conv_gd_agd} we have
-$L=\lceil2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)B_aT(B_a^2+\tilde\lambda)/(\tilde\lambda\eps))\rceil$ steps of accelerated gradient descent with step size $\eta=1/(B_a^2+\tilde\lambda)$ gives  $\|\widehat{a_j^{(m)}\intmat_j^{-1}\intvec_k}-a_j^{(m)}\intmat_j^{-1}\intvec_k\|_2\leq\eps$. Now, it remains to construct a transformer that can implement the accelerated gradient descent steps. Here we only provide the construction of the gradient $\nabla L_{k,j}(\bx)$ at the $l$-th iteration $\bx=\bx_{k,j}^{\ell-1}\in\R^d$ which belongs to the output after $\ell-1$ transformer layers.  The full construction of AGD steps follows from similar techniques as in Step~\ref{slinucb_step2} of  the proof of  
-Theorem~\ref{thm:approx_smooth_linucb}. Concretely, for each layer $\ell\in[L]$ and $k\in[A],j\in[m]$, we choose 
+$L=\lceil2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)B_aT(B_a^2+\tilde\lambda)/(\tilde\lambda\eps))\rceil$ steps of accelerated gradient descent with step size $\eta=1/(B_a^2+\tilde\lambda)$ gives  $\|\widehat{a_j^{(m)}\intmat_j^{-1}\intvec_k}-a_j^{(m)}\intmat_j^{-1}\intvec_k\|_2\leq\eps$. Now, it remains to construct a transformer that can implement the accelerated gradient descent steps. Here we only provide the construction of the gradient $\nabla L_{k,j}(\bx)$ at the $l$-th iteration $\bx=\bx_{k,j}^{\ell-1}\in\R^d$ which belongs to the output after $\ell-1$ transformer layers.  The full construction of AGD steps follows from similar techniques as in Step~\ref{slinucb_step2} of  the proof of
+Theorem~\ref{thm:approx_smooth_linucb}. Concretely, for each layer $\ell\in[L]$ and $k\in[A],j\in[m]$, we choose
 $\bQ_{kj1,kj2,kj3}^{(\ell)},\bK_{kj1,kj2,kj3}^{(\ell)},\bV_{kj1,kj2,kj3}^{(\ell)}$ such that for even token indices $2j$ with $s\leq t-1$ and odd token indices with $s\leq t$
 \begin{align*}
     &\bQ_{kj1}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
@@ -453,34 +433,20 @@ $\bQ_{kj1,kj2,kj3}^{(\ell)},\bK_{kj1,kj2,kj3}^{(\ell)},\bV_{kj1,kj2,kj3}^{(\ell)
     \end{bmatrix},~~\bV_{kj1}^{(\ell)}\bh^{(\ell-1)}_{2s-1}=\bzero,\\
     &
     \bQ_{kj2}^{(\ell)}=-\bQ_{kj1}^{(\ell)},~~ \bK_{kj2}^{(\ell)}=\bK_{kj1}^{(\ell)},~~  \bV_{kj2}^{(\ell)}=-\bV_{kj1}^{(\ell)},\\
-    %  &
-    %  \bQ_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
-    %      1\\1-2t\\ 1\\\bzero
-    % \end{bmatrix},~~ \bK_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
-    %     1\\ 1 \\2j\\\bzero
-    % \end{bmatrix},~~ 
-    % \bK_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\begin{bmatrix}
-    %     1\\ 1 \\2j-1\\\bzero
-    % \end{bmatrix},~~ \bV_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\eta\begin{bmatrix}
-    %     \bzero\\ \ba_{j,k}-\lambda\hat\bv_k^{\ell-1}\\ \bzero
-    % \end{bmatrix},\\
      &
      \bQ_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
          1\\-(2t-1)\\ 1\\\bzero
-    \end{bmatrix}, 
-    % \bK_{kj4}^{(\ell)}\bh^{(\ell)}_{2j}=\begin{bmatrix}
-    %     1\\ 1 \\(2j)^2\\\bzero
-    % \end{bmatrix}, 
+    \end{bmatrix},
 \bK_{kj3}^{(\ell)}\bh^{(\ell)}_{2s-1}=\begin{bmatrix}
         1\\ 1 \\(2s-1)\\\bzero
     \end{bmatrix}, \\&\qquad~\bV_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\eta\begin{bmatrix}
         \bzero\\ a_j^{(m)}\intvec_k-[(1-b_j^{(m)})\prodeig+b_j^{(m)}\tilde\lambda]\bx_{k,j}^{\ell-1}\\ \bzero
     \end{bmatrix}.
 \end{align*}
-Similarly, it can be verified that the constructed attention layer generates 
+Similarly, it can be verified that the constructed attention layer generates
 \begin{align*}
   -\eta\cdot\nabla L_{k,j}(\bx_{k,j}^{\ell-1})=-\frac{\eta}{2t-1}\Big[ [(1-b_j^{(m)})\prodeig\id_d+b_j^{(m)}\tilde\lambda]+b_j^{(m)}\sum_{s=1}^{t-1}\ba_s\ba_s^\top \Big]\bx_{k,j}^{\ell-1}+\frac{\eta a_j^{(m)}\intvec_k}{2t-1}.
-\end{align*} 
+\end{align*}
 Therefore,  a  construction similar to  Step~\ref{slinucb_step2} of the proof of Theorem~\ref{thm:approx_smooth_linucb} yields Step~\ref{ts_step2b}. Moreover, note that for the construction to exist  we need the embedding dimension  $D=\conO(Adm)=\tcO(T^{1/4}Ad)$ and the number of hidden neurons $\hidden=\conO(Adm)=\tcO(T^{1/4}Ad)$.
 
 \paragraph{Proof of Step~\ref{ts_step2c}}
@@ -492,42 +458,42 @@ Note that step 2c is a linear transformation from $\ba_{t,k},\widehat{a_j^{(m)}\
 
 
 \paragraph{Proof of Step~\ref{ts_step3}}
-Similar to the proof of Step~\ref{ts_step2b}, given $\widehat{\Tpscov_t^{1/2}\ba_{t,k}}$ we can apprxoimate $\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}}\approx \Tpscov_t^{-1/2}\ba_{t,k}$ using accelerated gradient descent. Concretely, note that 
+Similar to the proof of Step~\ref{ts_step2b}, given $\widehat{\Tpscov_t^{1/2}\ba_{t,k}}$ we can apprxoimate $\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}}\approx \Tpscov_t^{-1/2}\ba_{t,k}$ using accelerated gradient descent. Concretely, note that
 \begin{align*}
    \sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}} =\argmin_{\bx\in\R^d}\frac{1}{2(2t-1)}\bx^\top\Tpscov_t\bx-\frac{1}{2t-1}\<\bx,  \sqrt{\Tpsparn}\widehat{\Tpscov_t^{1/2}\ba_{t,k}}\>=:\argmin_{\bx\in\R^d} L_{k}(\bx)
 \end{align*}
-is the global minimizer of a $\tilde\lambda/(2t-1)$-convex and $(B_a^2+\tilde\lambda)$-smooth function with the conditional number $\padecond\leq 2T(B_a^2+\tilde\lambda)/\tilde\lambda$. Since 
+is the global minimizer of a $\tilde\lambda/(2t-1)$-convex and $(B_a^2+\tilde\lambda)$-smooth function with the conditional number $\padecond\leq 2T(B_a^2+\tilde\lambda)/\tilde\lambda$. Since
 $$
 \|\sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}} \|_2\leq\sqrt{\Tpsparn}\lops{\intmat_j^{-1}}\|\widehat{\Tpscov_t^{1/2}\ba_{t,k}} \|_2\leq 2\sqrt{\Tpsparn}\sqrt{T(B_a^2+\tilde\lambda)}B_a,$$
 where the last inequality uses the assumption in Step~\ref{ts_step3}.
 Therefore for any $\eps_0>0$, it follows from Proposition~\ref{prop:conv_gd_agd} that
-$L=\lceil2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)2\sqrt{\Tpsparn}\sqrt{T(B_a^2+\tilde\lambda)}B_a/\eps_0)\rceil$ steps of accelerated gradient descent with step size $\eta=1/(B_a^2+\tilde\lambda)$ gives  $$\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}} -\sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}} \|_2\leq\eps_0.$$ 
+$L=\lceil2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)2\sqrt{\Tpsparn}\sqrt{T(B_a^2+\tilde\lambda)}B_a/\eps_0)\rceil$ steps of accelerated gradient descent with step size $\eta=1/(B_a^2+\tilde\lambda)$ gives  $$\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}} -\sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}} \|_2\leq\eps_0.$$
 
-Following the construction in Step~\ref{slinucb_step2} of the proof of Theorem~\ref{thm:approx_smooth_linucb} it can be verified that there exists a transformer $\TF_\btheta(\cdot)$ with 
+Following the construction in Step~\ref{slinucb_step2} of the proof of Theorem~\ref{thm:approx_smooth_linucb} it can be verified that there exists a transformer $\TF_\btheta(\cdot)$ with
  \begin{align*}
   &L=\lceil2\sqrt{2 T(B_a^2+\tilde\lambda)/\tilde\lambda}\log((1+\padecond)2\sqrt{\Tpsparn}\sqrt{T(B_a^2+\tilde\lambda)}B_a/\eps_0)\rceil=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}=4A,~~~ \\
   &\qquad\qquad
   \max_{\ell\in[L]}\hidden^{(l)}=4Ad,~~~
   \nrmp{\btheta}\leq  \cO(A)
-  \end{align*} that implements the AGD steps. Therefore, the approximation error 
+  \end{align*} that implements the AGD steps. Therefore, the approximation error
   \begin{align*}
-     &\quad\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}} 
+     &\quad\|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}}
       -
       \sqrt{\Tpsparn}{\Tpscov_t^{-1/2}\ba_{t,k}}
       \|_2\\
       &\leq
   \|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}} -\sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}} \|_2+ \|\sqrt{\Tpsparn}\Tpscov_t^{-1}\widehat{\Tpscov_t^{1/2}\ba_{t,k}}-\sqrt{\Tpsparn}\Tpscov_t^{-1}{\Tpscov_t^{1/2}\ba_{t,k}} \|_2\\
       &\leq \eps_0+\sqrt{\Tpsparn}\lops{\Tpscov_t^{-1}}\|\widehat{\Tpscov_t^{1/2}\ba_{t,k}}-\Tpscov_t^{1/2}\ba_{t,k} \|_2\\
-      &\leq 
+      &\leq
 \eps_0+\frac{\sqrt{\Tpsparn}}{\tilde\lambda}\|\widehat{\Tpscov_t^{1/2}\ba_{t,k}}-\Tpscov_t^{1/2}\ba_{t,k} \|_2\leq \eps_0+\eps/2,
-  \end{align*} where the last inequality uses the assumption on the approximation error in Step~\ref{ts_step2}. 
-  Letting  $\eps_0=\eps/2$ yields $ \|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}} 
+  \end{align*} where the last inequality uses the assumption on the approximation error in Step~\ref{ts_step2}.
+  Letting  $\eps_0=\eps/2$ yields $ \|\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}}
       -
       \sqrt{\Tpsparn}{\Tpscov_t^{-1/2}\ba_{t,k}}
-      \|_2\leq \eps$. 
+      \|_2\leq \eps$.
 
 
-  
+
 In addition to the calculation of  $\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_{t,k}}$, we construct a two-layer attention-only transformer that computes $\<\widehat\Tpsmean_t,\ba_{t,k}\>$. Namely, we choose $\bQ^{(1)}_{k1,k2},\bK^{(1)}_{k1,k2},\bV^{(1)}_{k1,k2}$ such that
 \begin{align*}
     &\bQ_{k1}^{(1)}\bh^{(0)}_{2t-1}=\begin{bmatrix}
@@ -550,10 +516,10 @@ In addition to the calculation of  $\sqrt{\Tpsparn}\widehat{\Tpscov_t^{-1/2}\ba_
         \bzero\\ \be_k \\ \bzero
     \end{bmatrix},
 \end{align*}
-where $\tfthres=2TB_a^2(B_aB_w+\sqrt{2\Tpsparn\log(T/{\delta_0}))})/\tilde\lambda=\tcO(T)$ is an upper bound of $\<\widehat\Tpsmean_t,\ba_{t,k}\>$ for all $k\in[A]$ under the event $\hpevent_{{\delta_0}}$, and $\be_k=(0,0,\ldots,1,0,\ldots,0)\in\R^{A}$ is the one-hot vector supported on the $k$-th entry. Summing up the attention heads gives the update 
+where $\tfthres=2TB_a^2(B_aB_w+\sqrt{2\Tpsparn\log(T/{\delta_0}))})/\tilde\lambda=\tcO(T)$ is an upper bound of $\<\widehat\Tpsmean_t,\ba_{t,k}\>$ for all $k\in[A]$ under the event $\hpevent_{{\delta_0}}$, and $\be_k=(0,0,\ldots,1,0,\ldots,0)\in\R^{A}$ is the one-hot vector supported on the $k$-th entry. Summing up the attention heads gives the update
 $$
 \bzero\mapsto\frac{\<\widehat\Tpsmean_t,\ba_{t,k}\>}{2t-1}.
-$$ Note that one can choose the matrices such that 
+$$ Note that one can choose the matrices such that
 $$\lops{\bQ^{(1)}_{k1,k2}}\leq \tfthres,~~~\lops{\bK^{(1)}_{k1,k2}}\leq \tfthres,~~~\lops{\bV^{(1)}_{k1,k2}}\leq1.$$ Thus the norm of the attention layer  $\nrmp{\btheta^{(1)}}\leq \tfthres+2$.
 
 
@@ -569,13 +535,13 @@ By Assumption~\ref{ass:thompson_mlp_approx_linear},  $g_{k,\trunprob}(\bigvec)$ 
 \begin{align*}
 \|\sqrt{\Tpsparn}\Tpscov_t^{-1/2}\ba_{t,k}\|_2\leq \sqrt{\Tpsparn}\|\Tpscov_t^{-1/2}\|_2\|\ba_{t,k}\|_2\leq\sqrt{\lambda}B_a,~~|\<\Tpsmean_t,\ba_{t,k}\>|\leq \|\Tpsmean_t\|_2\|\ba_{t,k}\|_2=B_wB_a
 \end{align*}
-and $R_{\delta_0}=2(B_wB_a+\sqrt{\lambda}B_a)$, it follows from 
-the assumption  $\eps_3\leq R_{\delta_0}/2$ and  a triangular inequality that $\linf{\bv}\leq R_\delta$. Therefore, using Assumption~\ref{ass:thompson_mlp_approx_linear} and stacking up the approximation functions for each coordinate $k\in[A]$ we construct a two-layer MLP with $\lops{\bW_1}\leq \sqrt{A\neuron},\lops{\bW_1}\leq \weightn$, $D'= \neuron A$ such that 
+and $R_{\delta_0}=2(B_wB_a+\sqrt{\lambda}B_a)$, it follows from
+the assumption  $\eps_3\leq R_{\delta_0}/2$ and  a triangular inequality that $\linf{\bv}\leq R_\delta$. Therefore, using Assumption~\ref{ass:thompson_mlp_approx_linear} and stacking up the approximation functions for each coordinate $k\in[A]$ we construct a two-layer MLP with $\lops{\bW_1}\leq \sqrt{A\neuron},\lops{\bW_1}\leq \weightn$, $D'= \neuron A$ such that
 \begin{align*}\bW_2\sigma(\bW_1\bh^{(1)}_{2t-1})=\begin{bmatrix}
     \bzero\\\hat \bv_{t1}\\\vdots\\\hat\bv_{tA}\\\bzero,
 \end{bmatrix}
 \end{align*}
-where $(\hat \bv_{t1},\ldots,\hat\bv_{tA})$ is supported on $\bh^c_{2t-1}$ and $|\hat v_{tk}-g_{k,\trunprob}(\bigvec)|\leq \eps$ for all $k\in[A]$. 
+where $(\hat \bv_{t1},\ldots,\hat\bv_{tA})$ is supported on $\bh^c_{2t-1}$ and $|\hat v_{tk}-g_{k,\trunprob}(\bigvec)|\leq \eps$ for all $k\in[A]$.
 
 
 
@@ -594,26 +560,26 @@ where $(\hat \bv_{t1},\ldots,\hat\bv_{tA})$ is supported on $\bh^c_{2t-1}$ and $
 
 
 \subsection{Proof of Theorem~\ref{thm:ts_linear_regret}}\label{sec:pf_prop:ts_linear_regret}
-Denote the transformer constructed in Theorem~\ref{thm:approx_thompson_linear-formal} by $\TF_\tfpar$. 
-From the proof of Theorem~\ref{thm:approx_thompson_linear-formal}, we have 
-$$\log\frac{\sAlg_{\TS}(\eaction_t|\dset_{t-1},\state_t)}{\sAlg_{\tfpar}(\eaction_t|\dset_{t-1},\state_t)}\leq \eps$$ under the event $$\hpevent_{\delta_0}:=\{\max_{t\in[T]}|\eps_t|\leq\sqrt{2\Tpsparn\log(2T/\delta_0)}\}\cup \{\|\bw^*\|_2\leq  B_w\}~~\text{ for all } t\in[\totlen]$$ with probability at least $1-\delta_0$, where  $B_w:=\sqrt{\lambda}\big(\sqrt{d}+2\sqrt{\log(2/\delta_0)}\big)$. Note that due to the unboundedness of the noise $\eps_t$ and parameter vector $\bw^*$, Assumption~\ref{asp:realizability} may not be satisfied. However, setting $\delta_0=\delta/(2n)$ and applying a union bound gives 
+Denote the transformer constructed in Theorem~\ref{thm:approx_thompson_linear-formal} by $\TF_\tfpar$.
+From the proof of Theorem~\ref{thm:approx_thompson_linear-formal}, we have
+$$\log\frac{\sAlg_{\TS}(\eaction_t|\dset_{t-1},\state_t)}{\sAlg_{\tfpar}(\eaction_t|\dset_{t-1},\state_t)}\leq \eps$$ under the event $$\hpevent_{\delta_0}:=\{\max_{t\in[T]}|\eps_t|\leq\sqrt{2\Tpsparn\log(2T/\delta_0)}\}\cup \{\|\bw^*\|_2\leq  B_w\}~~\text{ for all } t\in[\totlen]$$ with probability at least $1-\delta_0$, where  $B_w:=\sqrt{\lambda}\big(\sqrt{d}+2\sqrt{\log(2/\delta_0)}\big)$. Note that due to the unboundedness of the noise $\eps_t$ and parameter vector $\bw^*$, Assumption~\ref{asp:realizability} may not be satisfied. However, setting $\delta_0=\delta/(2n)$ and applying a union bound gives
 \begin{align}
     \log\frac{\sAlg_{\TS}(\eaction^i_t|\dset^i_{t-1},\state^i_t)}{\sAlg_{\tfpar}(\eaction^i_t|\dset^i_{t-1},\state^i_t)}\leq \eps,~~~\text{ for } t\in[\totlen],i\in[n].\label{eq:unif_traj_realize}
-\end{align} 
-with probability at least $1-\delta/2$. 
+\end{align}
+with probability at least $1-\delta/2$.
 From the proof of Theorem~\ref{thm:diff_reward} we see that Assumption~\ref{asp:realizability} is only used in Eq.~\eqref{eq:pf_hellinger_control_general2} in the proof of Lemma~\ref{lm:general_imit}. Moreover, it can be verified that the same result holds with  Assumption~\ref{asp:realizability}  replaced by the condition in Eq.~\eqref{eq:unif_traj_realize}. Therefore, we have \begin{align*}
 \Big|\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_\TS}(\totlen)\Big|
-&\leq 
-c \totlen^2 \sqrt{\distratio} \bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot 
+&\leq
+c \totlen^2 \sqrt{\distratio} \bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot
  \totlen/\delta } }{n}} +  \sqrt{\geneps}\bigg)\\
- &\leq 
- c \totlen^2 \sqrt{\distratio} \bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot 
+ &\leq
+ c \totlen^2 \sqrt{\distratio} \bigg(\sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot
  \totlen/\delta } }{n}}  \bigg)+\sqrt{\totlen}
 \end{align*}
-with probability at least $1-\delta$ as in Theorem~\ref{thm:diff_reward}, where the second inequality follows as in our setting $\geneps=\eps=1/(\totlen^3\distratio)$. 
-Now, it suffices to show Thompson sampling has the expected regret with 
+with probability at least $1-\delta$ as in Theorem~\ref{thm:diff_reward}, where the second inequality follows as in our setting $\geneps=\eps=1/(\totlen^3\distratio)$.
+Now, it suffices to show Thompson sampling has the expected regret with
 \begin{align*}
-    \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]=\cO(d\sqrt{T}\log(Td)). 
+    \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]=\cO(d\sqrt{T}\log(Td)).
 \end{align*}
 
 
@@ -622,7 +588,7 @@ Now, it suffices to show Thompson sampling has the expected regret with
 
 The proof follows similar arguments as in  Theorem 36.4 in~\cite{lattimore2020bandit}. Define $$\tilde\lambda:=\Tpsparn/\lambda,~~~\beta:=\sqrt{\Tpsparn}\Big(\sqrt{2\Tpsparn d\log(4d/{\delta_{\TS}})}+\sqrt{2\log(2/{\delta_{\TS}})+d\log(1+TB_a^2/\tilde\lambda d)}\Big),
 $$
-where ${\delta_{\TS}}$ will be specified later,  and recall $\Tpscov_t=\tilde\lambda \id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$. Since $\|\bw^\star\|_2\leq\sqrt{2\lambda d\log(4d/{\delta_{\TS}})}$ with probability at least $1-{\delta_{\TS}}/2$ by a union bound, it  follows from Theorem 20.5 in~\cite{lattimore2020bandit} that  $$\P(\|\bw^\star\|_2\leq\sqrt{2\lambda d\log(4d/{\delta_{\TS}})},~~~\text{and~~~}\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\geq\beta,\text{for some } i\in[T])\leq{\delta_{\TS}},$$ where the probability is taken over the both randomness of the noise and of the bandit instance $\inst$.  
+where ${\delta_{\TS}}$ will be specified later,  and recall $\Tpscov_t=\tilde\lambda \id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$. Since $\|\bw^\star\|_2\leq\sqrt{2\lambda d\log(4d/{\delta_{\TS}})}$ with probability at least $1-{\delta_{\TS}}/2$ by a union bound, it  follows from Theorem 20.5 in~\cite{lattimore2020bandit} that  $$\P(\|\bw^\star\|_2\leq\sqrt{2\lambda d\log(4d/{\delta_{\TS}})},~~~\text{and~~~}\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\geq\beta,\text{for some } i\in[T])\leq{\delta_{\TS}},$$ where the probability is taken over the both randomness of the noise and of the bandit instance $\inst$.
 
 Let $\hpevent$ be the event where $\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\leq\beta$ for all $i\in[T]$, and let $\hpevent_0$ be the event where $\{\|\bw^\star\|_2\leq\sqrt{2\lambda d\log(4d/{\delta_{\TS}})}\}$. Then $\P(\hpevent\cap\hpevent_0)\geq 1-{\delta_{\TS}}$ and the expected regret
 \begin{align*}
@@ -632,15 +598,15 @@ Let $\hpevent$ be the event where $\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\leq\beta$ fo
   \E\Big[\sum_{t=1}^T (\max_{j\in[A]}\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>) \bone_{\hpevent\cap\hpevent_0}\Big]
   +
    \E\Big[\sum_{t=1}^T \max_{j\in[A]}(\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>)\bone_{(\hpevent\cap\hpevent_0)^c}\Big]\\
-   &\leq 
+   &\leq
    \E\Big[\sum_{t=1}^T (\max_{j\in[A]}\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>) \bone_{\hpevent\cap\hpevent_0}\Big]
 +
 \E[2B_aT\|\bw^*\|_2\bone_{(\hpevent\cap\hpevent_0)^c}]
   \\
-  &\leq 
+  &\leq
   \E\Big[\sum_{t=1}^T (\max_{j\in[A]}\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>) \bone_{\hpevent\cap\hpevent_0}\Big]+2B_aT\E[\|\bw^*\|_2\bone_{(\hpevent\cap\hpevent_0)^c}].
 \end{align*}
-Since 
+Since
 \begin{align*}
  \E[\|\bw^*\|_2\bone_{(\hpevent\cap\hpevent_0)^c}]
     &\leq
@@ -654,16 +620,16 @@ Since
 \sqrt{2\lambda d\log(4d/{\delta_{\TS}})}{\delta_{\TS}}+2\sqrt{2}d^{3/2}\lambda^{1/2}\int^\infty_{\sqrt{ \log(4d/{\delta_{\TS}})}}\exp(-{t^2})dt\\
 &\leq
 \sqrt{2\lambda d\log(4d/{\delta_{\TS}})}{\delta_{\TS}}+\sqrt{2}d^{3/2}\lambda^{1/2}\int^\infty_{{ \log(4d/{\delta_{\TS}})}}\frac{1}{t^{1/2}}\exp(-{t})dt\\
-&\leq 
+&\leq
 2\sqrt{2\lambda d\log(4d/{\delta_{\TS}})}{\delta_{\TS}},
 \end{align*}
-where the second line follows from a union bound over $[d]$, and the third line uses properties of subgaussian variables. Therefore, choosing ${\delta_{\TS}}=1/[T\sqrt{ d}]$  gives 
+where the second line follows from a union bound over $[d]$, and the third line uses properties of subgaussian variables. Therefore, choosing ${\delta_{\TS}}=1/[T\sqrt{ d}]$  gives
 \begin{align}
 &\qquad\E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]\notag\\
     &\leq
      \E\Big[\sum_{t=1}^T (\max_{j\in[A]}\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>) \bone_{\hpevent\cap\hpevent_0}\Big]+6B_a\sqrt{\lambda\log(4d^2T)}.\label{eq:ts_linear_regret_decomp}
 \end{align}
-Now define the event $\hpevent_t:=\{\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\leq\beta\}$,  then  we have $\hpevent_t\in\cF_{t-1}$  and $\cap_{t=1}^T \hpevent_t=\hpevent$. Also, we define the upper confidence bound $U_t(\ba):=\<\Tpsmean_t,\ba\>+\beta\|\ba\|_{\Tpscov_t^{-1}}$, which does not depend on the true parameter $\bw^*$. Let $(\cF_{t})_{t\geq 0}$ denote the filtration generated by the data collected up to time $t$ and the random parameter vector $\bw^*$. 
+Now define the event $\hpevent_t:=\{\|\Tpsmean_t-\bw^*\|_{\Tpscov_t}\leq\beta\}$,  then  we have $\hpevent_t\in\cF_{t-1}$  and $\cap_{t=1}^T \hpevent_t=\hpevent$. Also, we define the upper confidence bound $U_t(\ba):=\<\Tpsmean_t,\ba\>+\beta\|\ba\|_{\Tpscov_t^{-1}}$, which does not depend on the true parameter $\bw^*$. Let $(\cF_{t})_{t\geq 0}$ denote the filtration generated by the data collected up to time $t$ and the random parameter vector $\bw^*$.
 
 Let $\ba_t^*$ denote the optimal action at time $t$. Due to the construction of Thompson sampling, we have the distribution of $\ba_t^*$ and $\ba_t$ are the same conditioned on $\cF_{t-1}$. Therefore, $\E[U_t(\ba_t^*)|\cF_{t-1}]=\E[U_t(\ba_t)|\cF_{t-1}]$ and
 \begin{align*}
@@ -677,20 +643,20 @@ Let $\ba_t^*$ denote the optimal action at time $t$. Due to the construction of 
     &\leq
    2 \beta\E[\|\ba_t\|_{\Tpscov_t^{-1}}|\cF_{t-1}].
 \end{align*}
-Moreover, we have $$\|\ba_t\|_{\Tpscov_t^{-1}}\leq B_a/\sqrt{\tilde\lambda}.$$ 
+Moreover, we have $$\|\ba_t\|_{\Tpscov_t^{-1}}\leq B_a/\sqrt{\tilde\lambda}.$$
 Combining the last two displays, we obtain
 \begin{align*}
      &\qquad\E\Big[\sum_{t=1}^T (\max_{j\in[A]}\<\bw^\star,\ba_{t,k}\>-\<\bw^\star,\ba_{t}\>) \bone_{\hpevent\cap\hpevent_0}\Big]\\
     &\leq\sum_{t=1}^T \E\Big[2 \beta \|\ba_t\|_{\Tpscov_t^{-1}}\wedge({B_a}/{\sqrt{\tilde\lambda}})\Big]\\
-    &\leq 
+    &\leq
     2\big(\beta\vee ({B_a}/{\sqrt{\tilde\lambda}})\big)\E\Big[\sum_{t=1}^T (\|\ba_t\|_{\Tpscov_t^{-1}}\wedge1)\Big]\\
-    &\leq 
+    &\leq
     2\big(\beta\vee ({B_a}/{\sqrt{\tilde\lambda}})\big)\sqrt{T}\sqrt{\E\Big[\sum_{t=1}^T (\|\ba_t\|^2_{\Tpscov_t^{-1}}\wedge1)\Big]}\\
     &\leq
     2\big(\beta\vee ({B_a}/{\sqrt{\tilde\lambda}})\big)\sqrt{T}\sqrt{2d\log(1+TB_a^2/(\tilde\lambda d))}\\
     &= \cO( d\sqrt{T}\log(Td)),
 \end{align*}
-where the  fourth line uses  Cauchy-Schwartz inequality and the fifth line follows from Lemma 19.4 in~\cite{lattimore2020bandit}. Combining the last display with~Eq.~\eqref{eq:ts_linear_regret_decomp} completes the proof of first part of Theorem~\ref{thm:ts_linear_regret}. Moreover, the second part of Theorem~\ref{thm:ts_linear_regret}  (i.e., the upper bound on $\log\cN_{\tfparspace}$) follows directly from Lemma~\ref{lm:cover_num_bound} and Eq.~\eqref{eq:ts_tf_param-main}. 
+where the  fourth line uses  Cauchy-Schwartz inequality and the fifth line follows from Lemma 19.4 in~\cite{lattimore2020bandit}. Combining the last display with~Eq.~\eqref{eq:ts_linear_regret_decomp} completes the proof of first part of Theorem~\ref{thm:ts_linear_regret}. Moreover, the second part of Theorem~\ref{thm:ts_linear_regret}  (i.e., the upper bound on $\log\cN_{\tfparspace}$) follows directly from Lemma~\ref{lm:cover_num_bound} and Eq.~\eqref{eq:ts_tf_param-main}.
 
 
 
@@ -713,10 +679,10 @@ For any $j\neq k$, by definition of $g_{k,\trunprob}$
      \frac{1}{\trunprob}\Big(\P( \<\bx_k-\bx_j',\bz\>+y_k-y_j\geq0\geq\<\bx_k-\bx_j,\bz\>+y_k-y_j )\\
      &\qquad~~~
      +\P( \<\bx_k-\bx_j',\bz\>+y_k-y_j\leq0\leq\<\bx_k-\bx_j,\bz\>+y_k-y_j)\Big)\\
-     &\leq 
+     &\leq
       \frac{1}{\trunprob}\Big(\P(\<\bx_j-\bx_j',\bz\>\geq\<\bx_k-\bx_j',\bz\>+y_k-y_j\geq0 )\\&\qquad~~~+\P( \<\bx_k-\bx_j',\bz\>+y_k-y_j\leq0\leq\<\bx_k-\bx_j,\bz\>+y_k-y_j)\Big)\\
-       &\leq 
-      \frac{1}{\trunprob}\Big(\P(\<\bx_j-\bx_j',\bz\>\geq\<\bx_k-\bx_j',\bz\>+y_k-y_j\geq0 )+\P(\<\bx_j-\bx_j',\bz\>\leq \<\bx_k-\bx_j',\bz\>+y_k-y_j\leq0\Big).   
+       &\leq
+      \frac{1}{\trunprob}\Big(\P(\<\bx_j-\bx_j',\bz\>\geq\<\bx_k-\bx_j',\bz\>+y_k-y_j\geq0 )+\P(\<\bx_j-\bx_j',\bz\>\leq \<\bx_k-\bx_j',\bz\>+y_k-y_j\leq0\Big).
 \end{align*}
 Note that conditioned on $\bx_j,\bx_j'$ we have
 \begin{align*}
@@ -727,20 +693,20 @@ Note that conditioned on $\bx_j,\bx_j'$ we have
     \\
     &\leq
      \frac{1}{\trunprob}\Big[\P\Big(\<\bx_k-\bx_j',\bz\>+y_k-y_j\in[-\|\bx_j-\bx_j'\|_2\sqrt{2\log(2/{\delta_1})},\|\bx_j-\bx_j'\|_2\sqrt{2\log(2/{\delta_1})}] \Big)+{\delta_1}\Big]\\
-     &\leq 
+     &\leq
     \frac{1}{\trunprob}[\sup_{A\in\cF,\mu(A)=2\|\bx_j-\bx_j'\|_2\sqrt{2\log(2/{\delta_1})}}\P(\<\bx_k-\bx_j',\bz\>\in A)+{\delta_1}]\\
-    &\leq 
+    &\leq
    \frac{1}{\trunprob}(\frac{2\|\bx_j-\bx_j'\|_2\sqrt{2\log(2/{\delta_1})}}{\sqrt{2\pi}\Trunregp}+{\delta_1})\leq \frac{1}{\trunprob}(\frac{2\|\bx_j-\bx_j'\|_2}{\Trunregp{\delta_1}}+{\delta_1})
 \end{align*}
-for any ${\delta_1}>0$, 
-where the last inequality follows from the fact that standard Gaussian has probability density less than $1/\sqrt{2\pi}$ everywhere,  $\|\bx_k-\bx_j'\|_2\leq \Trunregp$ and $\log(2/{\delta_1})\leq 4/{\delta_1}^2$. Choosing ${\delta_1}=1\wedge\sqrt{\frac{2\|\bx_j-\bx_j'\|_2}{\Trunregp}}$ gives 
+for any ${\delta_1}>0$,
+where the last inequality follows from the fact that standard Gaussian has probability density less than $1/\sqrt{2\pi}$ everywhere,  $\|\bx_k-\bx_j'\|_2\leq \Trunregp$ and $\log(2/{\delta_1})\leq 4/{\delta_1}^2$. Choosing ${\delta_1}=1\wedge\sqrt{\frac{2\|\bx_j-\bx_j'\|_2}{\Trunregp}}$ gives
 \begin{align*}
  &\quad |g_{k,\trunprob}(\bx_1,\ldots,\bx_j,\ldots,\bx_A,y_1,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots,\bx'_j,\ldots\bx_A,y_1,\ldots,y_A)|\\
- &\leq  
+ &\leq
   \frac{2}{\trunprob}\Big(\sqrt{\frac{2\|\bx_j-\bx_j'\|_2}{\Trunregp}}+\frac{2\|\bx_j-\bx_j'\|_2}{\Trunregp}\Big)
 \end{align*}
 
-Similarly, for $\bx_k\neq\bx_k'$, we have 
+Similarly, for $\bx_k\neq\bx_k'$, we have
 \begin{align*}
      &\quad|g_{k,\trunprob}(\bx_1,\ldots,\bx_k,\ldots,\bx_A,y_1,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots,\bx'_k,\ldots\bx_A,y_1,\ldots,y_A)|
         \\
@@ -752,28 +718,28 @@ Similarly, for $\bx_k\neq\bx_k'$, we have
     &\leq \frac{A}{\trunprob}\max_{i
     \neq k}\Big(\P(\<\bx_k-\bx_k',\bz\>\geq\<\bx_i-\bx_k',\bz\>+y_i-y_k\geq0 )+\P(\<\bx_k-\bx_k',\bz\>\leq \<\bx_i-\bx_k',\bz\>+y_i-y_k\leq0\Big).
 \end{align*}
-Following the same argument, we have 
+Following the same argument, we have
 \begin{align*}
 &\quad~|g_{k,\trunprob}(\bx_1,\ldots,\bx_k,\ldots,\bx_A,y_1,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots,\bx'_k,\ldots\bx_A,y_1,\ldots,y_A)|\\&\leq   \frac{2A}{\trunprob}\Big(\sqrt{\frac{2\|\bx_k-\bx_k'\|_2}{\Trunregp}}+\frac{2\|\bx_k-\bx_k'\|_2}{\Trunregp}\Big).
 \end{align*}
 
-Likewise, for any $j\neq k$ we have 
+Likewise, for any $j\neq k$ we have
 \begin{align*}
     &\quad|g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_j,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_j',\ldots,y_A)|\\
     &\leq
     \frac{1}{\Trunregp}
     \Big(\P( \<\bx_k-\bx_j,\bz\>\in[\min\{y_k-y_j,y_k-y_j'\},\max\{y_k-y_j,y_k-y_j'\}]\Big)\\
-      &\leq 
+      &\leq
       \frac{1}{\trunprob}\sup_{A\in\cF,\mu(A)=2|y_j-y_j'|}\P(\<\bx_k-\bx_j,\bz\>\in A)\\
       &\leq
-   \frac{1}{\trunprob}\frac{2|y_j-y_j'|}{\sqrt{2\pi}\Trunregp}\leq \frac{2|y_j-y_j'|}{\Trunregp\trunprob} 
+   \frac{1}{\trunprob}\frac{2|y_j-y_j'|}{\sqrt{2\pi}\Trunregp}\leq \frac{2|y_j-y_j'|}{\Trunregp\trunprob}
 \end{align*} and
 \begin{align*}
     &\quad|g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_k,\ldots,y_A)-g_{k,\trunprob}(\bx_1,\ldots,\bx_A,y_1,\ldots,y_k',\ldots,y_A)|\\
     &\leq
     \sum_{j\neq k}\frac{1}{\Trunregp}
     \Big(\P( \<\bx_k-\bx_j,\bz\>\in[\min\{y_k'-y_j,y_k-y_j\},\max\{y_k'-y_j,y_k-y_j\}]\Big)\\
-      &\leq 
+      &\leq
       \frac{A}{\trunprob}\sup_{A\in\cF,\mu(A)=2|y_j-y_j'|}\P(\<\bx_k-\bx_j,\bz\>\in A)\\
       &\leq
    \frac{A}{\trunprob}\frac{2|y_j-y_j'|}{\sqrt{2\pi}\Trunregp}\leq \frac{2A|y_j-y_j'|}{\Trunregp\trunprob}.
