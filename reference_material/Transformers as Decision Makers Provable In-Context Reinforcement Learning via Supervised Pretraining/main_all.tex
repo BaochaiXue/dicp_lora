@@ -4,38 +4,38 @@
 \usepackage{parskip}
 
 
-% \usepackage[utf8]{inputenc} % allow utf-8 input
-% \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 
-% \usepackage{times}
+
+
+
 \usepackage{parskip}
 \usepackage{subcaption}
-% \usepackage[font=small,labelfont=bf]{caption}
 
-% \newcommand\hmmax{0}
-% \newcommand\bmmax{0}
 
-%% Math
+
+
+
+
 \usepackage{amsmath}
 \usepackage{amsfonts,amscd,amssymb,bm,bbm,mathrsfs}
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{nicefrac}       
 \usepackage{amsthm}
 \usepackage{mathtools}
 
-% This package controls font of math
-% \usepackage{mathabx}
-% This package removes ~ space in equations
-% \usepackage{amsxtra}
 
-% Restate equation
-% Suggestion: use these commands inside aligned environment
+
+
+
+
+
+
 \newcommand\labelAndRemember[2]
-  {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
+  {\expandafter\gdef\csname labeled:#1\endcsname{#2}
    \label{#1}#2}
 \newcommand\recallLabel[1]
    {\csname labeled:#1\endcsname\tag{\ref{#1}}}
 \newcommand\labelr[2]
-  {\expandafter\gdef\csname labeled:#1\endcsname{#2}%
+  {\expandafter\gdef\csname labeled:#1\endcsname{#2}
    \label{#1}#2}
 \newcommand\recall[1]
    {\csname labeled:#1\endcsname}
@@ -43,20 +43,20 @@
 
 
 
-%% Algorithm
+
 \usepackage[algo2e,linesnumbered,vlined,ruled]{algorithm2e}
 \usepackage{algorithm}
 \usepackage[noend]{algorithmic}
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
 
-%% Basics
+
 \usepackage{url}
 \usepackage[breaklinks=true]{hyperref}
 \usepackage{breakcites}
-% \usepackage[usenames,dvipsnames]{color}
 
-% Commented for ICLR version
+
+
 \hypersetup{
   colorlinks,
   citecolor=blue!70!black,
@@ -75,8 +75,8 @@
 \crefformat{figure}{Figure #2#1#3}
 \Crefformat{figure}{Figure #2#1#3}
 
-%% Table
-\usepackage{booktabs}       % professional-quality tables
+
+\usepackage{booktabs}       
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{makecell}
@@ -87,58 +87,58 @@
 
 
 
-%% Display
-% \usepackage[usenames,dvipsnames]{color}
-% \usepackage[dvipsnames]{xcolor}
+
+
+
 \usepackage[normalem]{ulem}
 \usepackage{exscale}
 \usepackage{tikz}
 \usepackage{float}
 \usepackage{graphicx,graphics}
-% subfig}
+
 \graphicspath{ {./fig/} }
 \allowdisplaybreaks
 
-%% Theorems
-% \usepackage{chngcntr}
-% \usepackage{apptools}
-% \makeatletter
-% \def\thm@space@setup{\thm@preskip=3pt
-% \thm@postskip=0pt}
-% \makeatother
-% \newtheorem{theorem}{Theorem}
-% \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{corollary}[theorem]{Corollary}
-% \newtheorem{proposition}[theorem]{Proposition}
-% \newtheorem{definition}[theorem]{Definition}
-% \newtheorem{assumption}[theorem]{Assumption}
-% \theoremstyle{definition}
-% \newtheorem{remark}[theorem]{Remark}
-% \newtheorem{example}[theorem]{Example}
-
-% \AtAppendix{\theoremstyle{theorem}
-% \renewtheorem{lemma}{Lemma}[section]
-% \renewtheorem{corollary}{Corollary}[section]
-% \renewtheorem{proposition}{Proposition}[section]
-% \renewtheorem{definition}{Definition}[section]
-% \renewtheorem{assumption}{Assumption}[section]
-% \theoremstyle{definition}
-% \renewtheorem{remark}{Remark}[section]
-% \renewtheorem{example}{Example}[section]}
 
 
 
-%%% New theorem environment
-% Proof environments
-% The Theorems are numbered consecutively
-% Lemmas are numbered by section, and observations, claims, facts, and 
-% assumptions take their numbering. Propositions and definitions have their
-% own numbering by section.
-% \newtheorem{theorem}{Theorem}[section]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newtheorem{theorem}{Theorem}
 \newtheorem*{theorem*}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
-% \newtheorem{ass}{Assumption}[section]
+
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem*{remark*}{Remark}
 \newtheorem*{lemma*}{Lemma}
@@ -170,20 +170,20 @@
   \hspace*{1em}}{\qed\bigskip\\}
 \newenvironment{inner-proof}{\noindent{\bf Proof}\hspace{1em}}{
   $\bigtriangledown$\medskip\\}
-%% \newenvironment{proof-of-lemma}[1][{}]{\noindent{\bf Proof of Lemma {#1}}
-%%   \hspace*{1em}\renewcommand{\qedsymbol}{$\bigtriangledown$}}{\qed\bigskip\\}
+
+
 \newenvironment{proof-attempt}{\noindent{\bf Proof Attempt}
   \hspace*{1em}}{\qed\bigskip\\}
-%\newenvironment{proofof}[1]{\noindent{\bf Proof} of {#1}: \hspace*{1em}}{\qed\bigskip\\}
+
 \newenvironment{proofof}[1][{}]{\noindent{\bf Proof of \cref{#1}}
   \hspace*{1em}}{\qed\bigskip\\}
   
-% \theoremsymbol{\ensuremath{\square}}
-% \newtheorem{proof}{Proof}
-%restate
+
+
+
 \newenvironment{thmbis}[1]
-  {\renewcommand{\thetheorem}{\ref{#1}$'$}%
-   \addtocounter{theorem}{-1}%
+  {\renewcommand{\thetheorem}{\ref{#1}$'$}
+   \addtocounter{theorem}{-1}
    \begin{theorem}}
   {\end{theorem}}
 
@@ -192,26 +192,26 @@
 \newcommand{\revise}[1]{{\color{blue}#1}}
 \newcommand{\remove}[1]{{\color{Gray}\sout{#1}}}
       
-%% ------------------------------------------------
-%% ----------------Math symbols----------------
-%% ------------------------------------------------
+
+
+
 \renewcommand{\hat}{\widehat}
 \renewcommand{\bar}{\overline}
 \renewcommand{\epsilon}{\varepsilon}
 
 \usepackage{pifont}
-% \newcommand{\yes}{\checkmark}
+
 \newcommand{\no}{\ding{55}}
 \newcommand{\yes}{\ding{51}}
-%\newcommand{\id}{I}
+
 \newcommand{\id}{\bI}
 \newcommand{\tA}{\tilde{\mathcal{A}}} 
 \newcommand{\tC}{\tilde{C}}  
 \newcommand{\tX}{\tilde{X}}    
 \newcommand{\tZ}{\tilde{Z}} 
 \newcommand{\tM}{\tilde{M}}
-% \newcommand{\cL}{\mathcal{L}}
-% \newcommand{\cO}{\mathcal{O}}
+
+
 \newcommand{\nS}{|\mathcal{S}|}
 \newcommand{\nA}{|\mathcal{A}|}
 \newcommand{\RR}{\mathbb{R}}
@@ -221,26 +221,26 @@
 \newcommand{\hX}{X}
 \newcommand{\hY}{Y}
 \newcommand{\hZ}{Z}
-% \newcommand{\II}[1]{\mathbb{1}\left\{#1\right\}}
+
 \newcommand{\II}{\mathbb{I}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\PP}{\mathbb{P}}
 \newcommand{\QQ}{\mathbb{Q}}
 \newcommand{\VV}{\mathbb{V}}
 \newcommand{\DD}{\mathbb{D}}
-% set \cL \bL 
+
 \newcounter{cnt}
 \setcounter{cnt}{0}
-\foreach \num in {1,2,...,26}{%
-  \stepcounter{cnt}%
-  \expandafter\xdef \csname c\Alph{cnt}\endcsname {\noexpand\mathcal{\Alph{cnt}}}%
-  \expandafter\xdef \csname b\Alph{cnt}\endcsname {\noexpand\mathbb{\Alph{cnt}}}%
+\foreach \num in {1,2,...,26}{
+  \stepcounter{cnt}
+  \expandafter\xdef \csname c\Alph{cnt}\endcsname {\noexpand\mathcal{\Alph{cnt}}}
+  \expandafter\xdef \csname b\Alph{cnt}\endcsname {\noexpand\mathbb{\Alph{cnt}}}
 }
 \renewcommand{\bR}{\mathbf{R}}
 \newcommand{\br}{\mathbf{r}}
-%% ------------------------------------------------
-%% ----------------Mathrm----------------
-%% ------------------------------------------------
+
+
+
 \newcommand{\tr}{\mathrm{tr}}
 \newcommand{\im}{\operatorname{Im}}
 \newcommand{\ind}{\mathrm{1}}
@@ -271,7 +271,7 @@
 \newcommand{\iprod}[2]{\left\langle #1, #2 \right\rangle}
 \newcommand{\nrm}[1]{\left\|#1\right\|}
 \newcommand{\minop}[1]{\min\left\{#1\right\}}
-% \newcommand{\maxop}[1]{\max\left\{#1\right\}}
+
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\sqr}[1]{\left\|#1\right\|^2}
 \newcommand{\prob}[1]{\mathbb{P}\left(#1\right)}
@@ -280,7 +280,7 @@
 \newcommand{\condP}[2]{\mathbb{P}\left(\left.#1\right|#2\right)}
 \newcommand{\condV}[2]{\mathbb{V}\left[\left.#1\right|#2\right]}
 \newcommand{\bigO}[1]{\mathcal{O}\left(#1\right)}
-% \newcommand{\tbO}[1]{\tilde{\mathcal{O}}\left(#1\right)}
+
 \newcommand{\tbO}[1]{\widetilde{\mathcal{O}}\left(#1\right)}
 \newcommand{\tbbO}[1]{\tilde{\mathcal{O}}\big(#1\big)}
 \newcommand{\tbOm}[1]{\tilde{\Omega}\left(#1\right)}
@@ -288,18 +288,18 @@
 \newcommand{\ThO}[1]{\Theta\left(#1\right)}
 \newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
 \newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
-% \newcommand{\KL}[2]{\operatorname{KL}\left(\left.#1\right|\right)}
-\DeclarePairedDelimiterX{\ddiv}[2]{(}{)}{%
-  #1\;\delimsize\|\;#2%
+
+\DeclarePairedDelimiterX{\ddiv}[2]{(}{)}{
+  #1\;\delimsize\|\;#2
 }
 \newcommand{\KL}{\operatorname{KL}\ddiv}
-% \newcommand{\Dtwo}{\operatorname{D}_2\ddiv}
+
 \newcommand{\Dtwo}{\operatorname{D}_{\chi^2}\ddiv}
 \newcommand{\pos}[1]{\left[#1\right]_{+}}
-% \renewcommand{\neg}[1]{\left[#1\right]_{-}}
-% \newcommand{\Om}[1]{\Omega\left(#1\right)}
+
+
 \newcommand{\hnabla}{\widehat{\nabla}}
-% \newcommand{\TV}{\mathrm{TV}}
+
 \newcommand{\Unif}{\mathrm{Unif}}
 \newcommand{\Fil}{\mathfrak{F}}
 
@@ -307,46 +307,46 @@
 \newcommand{\condPt}[2]{\mathbb{P}_{\theta}\left(\left.#1\right|#2\right)}
 \newcommand{\condPb}[2]{\mathbb{P}_{\pi_b}\left(\left.#1\right|#2\right)}
 
-% Norms for convenience, along with sizes
-\newcommand{\norm}[1]{\left\|{#1}\right\|} % A norm with 1 argument
-\newcommand{\lone}[1]{\norm{#1}_1} % l1 norm
-\newcommand{\ltwo}[1]{\norm{#1}_2} % l2 norm
-\newcommand{\ltwop}[2]{\norm{#1}_{2,{#2}}} % l2p norm
+
+\newcommand{\norm}[1]{\left\|{#1}\right\|} 
+\newcommand{\lone}[1]{\norm{#1}_1} 
+\newcommand{\ltwo}[1]{\norm{#1}_2} 
+\newcommand{\ltwop}[2]{\norm{#1}_{2,{#2}}} 
 
 \newcommand{\lop}[1]{\norm{#1}_{\mathrm{op}}}
 \newcommand{\lops}[1]{\|{#1}\|_{\mathrm{op}}}
-\newcommand{\linf}[1]{\norm{#1}_\infty} % l-infinity norm
-\newcommand{\lzero}[1]{\norm{#1}_0} % l0 norm
-\newcommand{\dnorm}[1]{\norm{#1}_*} % Dual norm
-\newcommand{\lfro}[1]{\left\|{#1}\right\|_{\sf Fr}} % Frobenius norm
-\newcommand{\lnuc}[1]{\left\|{#1}\right\|_*} % Nuclear norm
+\newcommand{\linf}[1]{\norm{#1}_\infty} 
+\newcommand{\lzero}[1]{\norm{#1}_0} 
+\newcommand{\dnorm}[1]{\norm{#1}_*} 
+\newcommand{\lfro}[1]{\left\|{#1}\right\|_{\sf Fr}} 
+\newcommand{\lnuc}[1]{\left\|{#1}\right\|_*} 
 \newcommand{\matrixnorm}[1]{\left|\!\left|\!\left|{#1}
-  \right|\!\right|\!\right|} % Matrix norm with three bars
-\newcommand{\opnorm}[1]{\norm{#1}_{\rm op}} % Operator norm with three bars
-\newcommand{\normbigg}[1]{\bigg\|{#1}\bigg\|} % A norm with 1 argument and bigg
-                                              % brackets.
-\newcommand{\normbig}[1]{\big\|{#1}\big\|} % A norm with 1 argument and big
-                                           % brackets.
-\newcommand{\normBig}[1]{\Big\|{#1}\Big\|} % A norm with 1 argument and Big
-                                           % brackets
-\newcommand{\lonebigg}[1]{\normbigg{#1}_1} % l1 norm
-\newcommand{\ltwobigg}[1]{\normbigg{#1}_2} % l2 norm
-\newcommand{\ltwobig}[1]{\normbig{#1}_2} % l2 norm
-\newcommand{\ltwoBig}[1]{\normBig{#1}_2} % l2 norm
-\newcommand{\linfbigg}[1]{\normbigg{#1}_\infty} % l-infinity norm
-\newcommand{\norms}[1]{\|{#1}\|} % A norm with 1 argument and normal (small)
-\newcommand{\ltwopbigg}[2]{\normbigg{#1}_{2,{#2}}} % l2p norm
-\newcommand{\ltwopbig}[2]{\normbig{#1}_{2,{#2}}} % l2p norm
+  \right|\!\right|\!\right|} 
+\newcommand{\opnorm}[1]{\norm{#1}_{\rm op}} 
+\newcommand{\normbigg}[1]{\bigg\|{#1}\bigg\|} 
+                                              
+\newcommand{\normbig}[1]{\big\|{#1}\big\|} 
+                                           
+\newcommand{\normBig}[1]{\Big\|{#1}\Big\|} 
+                                           
+\newcommand{\lonebigg}[1]{\normbigg{#1}_1} 
+\newcommand{\ltwobigg}[1]{\normbigg{#1}_2} 
+\newcommand{\ltwobig}[1]{\normbig{#1}_2} 
+\newcommand{\ltwoBig}[1]{\normBig{#1}_2} 
+\newcommand{\linfbigg}[1]{\normbigg{#1}_\infty} 
+\newcommand{\norms}[1]{\|{#1}\|} 
+\newcommand{\ltwopbigg}[2]{\normbigg{#1}_{2,{#2}}} 
+\newcommand{\ltwopbig}[2]{\normbig{#1}_{2,{#2}}} 
 
 
-                                 % brackets.
-\newcommand{\matrixnorms}[1]{|\!|\!|{#1}|\!|\!|} % Small matrix norm
-\newcommand{\matrixnormbigg}[1]{\bigg|\!\bigg|\!\bigg|{#1}\bigg|\!\bigg|\!\bigg|} % Small matrix norm
-\newcommand{\lones}[1]{\norms{#1}_1} % l1 norm with small brackets
-\newcommand{\ltwos}[1]{\norms{#1}_2} % l2 norm with small brackets
+                                 
+\newcommand{\matrixnorms}[1]{|\!|\!|{#1}|\!|\!|} 
+\newcommand{\matrixnormbigg}[1]{\bigg|\!\bigg|\!\bigg|{#1}\bigg|\!\bigg|\!\bigg|} 
+\newcommand{\lones}[1]{\norms{#1}_1} 
+\newcommand{\ltwos}[1]{\norms{#1}_2} 
 \newcommand{\ltwob}[1]{\big\|#1\big\|_2}
-\newcommand{\linfs}[1]{\norms{#1}_\infty} % l-infinity norm with small brackets
-\newcommand{\lzeros}[1]{\norms{#1}_0} % l0 norm with small brackets
+\newcommand{\linfs}[1]{\norms{#1}_\infty} 
+\newcommand{\lzeros}[1]{\norms{#1}_0} 
 \newcommand{\lambdamax}[1]{\lambda_{\max}({#1})}
 \newcommand{\lambdamin}[1]{\lambda_{\min}({#1})}
 \newcommand{\vmax}[1]{v_{\max}({#1})}
@@ -355,12 +355,12 @@
 \renewcommand{\cO}{\mathcal{O}}
 \newcommand{\tO}{\widetilde{\cO}}
 \newcommand{\wt}{\widetilde}
-% \newcommand{\indic}[1]{\mathbf{1}\left\{#1\right\}} % Indicator function
-% \newcommand{\indic}[1]{1_{#1}}
+
+
 \newcommand{\indic}[1]{1\{#1\}}
-\newcommand{\indics}[1]{1\{#1\}} % Indicator function small
-% \newcommand{\bindic}[1]{\mathbf{1}\left\{#1\right\}} % Indicator
-% function
+\newcommand{\indics}[1]{1\{#1\}} 
+
+
 
 \newcommand{\<}{\left\langle}
 \renewcommand{\>}{\right\rangle}
@@ -387,7 +387,7 @@
  {\let\displaystyle\textstyle\csname align*\endcsname}
  {\endalign}
  
-%%%%%%%%%%%%%%%%%%%% Notation for transformers %%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \newcommand{\Hzero}{\bH^{(0)}}
 \newcommand{\bHzero}{\bH^{(0)}}
@@ -401,9 +401,9 @@
 \newcommand{\Lth}{{(L)}}
 \newcommand{\Lpth}{{(L+1)}}
 \newcommand{\zeroth}{{(0)}}
-% \newcommand{\sursf}{\widehat{\mathbf{\sigma}_{\rm S}}}
+
 \newcommand{\sursf}{\sigma}
-% \newcommand{\Attn}{\mathbf{Attn}}
+
 \newcommand{\Attn}{{\rm Attn}}
 \newcommand{\MAttn}{{\rm MAttn}}
 \newcommand{\AN}{{\rm AN}}
@@ -415,7 +415,7 @@
 \newcommand{\TFr}{{\rm TF}^{R}}
 \newcommand{\hatw}{\hat{w}}
 
-% \newcommand{\barsig}{\overline{\sigma}}
+
 \newcommand{\barsig}{\sigma}
 \newcommand{\Bh}{B_h}
 \newcommand{\Bv}{B_v}
@@ -463,7 +463,7 @@
 \newcommand{\Pin}{\mathsf{P}}
 \newcommand{\pin}{\mathsf{p}}
 
-% \newcommand{\ltwop}[1]{\nrm{#1}_{2,p}}
+
 \newcommand{\ltwoinf}[1]{\nrm{#1}_{2,\infty}}
 
 \renewcommand{\read}{{\sf read}}
@@ -528,11 +528,11 @@
 \newcommand{\out}{\mathrm{out}}
 \newcommand{\clog}{\iota}
 
-% \newcommand{\nrmp}[1]{\nrm{#1}_p}
+
 \newcommand{\tbh}{\wt{\bh}}
 \newcommand{\tbH}{\wt{\bh}}
 \newcommand{\bigabs}[1]{\big|#1\big|}
-% \cfn{change to op norm}
+
 
 \newcommand{\linkf}{g}
 \newcommand{\Clink}{L_g}
@@ -651,7 +651,7 @@
 \newcommand{\set}[1]{{\left\{ #1 \right\}}}
 \newcommand{\sets}[1]{{\{ #1 \}}}
 
-% Operator
+
 \newcommand{\defeq}{\mathrel{\mathop:}=}
 \newcommand{\eqdef}{=\mathrel{\mathop:}}
 \newcommand{\vect}[1]{\ensuremath{\mathbf{#1}}}
@@ -659,20 +659,20 @@
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\grad}{\nabla}
 \newcommand{\hess}{\nabla^2}
-% \newcommand{\argmin}{\mathop{\rm argmin}}
-% \newcommand{\argmax}{\mathop{\rm argmax}}
+
+
 \newcommand{\fracpar}[2]{\frac{\partial #1}{\partial  #2}}
-% \newcommand{\simiid}{{\sim_{\rm iid}}}
+
 \newcommand{\simiid}{\stackrel{\rm iid}{\sim}}
 
 \newcommand{\sigmin}{\sigma_{\min}}
-% \newcommand{\tr}{\mathrm{tr}}
+
 \renewcommand{\det}{\mathrm{det}}
 \newcommand{\rank}{\mathrm{rank}}
 \newcommand{\logdet}{\mathrm{logdet}}
 \newcommand{\trans}{^{\top}}
-% \newcommand{\diag}{\mathrm{diag}}
-% \newcommand{\poly}{\mathrm{poly}}
+
+
 \newcommand{\polylog}{\mathrm{polylog}}
 
 
@@ -687,15 +687,15 @@
 \newcommand{\Cov}{\mathrm{Cov}}
 
 
-% Big O
-% \newcommand{\cO}{\mathcal{O}}
+
+
 \newcommand{\tlO}{\mathcal{\tilde{O}}}
 \newcommand{\tlOmega}{\tilde{\Omega}}
 \newcommand{\tlTheta}{\tilde{\Theta}}
 
 
 
-% Set
+
 
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\N}{\mathbb{N}}
@@ -704,14 +704,14 @@
 \newcommand{\C}{\mathbb{C}}
 
 
-% Matrix and Vector
+
 
 \newcommand{\A}{\mat{A}}
 \newcommand{\B}{\mat{B}}
-% \newcommand{\Q}{\mat{Q}}
+
 
 \newcommand{\I}{\mat{I}}
-% \newcommand{\D}{\mat{D}}
+
 \newcommand{\U}{\mat{U}}
 \newcommand{\V}{\mat{V}}
 \newcommand{\W}{\mat{W}}
@@ -736,9 +736,9 @@
 \newcommand{\partc}{{c}}
 \newcommand{\partd}{{d}}
 \newcommand{\thres}{{R_0}}
-\newcommand{\lran}{{l_1}} %low range
-\newcommand{\uran}{{l_2}}  %up range
-\newcommand{\appr}{{\mathrm{approx}}}  %up range
+\newcommand{\lran}{{l_1}} 
+\newcommand{\uran}{{l_2}}  
+\newcommand{\appr}{{\mathrm{approx}}}  
 \newcommand{\inst}{{\mathsf{M}}} 
 \newcommand{\traj}{{\mathbf\tau}} 
 \newcommand{\trajsp}{{\mathcal{T}}}
@@ -758,19 +758,19 @@
 \newcommand{\sLinUCB}{{\mathrm{sLinUCB}}} 
 
 \newcommand{\temp}{{\tau}} 
-\newcommand{\optas}{{\ba}} %optimal actions
-\newcommand{\off}{{\mathrm{off}}} %optimal actions
+\newcommand{\optas}{{\ba}} 
+\newcommand{\off}{{\mathrm{off}}} 
 
 
-\newcommand{\cwid}{{\alpha}}  %width of the confidence set
-\newcommand{\alb}{{\mathrm{b_a}}}  %action lower bound
+\newcommand{\cwid}{{\alpha}}  
+\newcommand{\alb}{{\mathrm{b_a}}}  
 \newcommand{\Bern}{{\mathrm{Bern}}}
-% \newcommand{\B}{{\mathrm{B}}}
+
 \newcommand{\TS}{{\mathrm{TS}}}
 \newcommand{\ATS}{{\mathrm{ATS}}}
 
 \newcommand{\optaerr}{\eps_1} 
-\newcommand{\optaerrb}{\eps_2}%optimal action estimation error
+\newcommand{\optaerrb}{\eps_2}
 
 
 
@@ -778,8 +778,8 @@
 \newcommand{\Tpsmean}{{{\mathbf\mu}}}
 \newcommand{\Tpscov}{{{\mathbf\Sigma}}}
 \newcommand{\Tpssam}{{\tilde\bw}}
-\newcommand{\Tpspar}{{\lambda}}  % prior variance in TS
-\newcommand{\Tpsparn}{{r}} %noise variance in TS
+\newcommand{\Tpspar}{{\lambda}}  
+\newcommand{\Tpsparn}{{r}} 
 
 \newcommand{\trunprob}{{\eta_1}}
 \newcommand{\hpevent}{{\mathcal E}}
@@ -791,7 +791,7 @@
 \newcommand{\intmat}{{\mathbf {M}}}
 
 \newcommand{\Trunreg}{{D}}
-\newcommand{\Trunregpa}{{\eta_2}}  %fot the assumption
+\newcommand{\Trunregpa}{{\eta_2}}  
 
 \newcommand{\Trunregp}{{\eta}}
 \newcommand{\bigvec}{{\mathbf{v}}}
@@ -831,11 +831,11 @@
 \newcommand{\rewmodel}{{\mathbb R}}
 \newcommand{\state}{{s}}
 \newcommand{\action}{{a}}
-\newcommand{\eaction}{{\widebar{a}}}%expert action
+\newcommand{\eaction}{{\widebar{a}}}
 \newcommand{\reward}{{r}}
 \newcommand{\estreward}{{{r}}}
 
-\newcommand{\totlen}{{T}} %%total length
+\newcommand{\totlen}{{T}} 
 
 \newcommand{\cat}{{\tt cat}}
 \newcommand{\extractmap}{{\tt A}}
@@ -846,10 +846,10 @@
 \newcommand{\osAlg}{\overline{\mathsf{Alg}}}
 \newcommand{\osAlgt}{\overline{\mathsf{Alg}^t}}
 \newcommand{\Est}{{\rm Est}}
-%short alg
+
 \newcommand{\dset}{{D}}
-\newcommand{\adset}{{\widebar{D}}}  %all dataset
-\newcommand{\Numobs}{{n}}   %number of samples, not completed
+\newcommand{\adset}{{\widebar{D}}}  
+\newcommand{\Numobs}{{n}}   
 
 \newcommand{\Par}{{\theta}}
 \newcommand{\Parspace}{{\Theta}}
@@ -905,13 +905,13 @@
 \newcommand{\clipval}{{\mathsf{R}}}
 
 
-\newcommand{\tfmat}{{\bH}}  %matrices sent into TF
-\newcommand{\embd}{{D}}  %embedding dim
-\newcommand{\actnum}{{K}}  %number of actions
-\newcommand{\totreward}{{\mathfrak{R}}}  %total reward
+\newcommand{\tfmat}{{\bH}}  
+\newcommand{\embd}{{D}}  
+\newcommand{\actnum}{{K}}  
+\newcommand{\totreward}{{\mathfrak{R}}}  
 \newcommand{\genrewardb}{{\mathrm{R}}}
 \newcommand{\distratio}{{\mathcal{R}}}
-\newcommand{\tfthres}{{\mathsf{B}}}   %the threshold value in TF constructions.
+\newcommand{\tfthres}{{\mathsf{B}}}   
 
 \newcommand{\roll}{{\mathrm{roll}}}
 
@@ -921,7 +921,7 @@
 \newcommand{\Numvi}{{N}}
 \newcommand{\Qfun}{{Q}}
 \newcommand{\estQfun}{{\widehat{\Qfun}}}
-\newcommand{\trestQfun}{{\widehat{\Qfun}}} %true estimated fun
+\newcommand{\trestQfun}{{\widehat{\Qfun}}} 
 
 \newcommand{\Vfun}{{\valuefun}}
 \newcommand{\estVfun}{{\widehat{\Vfun}}}
@@ -967,7 +967,7 @@
 
 
 
-% Random variables
+
 \def\reta{{\textnormal{$\eta$}}}
 \def\ra{{\textnormal{a}}}
 \def\rb{{\textnormal{b}}}
@@ -981,7 +981,7 @@
 \def\rj{{\textnormal{j}}}
 \def\rk{{\textnormal{k}}}
 \def\rl{{\textnormal{l}}}
-% rm is already a command, just don't name any random variables m
+
 \def\rn{{\textnormal{n}}}
 \def\ro{{\textnormal{o}}}
 \def\rp{{\textnormal{p}}}
@@ -996,7 +996,7 @@
 \def\ry{{\textnormal{y}}}
 \def\rz{{\textnormal{z}}}
 
-% Random vectors
+
 \def\rvepsilon{{\mathbf{\epsilon}}}
 \def\rvtheta{{\mathbf{\theta}}}
 \def\rva{{\mathbf{a}}}
@@ -1026,7 +1026,7 @@
 \def\rvy{{\mathbf{y}}}
 \def\rvz{{\mathbf{z}}}
 
-% Elements of random vectors
+
 \def\erva{{\textnormal{a}}}
 \def\ervb{{\textnormal{b}}}
 \def\ervc{{\textnormal{c}}}
@@ -1054,7 +1054,7 @@
 \def\ervy{{\textnormal{y}}}
 \def\ervz{{\textnormal{z}}}
 
-% Random matrices
+
 \def\rmA{{\mathbf{A}}}
 \def\rmB{{\mathbf{B}}}
 \def\rmC{{\mathbf{C}}}
@@ -1082,7 +1082,7 @@
 \def\rmY{{\mathbf{Y}}}
 \def\rmZ{{\mathbf{Z}}}
 
-% Elements of random matrices
+
 \def\ermA{{\textnormal{A}}}
 \def\ermB{{\textnormal{B}}}
 \def\ermC{{\textnormal{C}}}
@@ -1110,7 +1110,7 @@
 \def\ermY{{\textnormal{Y}}}
 \def\ermZ{{\textnormal{Z}}}
 
-% Vectors
+
 \def\vzero{{\bm{0}}}
 \def\vone{{\bm{1}}}
 \def\vmu{{\bm{\mu}}}
@@ -1142,7 +1142,7 @@
 \def\vy{{\bm{y}}}
 \def\vz{{\bm{z}}}
 
-% Elements of vectors
+
 \def\evalpha{{\alpha}}
 \def\evbeta{{\beta}}
 \def\evepsilon{{\epsilon}}
@@ -1179,7 +1179,7 @@
 \def\evy{{y}}
 \def\evz{{z}}
 
-% Matrix
+
 \def\mA{{\bm{A}}}
 \def\mB{{\bm{B}}}
 \def\mC{{\bm{C}}}
@@ -1211,39 +1211,39 @@
 \def\mLambda{{\bm{\Lambda}}}
 \def\mSigma{{\bm{\Sigma}}}
 
-% Tensor
-% \DeclareMathAlphabet{\mathsfit}{\encodingdefault}{\sfdefault}{m}{sl}
-% \SetMathAlphabet{\mathsfit}{bold}{\encodingdefault}{\sfdefault}{bx}{n}
-% \newcommand{\tens}[1]{\bm{\mathsfit{#1}}}
-% \def\tA{{\tens{A}}}
-% \def\tB{{\tens{B}}}
-% \def\tC{{\tens{C}}}
-% \def\tD{{\tens{D}}}
-% \def\tE{{\tens{E}}}
-% \def\tF{{\tens{F}}}
-% \def\tG{{\tens{G}}}
-% \def\tH{{\tens{H}}}
-% \def\tI{{\tens{I}}}
-% \def\tJ{{\tens{J}}}
-% \def\tK{{\tens{K}}}
-% \def\tL{{\tens{L}}}
-% \def\tM{{\tens{M}}}
-% \def\tN{{\tens{N}}}
-% \def\tO{{\tens{O}}}
-% \def\tP{{\tens{P}}}
-% \def\tQ{{\tens{Q}}}
-% \def\tR{{\tens{R}}}
-% \def\tS{{\tens{S}}}
-% \def\tT{{\tens{T}}}
-% \def\tU{{\tens{U}}}
-% \def\tV{{\tens{V}}}
-% \def\tW{{\tens{W}}}
-% \def\tX{{\tens{X}}}
-% \def\tY{{\tens{Y}}}
-% \def\tZ{{\tens{Z}}}
 
 
-% Graph
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \def\gA{{\mathcal{A}}}
 \def\gB{{\mathcal{B}}}
 \def\gC{{\mathcal{C}}}
@@ -1271,13 +1271,13 @@
 \def\gY{{\mathcal{Y}}}
 \def\gZ{{\mathcal{Z}}}
 
-% Sets
+
 \def\sA{{\mathbb{A}}}
 \def\sB{{\mathbb{B}}}
 \def\sC{{\mathbb{C}}}
 \def\sD{{\mathbb{D}}}
-% Don't use a set called E, because this would be the same as our symbol
-% for expectation.
+
+
 \def\sF{{\mathbb{F}}}
 \def\sG{{\mathbb{G}}}
 \def\sH{{\mathbb{H}}}
@@ -1300,7 +1300,7 @@
 \def\sY{{\mathbb{Y}}}
 \def\sZ{{\mathbb{Z}}}
 
-% Entries of a matrix
+
 \def\emLambda{{\Lambda}}
 \def\emA{{A}}
 \def\emB{{B}}
@@ -1330,8 +1330,8 @@
 \def\emZ{{Z}}
 \def\emSigma{{\Sigma}}
 
-% entries of a tensor
-% Same font as tensor, without \bm wrapper
+
+
 \newcommand{\etens}[1]{\mathsfit{#1}}
 \def\etLambda{{\etens{\Lambda}}}
 \def\etA{{\etens{A}}}
@@ -1361,8 +1361,8 @@
 \def\etY{{\etens{Y}}}
 \def\etZ{{\etens{Z}}}
 
-% Bold and mathcal symbols
-% capital letters
+
+
 \def\bDelta{{\mathbf \Delta}}
 \def\bSigma{{\mathbf \Sigma}}
 \def\bA{{\mathbf A}}
@@ -1382,10 +1382,10 @@
 \def\bX{{\mathbf X}}
 \def\bZ{{\mathbf Z}}
 
-% small letters
+
 \def\balpha{{\boldsymbol \alpha}}
 \def\bbeta{{\boldsymbol \beta}}
-% \def\bbeta{\bw_\star}
+
 \def\bsigma{{\boldsymbol \sigma}}
 \def\btheta{{\boldsymbol \theta}}
 \def\beps{{\boldsymbol \eps}}
@@ -1432,7 +1432,7 @@
   Song Mei\thanks{UC Berkeley. Email: \texttt{songmei@berkeley.edu}}\hspace{.35em}\thanks{Equal contribution.}
 }
 
-\def\shownotes{0}  %set 1 to show author notes
+\def\shownotes{0}  
 \ifnum\shownotes=1
 \newcommand{\authnote}[2]{{\scriptsize $\ll$\textsf{#1 notes: #2}$\gg$}}
 \else
@@ -1455,7 +1455,7 @@
 
 
 \begin{abstract}
-% In this project, we study using transformers to implement online bandit algorithms, with potential generalization to offline bandit and RL settings. 
+
 
 
 
@@ -1463,68 +1463,68 @@ Large transformer models pretrained on offline reinforcement learning datasets h
 This paper provides a theoretical framework that analyzes supervised pretraining for ICRL. This includes two recently proposed training methods --- algorithm distillation and decision-pretrained transformers. First, assuming model realizability, we prove the supervised-pretrained transformer will imitate the conditional expectation of the expert algorithm given the observed trajectory. The generalization error will scale with model capacity and a distribution divergence factor between the expert and offline algorithms. Second, we show transformers with ReLU attention can efficiently approximate near-optimal online reinforcement learning algorithms like LinUCB and Thompson sampling for stochastic linear bandits, and UCB-VI for tabular Markov decision processes. This provides the first quantitative analysis of the ICRL capabilities of transformers pretrained from offline trajectories. 
 
 
-% This paper theoretically investigates the supervised-pretraining approach that trains a transformer to predict an expert action given a query state and interaction trajectories. 
 
 
-% In this paper, we provide a theoretical study of using transformers for in-context reinforcement learning (ICRL) with supervised pretraining. We show transformers can be used to implement online bandit algorithms like LinUCB, Thompson sampling, and UCB-VI. Our unified framework demonstrates supervised pretraining enables finding transformers that achieve competitive regret guarantees compared to expert algorithms.
 
-% Specifically, we formally characterize regret bounds and transformer constructions when pretraining on different sources of expert actions, including algorithm distillation, optimal actions, and approximate optimal actions. Our analysis subsumes prior empirical works on algorithm distillation and decision transformer pretraining under a common theoretical lens.
 
-% Overall, our results deliver fundamental insights on when and how supervised pretraining allows transformers to learn ICRL algorithms. We provide the first statistical and computational guarantees for using transformers as parametric decision makers that can efficiently adapt online in reinforcement learning contexts.
+
+
+
+
 \end{abstract}
-% \input{Sections/plans.tex}
+
 \section{Introduction}
 
-% \begin{itemize}[leftmargin=1.5em]
-%     \item We theoretically show that transformers can do reinforcement learning in-context.~\yub{both statistical results and TF constructions are new. Previous paper (DPT) only analyzes minimizers under idealized assumptions.}
-%     \item Namely, we prove that there exist TFs that can approximately implement LinUCB, Thompson sampling under the linear bandit setting (and maybe UCBVI under the MDP setting).
-%     \item We use supervised pretraining (imitation learning) to find the TF. This idea appears in previous empirical works~\cite{laskin2022context,lee2023supervised}. \yub{Our statistical framework provides a unified framework that subsumes both AD and DPT.}
-%     \yub{Can we say something about drawback of reward objective (instead of imitation)?}
-%     \item We provide regret guarantees for the algorithm generated by the TF obtained vis supervised pretraining.
-% \end{itemize}
 
-The transformer architecture~\citep{vaswani2017attention} for sequence modeling has become a key weapon for modern artificial intelligence, achieving success in language~\citep{devlin2018bert,brown2020language,openai2023gpt} and vision~\citep{dosovitskiy2020image}. Motivated by these advances, the research community has actively explored how to best harness transformers for reinforcement learning (RL)~\citep{chen2021decision, janner2021offline, lee2022multi, reed2022generalist, laskin2022context, lee2023supervised,yang2023foundation}. While promising empirical results have been demonstrated, the theoretical understanding of transformers for RL remains limited. %\sm{deleted last sentence} Even fundamental questions such as \emph{approximation capabilities} (what algorithms in RL can be approximated by transformers) and \emph{sample efficiency} (how many samples are needed for training) remain largely open. 
 
-%% Yu's original paragraph
-% The transformer architecture~\citep{vaswani2017attention} for sequence modeling has become a key weapon for modern artificial intelligence. Motivated by their success in modalities such as language~\citep{devlin2018bert,brown2020language,openai2023gpt} and vision~\citep{dosovitskiy2020image}, how to best unleash their power for Reinforcement Learning (RL) has become an active research area, where various approaches have been proposed~\citep{chen2021decision, janner2021offline, lee2022multi, reed2022generalist, laskin2022context, lee2023supervised,yang2023foundation}. Despite promising empirical results, theoretical understandings on how to use transformers to do RL are still lacking---Even fundamental questions such as \emph{approximation} (what sequence-to-sequence functions in RL can be approximated by transformers) and \emph{statistical efficiency} (how many samples are needed to train such a transformer) remain largely open.
+
+
+
+
+
+
+The transformer architecture~\citep{vaswani2017attention} for sequence modeling has become a key weapon for modern artificial intelligence, achieving success in language~\citep{devlin2018bert,brown2020language,openai2023gpt} and vision~\citep{dosovitskiy2020image}. Motivated by these advances, the research community has actively explored how to best harness transformers for reinforcement learning (RL)~\citep{chen2021decision, janner2021offline, lee2022multi, reed2022generalist, laskin2022context, lee2023supervised,yang2023foundation}. While promising empirical results have been demonstrated, the theoretical understanding of transformers for RL remains limited. 
+
+
+
 
 
 This paper provides theoretical insights into in-context reinforcement learning (ICRL)---an emerging approach that utilizes sequence-to-sequence models like transformers to perform reinforcement learning in newly encountered environments. In ICRL, the model takes as input the current state and past interaction history with the environment (the \emph{context}), and outputs an action. The key hypothesis in ICRL is that pretrained transformers can act as \emph{RL algorithms}, progressively improving their policy based on past observations. Approaches such as Algorithm Distillation \citep{laskin2022context} and Decision-Pretrained Transformers \citep{lee2023supervised} have demonstrated early successes, finding that \emph{supervised pretraining} can produce good ICRL performance. However, many concrete theoretical questions remain open about the ICRL capabilities of transformers, including but not limited to (1) what RL algorithms can transformers implement in-context; (2) what performance guarantees (e.g. regret bounds) can such transformers achieve when used iteratively as an online RL algorithm; and (3) when can supervised pretraining find such a good transformer. Specifically, this paper investigates the following open question:
 \begin{center}
 \emph{How can supervised pretraining on Transformers learn in-context reinforcement learning?}
 \end{center}
-% \yub{TODO: polish this question} \sm{changed "when" to "how"}
-
-
-%% Yu's original paragraph
-% This paper tackles this important open question in the scope of in-context reinforcement learning (ICRL)---An emerging approach for using sequence-to-sequence models (such as transformers) to perform RL in newly encountered environments. In ICRL, the model takes in the current state and past interaction history with the environment (the \emph{context}), and outputs an action. The underlying hypothesis in ICRL is that pretrained transformers can act as \emph{RL algorithms} that progressively improve their policy based on past observations. Approaches like Algorithm Distillation \citep{laskin2022context} and Decision-Pretrained Transformers \citep{lee2023supervised} demonstrated early successes in ICRL; in particular,  they find that \emph{supervised pretraining} can find transformers that perform good ICRL. However, many concrete theoretical questions remain open about the ICRL capabilities of transformers, including and not limited to (1) what RL algorithms can transformers implement in-context; (2) what performance guarantees (e.g. regret) can such transformers achieve when used iteratively as an online RL algorithm; and (3) when can supervised pretraining find such a good transformer. These motivate the following question:
-% \begin{center}
-% \emph{How can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
 
 
 
 
-% Concretely, in ICRL, the transformer takes in a current state as well as a sequence of past interactions with an environment (such as a bandit or an MDP), which we call the \emph{context}, and is required to output an action. These approaches include the algorithm distillation (AD) approach \citep{laskin2022context} and decision-pretrained transformers (DPT) \citep{lee2023supervised} which demonstrated early successes. Specifically, these works find \emph{supervised pretraining} works well in finding good ICRL transformers. However, a more fundamental understanding is lacking of (1) what ICRL algorithms can the transformer architecture implement, (2) what regret guarantees they can obtain, and (3) when supervised pretraining works in finding such transformers. This motivates the following open question:
-% \begin{center}
-% \emph{When can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
 
 
 
-% \yub{Finding expressive models for sequential decision making problems, such as RL, has been a central challenge, with modern architectures involving neural nets obtaining many successes.}~\yub{Sequence models, such as transformers for RL has been explored more recently (cite DT, AD, DPT, and also the review papers for FMDM).}~\yub{Despite the progress, how to best utilize sequence models to do powerful RL remains not well-understood in theory, and is still an active research area.}
-
-% \yub{NOTE: There are two motivations for ICRL with sequence models: 1. find good architectures for decision making; 2. learn a model to do fast adaptation to new tasks (e.g. meta-RL~\citep{wang2016learning}). Right now, I am using 1 to motivate, but 2 may be a more concrete objective.}
-
-% % ~\yub{The basic premise is that sequence models / Transformers can express more sophisticated target functions than their non-sequence counterparts.}
-
-% \yub{A recent line of work proposes to use Transformers to do in-context reinforcement learning (ICRL), in which case TF aims to play in an unseen environment based on a handful of interations with this environment.} \yub{Concretely, in ICRL, the transformer takes in a current state as well as a sequence of past interactions with an environment (such as a bandit or an MDP) which we call the \emph{context}, and is required to output an action.}~\yub{This approach (ICRL) has been recently studied in the works of AD and DPT who showed some early success...}~\yub{Specifically, they find \emph{supervised pretraining} works well in finding such TFs.}~\yub{and they establish some preliminary theory such as such as connections to PS (maybe not needed)}~\yub{\textbf{However, a more fundamental understanding is lacking on (1) what ICRL algorithms can the transformer architecture implement, (2) what guarantees (e.g. regret) can they obtain, and (3) when supervised pretraining works in finding such transformers.}} This motivates the following open question:
-% \begin{center}
-% \emph{When can supervised pretraining on Transformers learn in-context reinforcement learning?}
-% \end{center}
 
 
-In this paper, we initiate a theoretical study of the ICRL capability of transformers under supervised pretraining to address the open questions outlined above. We show that (1) Transformers can implement prevalent RL algorithms, including LinUCB and Thompson sampling for stochastic linear bandits, and UCB-VI for tabular Markov decision processes; (2) The algorithms learned by transformers achieve near-optimal regret bounds in their respective settings; (3) Supervised pretraining find such algorithms as long as the sample size scales with the covering number of transformer class and distribution ratio between expert and offline algorithms. %\lc{offline or context algorithm?}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In this paper, we initiate a theoretical study of the ICRL capability of transformers under supervised pretraining to address the open questions outlined above. We show that (1) Transformers can implement prevalent RL algorithms, including LinUCB and Thompson sampling for stochastic linear bandits, and UCB-VI for tabular Markov decision processes; (2) The algorithms learned by transformers achieve near-optimal regret bounds in their respective settings; (3) Supervised pretraining find such algorithms as long as the sample size scales with the covering number of transformer class and distribution ratio between expert and offline algorithms. 
 
 \paragraph{Summary of contributions and paper outline}
 \begin{itemize}[leftmargin=1.5em]
@@ -1535,24 +1535,24 @@ In this paper, we initiate a theoretical study of the ICRL capability of transfo
 \item Preliminary experiments validate that transformers can perform ICRL in our setup (Section~\ref{sec:experiments}).
 \item Technically, we prove efficient approximation of LinUCB by showing transformers can implement accelerated gradient descent for solving ridge regression (\cref{sec:pf_thm:approx_smooth_linucb}), enabling fewer attention layers than the vanilla gradient descent approach in \cite{bai2023transformers}. To enable efficient Thompson sampling implementation, we prove transformers can compute matrix square roots through the Pade decomposition (\cref{sec:pf_thm:approx_thompson_linear-formal}). These approximation results are interesting in their own right. 
 \end{itemize}
-% \yub{We have two main contributions, transformers and statistical framework. In main sections, we do statistical framework first. In contribution list here, shall we reverse the order and state TF first? (TF can do LinUCB)}
-% \sm{Experiments? }~\yub{added}
 
-% \paragraph{Related work} Our work is intimately related to the lines of work on meta-reinforcement learning, in-context learning, transformers for decision-making, and the approximation theory of transformers. Due to limited space, we discuss these related works in~\cref {sec:related-work}.
 
-% \begin{itemize}
-%     \item Framework (supervised pretraining; context algorithm, expert algorithm), instantiation to bandit and MDP. 
+
+
+
+
+
     
-%     \item Algorithm (MLE) and statistical results. Variations (source of the expert algorithm). Talk about application to both bandit and MDP.
-%     \yub{Maybe connections to imitation learning.}
+
+
     
-%     \item Transformer constructions (bandit, MDP).
 
-%     \yub{We have two main contributions, transformers and statistical framework. In main sections, we do statistical framework first. In contribution list here, shall we reverse the order and state TF first? (TF can do LinUCB)}
-%     \item Experiments.
 
-%     \sm{Approximation: AGD, matrix square root. }
-% \end{itemize}
+
+
+
+
+
 
 \subsection{Related work}\label{sec:related-work}
 
@@ -1580,25 +1580,25 @@ zhang2023trained, ahn2023transformers, raventos2023pretraining}. In particular, 
 
 
 
-% \sm{Add} \lc{add "throughout the proof, we assume the small probability $\delta_0,\delta<1/2$" to somewhere in the paper.}
 
 
 
-% \begin{itemize}
-% \item Meta-learning: \cite{schmidhuber1987evolutionary, schmidhuber1992learning, bengio1990learning, naik1992meta, ishii2002control, schaul2010metalearning, thrun2012learning}. Reward maximization Meta-RL: \cite{wang2016learning}, \cite{duan2016rl}. Hyperparameter Meta-RL: \cite{hochreiter2001learning}, \cite{finn2017model}, \cite{nichol2018first}. Offline meta-RL \cite{dorfman2021offline}, \cite{mitchell2021offline}, \cite{li2020focal}, \cite{pong2022offline}. AD: \cite{laskin2022context}, DPT: \cite{lee2023supervised}. 
 
-% \item ICL: \cite{brown2020language}, \cite{garg2022can}, \cite{von2023transformers}, \cite{li2023transformers}, \cite{akyurek2022learning}, \cite{xie2021explanation}. \cite{bai2023transformers}, \cite{zhang2023trained}, \cite{ahn2023transformers}, \cite{xie2021explanation}. 
 
-% \item Transformers for DM: \cite{chen2021decision}, \cite{janner2021offline}, \cite{lee2022multi}, \cite{reed2022generalist}, \cite{brohan2022rt}, \cite{shafiullah2022behavior}. \cite{yang2023foundation}, \cite{yang2022dichotomy}, \cite{brandfonbrener2022does}. 
-% \item Imitation learning: \cite{rajaraman2020toward, rashidinejad2021bridging}. Meta-RL theory \cite{wang2020global}. \sm{More imitation learning literature? }
-% \end{itemize}
+
+
+
+
+
+
+
 
 
 \section{Framework for In-Context Reinforcement Learning}\label{sec:framework}
 
-% \yub{should this section be actually our contribution instead of prelim? (since we subsume AD and DPT) If so, we can remove ``prelim'' in title, and attract more attention to this section.}
 
-% \paragraph{Decision making environment} 
+
+
 
 
 Let $\cM$ be the space of decision-making environments, where each environment $\inst \in \cM$ shares the same number of rounds $\totlen$ and state-action-reward spaces $\{ \statesp_t,  \actionsp_t, \rewardsp_t \}_{t \in [\totlen]}$. Each $\inst = \{\transmodel_\inst^{t-1}, \rewmodel_\inst^t \}_{t \in [\totlen]}$ has its own transition model $\transmodel_\inst^t: \statesp_{t} \times \actionsp_{t} \to \Delta(\statesp_{t+1})$ (with $\statesp_0$, $\actionsp_0 = \{ \emptyset \}$ so $\transmodel_\inst^0(\cdot) \in \Delta(\statesp_1)$ gives the initial state distribution) and reward functions $\rewmodel_\inst^{t}: \statesp_{t} \times \actionsp_{t} \to \Delta(\rewardsp_t)$. We equip $\cM$ with a distribution $\prior \in \Delta(\cM)$, the environment prior. While this setting is general, we later give concrete examples taking $\cM$ as $\totlen$ rounds of bandits or $K$ episodes of $H$-step MDPs with $\totlen = K H$. 
@@ -1608,14 +1608,14 @@ Let $\cM$ be the space of decision-making environments, where each environment $
 \textstyle \P_{\inst}^{\sAlg}(\dset_\totlen) =
 \prod_{t=1}^{\totlen}\transmodel_{\inst}^{t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \sAlg(\action_t|\dset_{t-1},\state_t)\rewmodel_{\inst}^t(\reward_t|\state_t,\action_t).
 \end{align*}
-% \lc{introduce $\transmodel^0_\inst$ ($\state_1\sim\init$).} \sm{I added a parathesis in the paragraph above}
+
 In supervised pretraining, we use a \textit{context algorithm} $\sAlg_0$ (which we also refer to as the offline algorithm) to collect the offline trajectories $\dset_\totlen$. For each trajectory $\dset_\totlen$, we also assume access to expert actions $\eaction = ( \eaction_t \in \actionsp_t )_{t \in \totlen} \sim \sAlg_{\shortexp}(\cdot | \dset_\totlen, \inst)$, sampled from an expert algorithm $\sAlg_{\shortexp}: \trajsp_\totlen \times \inst \to \prod_{t \in [\totlen]} \Delta(\actionsp_t)$. This expert could omnisciently observe the full trajectory $\dset_\totlen$ and environment $\inst$ to recommend actions. Let $\adset_\totlen = \dset_\totlen \cup \{ \eaction \}$ be the augmented trajectory. Then we have
 \begin{align*}
 \textstyle \P^{\sAlg_0,\sAlg_{\shortexp}}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_{\shortexp}^t (\eaction_t|\dset_{\totlen},\inst).
 \end{align*}
 We denote $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ as the joint distribution of $(\inst,\adset_\totlen)$ where $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\shortexp}_{\inst}$, and $\P^{\sAlg_0}_{\prior}$ as the joint distribution of $(\inst,\dset_\totlen)$ where $\inst \sim \prior$ and $\dset_\totlen \sim \P^{\sAlg_0}_{\inst}$. 
 
-% When the actions $\eaction = \{ \eaction_t \in \actionsp_t \}_{t \in \totlen} \sim \prod_{t = 1}^T \sAlg_\Par^t( \cdot | \trajsp_{t-1}, \state_t)$ are sampled from algorithms of transformers $\sAlg_\Par$, we write $\P^{\sAlg_0,\sAlg_\Par}_{\inst}(\adset_\totlen)=\P^{\sAlg_0}_{\inst}(\dset_\totlen)\prod_{t=1}^\totlen \sAlg_\Par^t (\eaction_t|\trajsp_{t-1}, \state_t )$. We further denote $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$ to be the joint distribution of $(\inst,\adset_\totlen)$ when $\inst \sim \prior$ and $\adset_\totlen \sim \P^{\sAlg_0,\sAlg_\Par}_{\inst}$, and define $\P^{\sAlg_0}_{\prior}$ and $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ similarly. 
+
 
 
 \paragraph{Three special cases of expert algorithms} We consider three special cases of the expert algorithm $\sAlg_{\shortexp}$, corresponding to three supervised pretraining setups:
@@ -1626,10 +1626,10 @@ We denote $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}$ as the joint distribution of $
 \end{itemize}  
 For any expert algorithm $\sAlg_{\shortexp}$, we define its reduced algorithm where the $t$-th step is $$\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t) := \E_\prior^{\sAlg_0}[\sAlg_{\shortexp}^t(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t].$$ The expectation on the right is over $\P_{\prior}^{\sAlg_0} ( \dset_\totlen, \inst |\dset_{t-1},\state_t) =\prior(\inst) \cdot \P_\inst^{\sAlg_0}(\dset_\totlen) / \P_\inst^{\sAlg_0}(\dset_{t-1},\state_t).$ Note that the reduced expert algorithm $\osAlg_{\shortexp}$ generally depends on the context algorithm $\sAlg_0$. However, for cases (a) and (b), $\osAlg_{\shortexp}$ is independent of the context algorithm $\sAlg_0$. Furthermore, in case (a), we have $\osAlg_{\shortexp}^t = \sAlg_{\shortexp}^t$. 
 
-% When $\inst$ is generated from the prior distribution $\prior$, we denote the joint distribution of $(\inst,\dset_\totlen,\eaction)$  as $\P_{\prior}^{\sAlg_0,\sAlg_\Par}$. We define $\P^{\sAlg_0}_{\prior}(\inst,\dset_\totlen)$, $\P^{\sAlg_0,\sAlg_\shortexp}_{\prior}(\inst,\dset_\totlen,\eaction)$ in a similar way. We use the same notation for the joint distribution and its marginal distribution when there is no confusion, for example, $\P_\prior^{\sAlg_0,\sAlg_\Par}(\dset_\totlen,\eaction)$ denotes the marginal distribution of  $(\dset_\totlen,\eaction)$ in the distribution $\P_\prior^{\sAlg_0,\sAlg_\Par}(\inst,\dset_\totlen,\eaction)$. 
 
 
-% In addition, if the expert algorithm coincides with the algorithm used to collect the trajectory $\sAlg_{\shortexp}=\sAlg_0$, we may simply set $\eaction_t=\action_t$ to avoid sampling twice. 
+
+
 
 \begin{comment}
 \sm{I will start from here.}
@@ -1647,7 +1647,7 @@ $\P^s_{\inst,t}(\cdot|\state_t,\action_t)$. To sum up, we have (denoting $\P^s_{
 \begin{align*}
 \P_{\inst}^{\sAlg_0}(\dset_\totlen) =
 \prod_{t=1}^{\totlen}\P^s_{\inst,t-1}(\state_{t}|\state_{t-1},\action_{t-1}) \P_{\inst,t}^{\sAlg_0}(\action_t|\dset_{t-1},\state_t)\P^r_{\inst,t}(\reward_t|\state_t,\action_t).
-% \P_{\inst,0}(\state_1) \Big[\prod_{t=1}^{\totlen-1}\P_{\inst,t}^{\sAlg_0}(\action_t|\dset_{t-1},\state_t)\P_{\inst,t}(\reward_t|\state_t,\action_t)\P_{\inst,t}(\state_{t+1}|\state_{t},\action_t)\Big]\P_{\inst,\totlen}^{\sAlg_0}(\action_\totlen|\dset_{\totlen-1},\state_\totlen)\P_{\inst,\totlen}(\reward_\totlen|\state_\totlen,\action_\totlen).
+
 \end{align*}
 \item In addition to the interaction trajectory, at each step $t\geq 1$, an action $\eaction_t\in\actionsp_t$ is also generated from an expert algorithm (policy) $\sAlg_{\shortexp}$ with probability $\P^{\sAlg_{\shortexp}}_{\inst,t}(\cdot|\dset_{\totlen},\inst)$. Some special cases we consider are 
 \begin{itemize}
@@ -1716,115 +1716,115 @@ Given a problem instance $\inst$, let $\P^{\sAlg_0,\sAlg_\Par}_{\inst}$ denotes 
 
 
 
-% \subsection{MDPs}
-
-% \yub{Old framework below.}
-
-% Data collection protocol for sampling a pretraining dataset $\Db$:
-% \begin{itemize}
-% \item Receive MDP instance $M\sim \Lambda$. The learner does not observe $M$.
-% \item Sample interaction history (in-context dataset) $D = (\tau^1, \dots, \tau^T)$ from some distribution $\P^{\Alg_0}_M(D)$, where each $\tau^t=(s^t_1,a^t_1,r^t_1,\dots,s^t_H,a^t_H,r^t_H)$ is a trajectory from the MDP. This distribution admits the decomposition
-% \begin{align*}
-%     & \P^{\Alg_0}_M(D) = \prod_{t=1}^T \P_M(\tau^t) \paren{ \prod_{h=1}^H \Alg_0(a^t_h | s^t_h; \tau^t_{1:h-1}, D^{1:t-1}) }, \quad {\rm where} \\
-%     & \P_M(\tau^t) = \prod_{h=1}^H \P_{M,h}(s^t_h|s^t_{h-1}, a^t_{h-1}) \RR_{M,h}(r^t_h | s^t_h, a^t_h).
-% \end{align*}
-% In typical cases where $\Alg_0$ predetermines a \emph{policy} $\pi^t\in\Pi$ before the $t$-th episode starts, we have (assuming $\pi^t$ is a Markov policy)
-% \begin{align*}
-%     \Alg_0(a^t_h | s^t_h; \tau^t_{1:h-1}, D^{1:t-1}) = \sum_{\pi^t\in\Pi} \Alg_0(\pi^t|D^{1:t-1}) \pi^t_h(a_h^t|s_h^t).
-% \end{align*}
-
-% \item Receive an ``expert action'' $\ab^t_h$ for each $(t,h)\in[T]\times[H]$:
-% \begin{itemize}
-%     \item (Option 1: Imitation) $\ab^t_h=(\ae_h)^t \sim \AlgE(\cdot | s^t_h; \tau^t_{1:h-1}, D^{1:t-1})$ from some expert algorithm $\AlgE$. A notable special case is $\Alg_0=\AlgE$ (on-policy case), where we can set $(\ae_h)^t=a_h^t$ for all $t\in[T]$ to avoid sampling twice. This was considered in the AD approach~\citep{laskin2022context}.
-%     \item (Option 2: Optimal action) $\ab^t_h=a^{\star,t}_h\sim \pi^\star_{M,h}(\cdot|s_h^t)$ for the current MDP instance $M$. This was considered in the DPT approach~\citep{lee2023supervised}.
-%     \item (Option 3: Approximate optimal action)~\yub{TBA}
-% \end{itemize}
-% Let $\Db\defeq(D, \sets{\ab^t_h}_{t,h\in[T]\times[H]})$ denote the interaction history augmented with the expert actions.
-% \end{itemize}
-
-% \begin{algorithm}[H]
-% \caption{Supervised pretraining by MLE}
-% \label{alg:mle-rl}
-% \begin{algorithmic}[1]
-% \REQUIRE Pretraining dataset $\Db^{(1:n)}$. MDP algorithm class $\sets{\pi_\btheta:\btheta\in\Theta}$.
-% \STATE Solve the following MLE problem~\yub{no dependence on partial trajectory $\tau^t_{1:h-1}$}
-% \begin{align*}
-%     \hat{\btheta} = \argmax_{\btheta\in\Theta} \sum_{t=1}^T \sum_{h=1}^H \log \pi_\btheta(\ab_h^t | s_h^t; D^{1:t-1}).
-% \end{align*}
-% \ENSURE MDP algorithm $\hat{\btheta}$.
-% \end{algorithmic}
-% \end{algorithm}
-
-% \paragraph{Results for imitation}
-% Same as bandit case, since typical RL algorithms and our transformer constructions admit same protocols (which only use $D^{1:t-1}$ but not $\tau^t_{1:h-1}$).
-
-% \yub{Copied from bandit}
-
-% \begin{lemma}[Imitation; general case]
-%     Under Option 1 (imitation), suppose there exists $\btheta^\star\in\Theta$ such that
-%     \begin{align}
-%     \label{eqn:pie-approximation}
-%         \log\frac{\pi^E(\ae_t|o_t; D_{1:t-1})}{\pi_{\btheta^\star}(\ae_t|o_t; D_{1:t-1})} \le \eps
-%     \end{align}
-%     almost surely (under the above interaction protocol) for all $t\in[T]$. Then with probability at least $1-\delta$,~\cref{alg:mle-bandit} achieves
-%     \begin{align*}
-%         \E_{M\sim \Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{ \sum_{t=1}^T \HelDs\paren{ \pi_{\hat{\btheta}}(\cdot|o_t, D_{1:t-1}), \pi^E(\cdot|o_t, D_{1:t-1})} } \le \eps T + \cO\paren{ \log\paren{ \abs{\Theta} / \delta } }.
-%     \end{align*}
-% \end{lemma}
-
-% \yub{We only need one-sided approximation, and only on $\ae_t$ (instead of all actions) in~\cref{eqn:pie-approximation}. Not really useful though.}
-% \yub{Question: Can we weaken~\cref{eqn:pie-approximation} to some in-expectation version?}
 
 
-% \paragraph{Results for fitting optimal actions}
-% The theoretically optimal action can be recast as sampled from the following PS-full algorithm $\piPSf_\Lambda$. However, typically we only consider $\piPS_\Lambda$ (e.g. in RL theory).
-% \begin{align*}
-%     \piPSf_\Lambda(\cdot|s_h^t; \tau^t_{1:h-1}, D^{1:t-1}) &\defeq \E_{M\sim\Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{\pi^\star_{M,h}(\cdot|s_h^t) \mid \tau^t_{1:h-1}, D^{1:t-1}}, \\
-%     \piPS_\Lambda(\cdot|s_h^t; D^{1:t-1}) &\defeq \E_{M\sim\Lambda, D^{1:t}\sim \P^{\Alg_0}_M}\brac{\pi^\star_{M,h}(\cdot|s_h^t) \mid D^{1:t-1}},
-% \end{align*}
 
-% \begin{lemma}[Bayesian approximation; general case]
-%     Under Option 2 (optimal action), suppose there exists $\btheta^\star\in\Theta$ such that
-%     \begin{align*}
-%         \log\frac{\piPS_\Lambda(a^\star_t|s_h^t; D^{1:t-1})}{\pi_{\btheta^\star}(a^\star_t|s_h^t; D^{1:t-1})} \le \eps
-%     \end{align*}
-%     almost surely (under the above interaction protocol) for all $t\in[T]$. Then with probability at least $1-\delta$,~\cref{alg:mle-bandit} achieves
-%     \begin{align*}
-%         \E_{M\sim \Lambda, \tau\sim\P^{\Alg_0}_M}\brac{ \sum_{t=1}^T \sum_{h=1}^H \HelDs\paren{ \pi_{\hat{\btheta}}(\cdot|s_h^t; D^{1:t-1}), \piPS_\Lambda(\cdot|s_h^t; D^{1:t-1})} } \le \eps T H + \cO\paren{ \log\paren{ \abs{\Theta} / \delta } }.
-%     \end{align*}
-% \end{lemma}
 
-% % {\color{red} Question: Need to bound both of the following terms
-% % \begin{align*}
-% %     \log\frac{\piPSf_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}{\piPS_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})} ~~~{\rm and}~~~
-% %     \log\frac{\piPS_\Lambda(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}{\pi_{\btheta^\star}(a_h^{\star, t}|s_h^t; \tau^t_{1:h-1}, D^{1:t-1})}
-% % \end{align*}
-% % under the above interaction protocol.
-% % }
 
-\paragraph{Transformer architecture} We consider a sequence of $N$ input vectors $\set{\bh_i}_{i=1}^N\subset \R^D$, compactly written as an input matrix $\bH=[\bh_1,\dots,\bh_N]\in \R^{D\times N}$, where each $\bh_i$ is a column of $\bH$ (also a \emph{token}). Throughout this paper, we define $\sigma(t)\defeq \relu(t)=\max\sets{t,0}$ as the standard relu activation function. %\lc{add one sentence to explain why using relu instead of softmax is fine?}
 
-% Decoder TFs are the same as encoder TFs, except that the attention layers are replaced by masked attention layers with a specific decoder-based (causal) attention mask.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\paragraph{Transformer architecture} We consider a sequence of $N$ input vectors $\set{\bh_i}_{i=1}^N\subset \R^D$, compactly written as an input matrix $\bH=[\bh_1,\dots,\bh_N]\in \R^{D\times N}$, where each $\bh_i$ is a column of $\bH$ (also a \emph{token}). Throughout this paper, we define $\sigma(t)\defeq \relu(t)=\max\sets{t,0}$ as the standard relu activation function. 
+
+
 
 
 \begin{definition}[Masked attention layer]
 \label{def:masked-attention}
 A masked attention layer with $M$ heads is denoted as $\Attn_{\btheta}(\cdot)$ with parameters $\btheta=\sets{ (\bV_m,\bQ_m,\bK_m)}_{m\in[M]}\subset \R^{D\times D}$. On any input sequence $\bH\in\R^{D\times N}$, we have $\bar{\bH} = \Attn_{\btheta}(\bH) = [\bar{\bh}_1, \ldots, \bar{\bh}_N] \in \R^{D \times N}$, where
-% \begin{talign}
-% \label{eqn:masked-attention}
-%     \bar{\bH} = \Attn_{\btheta}(\bH)\defeq \bH + \sum_{m=1}^M (\bV_m \bH) \times \Big( (\MSK_{1:N',1:N'}) \circ \sursf\paren{ (\bQ_m\bH)^\top (\bK_m\bH) } \Big) \in \R^{D\times N'},
-% \end{talign}
-% where $\circ$ denotes the entry-wise (Hadamard) product of two matrices, and $\MSK \in \R^{N \times N}$ is the mask matrix given by 
-% \[
-% \MSK = \begin{bmatrix}
-% 1 & 1/2 & 1/3 & \cdots & 1/N \\
-% 0 & 1/2 & 1/3 & \cdots & 1/N\\
-% 0 & 0 & 1/3 & \cdots & 1/N\\
-% \cdots & \cdots & \cdots & \cdots & \cdots \\
-% 0 & 0 & 0 & \cdots & 1/N
-% \end{bmatrix}. 
-% \]
-% In vector form, we have
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \begin{align*}
 \textstyle    \bar{\bh}_i = \brac{\Attn_{\btheta}(\bH)}_i = \bh_i + \sum_{m=1}^M \frac{1}{i}\sum_{j=1}^i \barsig\paren{ \<\bQ_m\bh_i, \bK_m\bh_j\> }\cdot \bV_m\bh_j \in \R^D.
 \end{align*}
@@ -1835,11 +1835,11 @@ We remark that the use of ReLU attention layers is for technical reasons. In pra
 \begin{definition}[MLP layer]
 \label{def:mlp}
 An MLP layer with hidden dimension $D'$ is denoted as $\MLP_{\btheta}(\cdot)$ with parameters $\btheta=(\bW_1,\bW_2)\in\R^{D'\times D}\times\R^{D\times D'}$. On any input sequence $\bH\in\R^{D\times N}$, we have $\bar{\bH} = \MLP_{\btheta}(\bH) = [\bar{\bh}_1, \ldots, \bar{\bh}_N] \in \R^{D \times N}$, where
-% $\MLP_{\btheta}(\bH)$ gives output
-% \begin{talign*}
-%     \bar{\bH} = \MLP_{\btheta}(\bH) \defeq \bH + \bW_2\barsig(\bW_1\bH),
-% \end{talign*}
-% where $\barsig: \R \to \R$ is the ReLU function. In vector form, we have 
+
+
+
+
+
 \[
 \bar{\bh}_i=\bh_i+\bW_2 \cdot \sigma(\bW_1\bh_i) \in \R^D.
 \]
@@ -1847,13 +1847,13 @@ An MLP layer with hidden dimension $D'$ is denoted as $\MLP_{\btheta}(\cdot)$ wi
 We next define $L$-layer decoder-based transformers. Each layer consists of a masked attention layer (see Definition \ref{def:masked-attention}) followed by an MLP layer (see Definition \ref{def:mlp}) and a clip operation. 
 
 
-% \begin{definition}[Clipped Transformer]
-% \label{def:decoder-tf-clip}
-% An $L$-layer decoder-based $\clipval$-clipped transformer, denoted as $\TF_\btheta^{\clipval}(\cdot)$, is a composition of $L$ self-attention layers, each followed by an MLP layer and a clip operation: $\bH^{(L)}=\TF_{\btheta}(\bH^{(0)})$, where $\bH^{(0)} = \clip_{\clipval}(\bH) \in\R^{D\times N}$ is the input sequence, and for $\ell\in\set{1,\dots,L}$, 
-% \begin{talign*}
-% \bH^{(\ell)} = \clip_{\clipval}\Big( \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \Big),~~~~~ \clip_{\clipval}(\bh) = [\proj_{\| \bh \|_2 \le \clipval}(\bh_i)]_i. 
-% \end{talign*}
-% Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$.
+
+
+
+
+
+
+
 
 
 \begin{definition}[Decoder-based Transformer]
@@ -1873,27 +1873,27 @@ Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  
 \end{definition}
 We introduced clipped operations in transformers for technical reasons. For brevity, we will write $\TF_\btheta = \TF_\btheta^{\clipval}$ when there is no ambiguity. We will set the clipping value $\clipval$ to be sufficiently large so that the clip operator does not take effect in any of our approximation results.
 
-%\sm{We allow $\clipval$ to be very large so that xxx}
 
 
-% \begin{definition}[Decoder-based Transformer]
-% \label{def:decoder-tf}
-% An $L$-layer decoder-based transformer, denoted as $\TF_\btheta(\bH)$, is a composition of $L$ self-attention layers each followed by an MLP layer: $\bH^{(L)}=\TF_{\btheta}(\bH^{(0)})$, where $\bH^{(0)} = \bH \in\R^{D\times N}$ is the input sequence, and
-% \begin{talign*}
-% \bH^{(\ell)} = \MLP_{\bthetamlp^{(\ell)}}\paren{ \Attn_{\bMAtt^{(\ell)}}\paren{\bH^{(\ell-1)}} } \in \R^{D \times N},~~~\ell\in\set{1,\dots,L}.
-% \end{talign*}
-% Above, the parameter $\btheta=(\bMAtt^{(1:L)},\bthetamlp^{(1:L)})$ consists of  $\bMAtt^{(\ell)}=\sets{ (\bV^{(\ell)}_m,\bQ^{(\ell)}_m,\bK^{(\ell)}_m)}_{m\in[M]} \subset \R^{D\times D}$ and  $\bthetamlp^{(\ell)}=(\bW^{(\ell)}_1,\bW^{(\ell)}_2)\in\R^{D' \times D}\times \R^{D\times D'}$. We define the parameter class of transformers as $\Theta_{D, L, M, \hidden, B} \defeq \{ \btheta=(\bAtt^{(1:L)}, \bmlp^{(1:L)}): \nrmp{\btheta}\le B \}$, where the norm of a transformer $\TF_\btheta$ is denoted as 
-% \begin{align}
-% \label{eqn:tf-norm}
-%     \nrmp{\btheta}\defeq \max_{\ell\in[L]} \Big\{  
-%     \max_{m\in[M]} \set{\lops{\bQ_m^\lth}, \lops{\bK_m^\lth} } + \sum_{m=1}^M \lops{\bV_m^\lth} +
-%     \lops{\bW_1^\lth} + \lops{\bW_2^\lth}
-%     \Big\}.
-% \end{align}
-% %We will frequently consider ``\emph{attention-only}'' decoder-based transformers with $\bW_1^\lth,\bW_2^\lth=\bzero$, which we denote as $\TFz_\btheta(\cdot)$ for shorthand, with $\btheta=\btheta^{(1:L)}\defeq \bMAtt^{(1:L)}$.
-% \end{definition}
 
-% When we need to control the covering number of transformers $\{ \TF_\btheta: \btheta \in \Theta_{D, L, M, \hidden, B} \}$, we will consider the clipped transformer architecture, defined in Definition~\ref{def:decoder-tf-clip}. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1904,7 +1904,7 @@ We introduced clipped operations in transformers for technical reasons. For brev
 \end{equation}
 We will always choose a proper concatenation operator $\cat$ in examples, so that in the pretraining phase, all the algorithm outputs $\{ \sAlg_\btheta(\cdot | \dset_{t-1}, \state_t) \}_{t \le \totlen}$ along the trajectory can be computed in a single forward propagation. 
 \section{Statistical analysis of supervised pretraining}\label{sec:supervised-pretraining}
-%That is, for each environment $\inst^\ith \sim_{iid} \prior$, an offline trajectory $\dset^\ith_\totlen$ is collected from the interaction of $\inst^\ith$ with $\sAlg_0$, augmented by expert actions $\eaction^\ith$ generated from $\sAlg_{\shortexp}$. Given a class of algorithms $\{ \sAlg_\Par \in \cup_{t \in [\totlen]} \{ (\trajsp_{t-1} \times \cS_t) \to \Delta(\actionsp_t) \}, ~\Par\in\Parspace\}$, supervised pretraining amounts to maximize the log-likelihood 
+
 
 In supervised pretraining, we are given $\Numobs$ i.i.d offline trajectories $\{\dset^\ith_\totlen =  (\state^\ith_1,\action^\ith_1, \reward^\ith_1, \ldots, \state^\ith_\totlen, \allowbreak \action^\ith_\totlen, \allowbreak\reward^\ith_\totlen) \}_{i=1}^\Numobs \sim_{iid} \P_\prior^{\sAlg_0}$ from the interaction of $\inst^\ith \sim_{iid} \prior$ with an offline algorithm $\sAlg_0$. Given an expert algorithm $\sAlg_{\shortexp}$, we augment each trajectory $\dset_{\totlen}^i$ by $\{ \eaction_t^i \sim_{iid} \sAlg_{\shortexp}( \cdot |\dset_{t-1}^i, \state_t^i)\}_{t \in [\totlen]}$. Supervised pretraining maximizes the log-likelihood over the algorithm class $\{ \sAlg_\Par\}_{\Par\in\Parspace}$
 \begin{align}
@@ -1912,22 +1912,22 @@ In supervised pretraining, we are given $\Numobs$ i.i.d offline trajectories $\{
 \end{align}
 This section discusses the statistical properties of the algorithm learned via supervised pretraining. 
 
-% When $\sAlg_\Par$ is specified by a transformer, this objective function coincides with the cross-entropy loss used to train transformers in supervised learning tasks. 
-% where $\sAlg_\Par(\eaction^\ith_{t}|\dset_{t-1}^\ith,\state_t)$ denotes the probability of algorithm $\sAlg_\Par$ selects the action $\eaction^\ith_t$ given the historical trajectory $\dset_{t-1}^\ith$ and current state $\state^\ith_t$. 
+
+
 
 
 
 \subsection{Main result}
 
-% \yub{to be organized.}
 
-% In this work, we will also apply the following standard concentration inequality (see e.g. Lemma A.4 in~\cite{foster2021statistical}).
-% \begin{lemma}\label{lm:exp_concen}
-%     For any sequence of random variables $(X_t)_{t\leq T}$ adapted to a filtration $\{\cF_{t}\}_{t=1}^T$, we have with probability at least $1-\delta$ that
-%     \begin{align*}
-%         \sum_{s=1}^t X_s\leq \sum_{s=1}^t\log\E[\exp(X_s)\mid\cF_{s-1}]+\log(1/\delta),~~~\text{for all } t\in[T].
-%     \end{align*}
-% \end{lemma}
+
+
+
+
+
+
+
+
 
 Our main result demonstrates that the algorithm maximizing the supervised pretraining loss will imitate $\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t) = \E_{\inst\sim \prior,  \dset_{\totlen} \sim \sAlg_0}[\sAlg_{\shortexp}^t(\cdot|\dset_\totlen,\inst)|\dset_{t-1},\state_t]$, the conditional expectation of the expert algorithm $\sAlg_{\shortexp}$ given the observed trajectory. The imitation error bound will scale with the covering number of the algorithm class and a  distribution ratio factor, defined as follows.
 
@@ -1939,18 +1939,18 @@ we say $\Parspace_0 \subseteq\Parspace$ is an  $\rho$-cover of $\Parspace$, if $
 The covering number $\cN_{\Parspace}(\rho)$ is the minimal cardinality of $\Parspace_0$ such that $\Parspace_0$ is a $\rho$-cover of $\Parspace$.
 \end{definition}
 
-%\yub{Define covering number as sum of $t\in[T]$, then $T$ disappears in MLE rate?}
 
 
 
-% \begin{lemma}[General guarantee for supervised pretraining]\label{lm:general_imit}
-% Suppose Assumption~\ref{asp:realizability} holds. Then  the solution to~Eq.~\eqref{eq:general_mle} achieves
-% \begin{align*}
-% \E_{\dset_\totlen\sim \P^{\sAlg_0}_\prior}\brac{ \sum_{t=1}^\totlen \HelDs\paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )} } \le c\frac{\totlen \log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \totlen\geneps.
-% \end{align*}
-% with probability at least $1-\delta$ for some universal constant $c>0$.
-% \end{lemma}
-% See the proof in Section~\ref{sec:pf_lm:general_imit}. 
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1964,31 +1964,31 @@ We define the distribution ratio of two algorithms $\sAlg_1,\sAlg_2$ by
 \end{align*}
 \end{definition}
 
-% \yub{This is chi-squared distance between the full trajectory under $\sAlg_1$ and $\sAlg_2$.}
+
 
 Our main result requires the realizability assumption of algorithm class $\{ \sAlg_\Par\}_{\Par \in \Parspace}$ with respect to the conditional expectation of the expert algorithm. 
 
 \begin{assumption}[Approximate realizability]
 \label{asp:realizability}
-% \lc{I think this includes both imitation and Bayes learning (PSfull). (Note that PS $=$ PSfull in bandit; later need another lemma  PS learning in MDPs).}
+
 There exists $\TruePar\in\Parspace$ and $\geneps > 0$ such that for all $t\in[\totlen]$, 
 \begin{align}
 \label{eqn:plc_approx_general}
 \log\E_{\inst \sim \prior, \adset_\totlen \sim \P_{\inst}^{\sAlg_0,\sAlg_\shortexp}}\Big[\frac{\osAlg_{\shortexp}(\eaction_t|\dset_{t-1},\state_t )}{\sAlg_\TruePar(\eaction_t|\dset_{t-1},\state_t )}\Big] \le \geneps. 
 \end{align}
-% where $\adset_\totlen$ follows the distribution  $\P_{\inst}^{\sAlg_0,\sAlg_\shortexp}$ with $\inst\sim\prior$. 
-\end{assumption}
-% It can be verified that a sufficient condition for Assumption~\ref{asp:realizability} is 
-% \begin{align}\label{asp:realizability_suff}
-% \log\frac{\osAlg_{\shortexp}(\eaction_t|\dset_{t-1},\state_t )}{\sAlg_\TruePar(\eaction_t|\dset_{t-1},\state_t )}\leq\geneps
-% \end{align} almost surely over $\adset_\totlen\sim\P_{\inst}^{\sAlg_0,\sAlg_\shortexp},\inst\sim\prior$.  
 
-% Let $\dset_\totlen=(\state_1,\action_1,\reward_1,\ldots,\state_\totlen,\action_\totlen,\reward_\totlen)$ denote a trajectory obtained by rolling out an algorithm $\sAlg$ in a problem instance $\inst$.  
-% We define the (instance-dependent) expected cumulative reward\lc{maybe a different name?}
-% \begin{align*}
-% \textstyle \totreward_{\inst,\sAlg}(\totlen)
-% :=\E_{\action\sim\sAlg}[\sum_{t=1}^\totlen \reward_t],
-% \end{align*} where  the expectation is over the  states $\state_{t}\sim\P^s_{\inst,t}(\cdot|\state_{t-1},\action_{t-1})$, actions  $\action_t\sim\sAlg(\cdot|\dset_{t-1},\state_t)$ and rewards $\reward_t\sim\P^r_{\inst,t}(\cdot|\state_t,\action_t)$ for $t\in[\totlen]$.  
+\end{assumption}
+
+
+
+
+
+
+
+
+
+
+
 
 We aim to bound the performance gap between $\sAlg_{\EstPar}$ and $\sAlg_\shortexp$ in terms of expected cumulative rewards, where the expected cumulative reward is defined as 
 \begin{align*}
@@ -1998,8 +1998,8 @@ We aim to bound the performance gap between $\sAlg_{\EstPar}$ and $\sAlg_\shorte
 An intermediate step of the result is controlling the expected Hellinger distance between two algorithms, where for distributions $p, q$, we have $\HelDs(p, q) = \int (\,\sqrt{p(x)} - \sqrt{q(x)} \,)^2 d x$. 
 
 \begin{theorem}[Performance gap between expected cumulative rewards]\label{thm:diff_reward} Let Assumption~\ref{asp:realizability} hold and let $\EstPar$ be a solution to Eq.~\eqref{eq:general_mle}. Take $\distratio = \distratio_{\osAlg_\shortexp,\sAlg_0}$ as defined in Definition~\ref{def:dist_ratio}, and $\cN_{\Parspace} = \cN_{\Parspace}((\Numobs\totlen)^{-2})$  as defined in Definition~\ref{def:cover_number_general}. Then for some universal constant $c>0$, with probability at least $1-\delta$, we have 
-%\lc{I still prefer the old version in statistical-proof.tex.}~
-%\yub{$\geneps$ in separate sqrt?}
+
+
 \begin{align}\label{eqn:Hellinger-bound-main-theorem}
 &~ \E_{\dset_\totlen\sim \P^{\sAlg_\shortexp}_\prior}\Big[ \sum_{t=1}^\totlen \HelD \paren{  \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ),\osAlg_{\shortexp}(\cdot|\dset_{t-1},\state_t )} \Big] 
 \le c {\totlen} \sqrt{\distratio}
@@ -2019,13 +2019,13 @@ The proof of Theorem~\ref{thm:diff_reward} is contained in Section~\ref{sec:pf_t
 
 We remark that when the expectation on the left-hand-side of (\ref{eqn:Hellinger-bound-main-theorem}) is with respect to the measure $\P_\prior^{\sAlg_0}$, standard MLE analysis will provide a bound without the distribution ratio factor $\distratio = \distratio_{\osAlg_\shortexp,\sAlg_0}$ in the right-hand side. The distribution ratio factor arises from the distribution shift between trajectories generated by the expert algorithm $\sAlg_\shortexp$ versus the context algorithm $\sAlg_0$.  In addition, it should be noted that the result in Theorem~\ref{thm:diff_reward} holds generally provided Assumption~\ref{asp:realizability} is satisfied, which does not require that the algorithm class is induced by transformers.
 
-% \sm{Can we provide an example in which reward maximization supervision is not the correct objective? }
-
-% \yub{update statement to hellinger + total reward.} \yub{Strengthen the result to subsume the fast rate case when $C\approx 1$.} \sm{Discuss the distribution ratio. } \sm{Discuss the reward maximization pretraining objective. }
 
 
 
-% \yub{Corollary: 1. AD; 2. DPT (comment on approximate DPT, or give another corollary box).}
+
+
+
+
 
 
 \subsection{Implications in special cases}
@@ -2036,19 +2036,19 @@ We remark that when the expectation on the left-hand-side of (\ref{eqn:Hellinger
 &\leq c \totlen^2 \Big( \sqrt{\frac{\log \brac{ \cN_{\Parspace} \cdot \totlen/\delta } }{n} } + \sqrt{\geneps} \Big). 
 \end{align*}
 If the context algorithm $\sAlg_0$ does not perform well, we cannot expect the learned algorithm $\sAlg_\EstPar$ to have good performance, regardless of the number of offline trajectories. 
-% For good performance of the learned algorithm $\sAlg_\EstPar$, it is crucial to have pretraining data generated by a high-quality context algorithm $\sAlg_0$. 
 
-% The algorithm distillation approach studied in~\cite{laskin2022context} corresponds to the case when $\sAlg_\shortexp=\sAlg_0$. Under this setting, we have the distribution ratio $\distratio_{\sAlg_\shortexp,\sAlg_0}=1$ and Lemma~\ref{thm:diff_reward} provides the guarantee \begin{align*}
-% |\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_\shortexp}(\totlen)|
-% &\leq 
-% c \genrewardb\cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}((\Numobs\totlen)^{-2}) \totlen/\delta } }{n} + \geneps}
-% \end{align*}
-% with probability at least $1-\delta$.  
+
+
+
+
+
+
+
 
 \paragraph{Decision Pretrained Transformer} When we set $\sAlg_\shortexp^t = \sAlg_\shortexp^t(\state_t,\inst)=\action^*_t$ to be the optimal action at time $t$, the supervised pretraining approach corresponds to Decision-Pretrained Transformers (DPT) proposed in \cite{lee2023supervised}. In this case, the conditional expectation of the expert algorithm $\osAlg_\shortexp(\cdot|\dset_{t-1},\state_t)=\E[\sAlg_{\shortexp}(\cdot|\state_t,\inst)|\dset_{t-1},\state_t]=\sAlg_{\TS}(\cdot|\dset_{t-1},\state_t)$ is the Thompson sampling algorithm \citep[Theorem 1]{lee2023supervised}, which samples from the posterior distribution of the optimal action $\action^*_t$ given by $\P(a^*_t(\inst) |\dset_{t-1},\state_t)\propto \prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)$. This implies that learning from optimal actions effectively learns to imitate Thompson sampling. Furthermore, the context algorithm is not required to perform well for the learned algorithm to be consistent with Thompson sampling. However, a high-quality context algorithm $\sAlg_0$ may help reduce the distribution ratio $\distratio$, thereby learning Thompson sampling with fewer samples. 
 
 
-% The decision-pretrained transformer in~\cite{lee2023supervised} corresponds to the case  where the expert $\sAlg_\shortexp=\sAlg_\shortexp(\state_t,\inst)=\action^*_t$ gives the optimal action at time $t$. Therefore, the expert policy $\sAlg_\shortexp(\cdot|\dset_{t-1},\state_t)=\E[\sAlg_{\shortexp}(\cdot|\state_t,\inst)|\dset_{t-1},\state_t]=\sAlg_{\TS}(\cdot|\dset_{t-1},\state_t)$ equals the policy of Thompson sampling (i.e., the distribution of the optimal action $\action^*_t$  under the posterior $\P(\inst|\dset_{t-1},\state_t)\propto \prior(\inst)\cdot\P_\inst^{\sAlg_0}(\dset_{t-1},\state_t)$). This implies that learning from the optimal actions is effectively learning to imitate the Thompson sampling algorithm.
+
 
 
 
@@ -2058,18 +2058,18 @@ If the context algorithm $\sAlg_0$ does not perform well, we cannot expect the l
 \end{align}
 Here, $\P_{\TS,t}(\cdot|\dset_\totlen)$ represents the posterior distribution of the optimal action $\action^*_t=\action^*_t(\inst)$ at time $t$, given the observation $\dset_\totlen$, where $(\inst, \dset_\totlen) \sim \P_\prior^{\sAlg_0}$. 
 
-% Note that in practice the learner may not know the optimal action $\action^*_t$ during pretraining, and may use an estimated optimal action $\widehat\action_t^*=\widehat\action^*_t(\dset_\totlen)$ as a surrogate. It can be shown that a similar guarantee as in Lemma~\ref{thm:diff_reward} can be established if the approximation error \begin{align}\E_{\dset_\totlen\sim\P_{\prior}^{\sAlg_0}}\KL{\widehat\action^*_t}{\P_{\TS,t}(\cdot|\dset_\totlen)}\leq\appeps
-% \label{eq:app_opt_cond}
-% \end{align} for all $t\in[\totlen]$ and some small $\appeps>0$, where $\P_{\TS,t}$ is the distribution of the optimal action $\action^*_t$ under the posterior $\inst|\dset_\totlen$. Note that  the error term $\appeps$  characterizes  the distance between the approximated optimal action $\widehat\action^*_t$ and the best guess we have about $\action^*_t$ given $\dset_\totlen$. \lc{Should put the result to appendix later}
+
+
+
 
 \begin{proposition}\label{prop:app_opt_diff_reward} Let Assumption~\ref{asp:realizability} hold and let $\EstPar$ be the solution to Eq.~\eqref{eq:general_mle}. Take $\distratio = \distratio_{\sAlg_\TS,\sAlg_0}$ as defined in Definition~\ref{def:dist_ratio}, and $\cN_{\Parspace} = \cN_{\Parspace}((\Numobs\totlen)^{-2})$  as defined in Definition~\ref{def:cover_number_general}. Assume that for each trajectory, an estimated optimal action is provided $\widehat\action_t^* \sim \sAlg_{\shortexp}^t(\cdot | \dset_\totlen)$ at each time $t\in[\totlen]$ satisfying Eq.~\eqref{eq:app_opt_cond}. 
-% Then for some universal constant $c>0$, with probability at least $1-\delta$, we have
-% \begin{align*}
-% &~  \E_{\dset_\totlen\sim \P^{\sAlg_\TS}_\prior} \Big[ \sum_{t=1}^\totlen \HelD \paren{ \sAlg_{{\EstPar}}(\cdot|\dset_{t-1},\state_t ), \sAlg_{\TS}(\cdot|\dset_{t-1},\state_t )} \Big] \\
-% \le&~ c{\totlen} \sqrt{\distratio}
-% \sqrt{\frac{\log \cN_{\Parspace} +\log(\totlen/\delta)}{n}+\geneps+\appeps}. 
-% \end{align*}
-% with probability at least $1-\delta$ for some universal constant $c>0$. 
+
+
+
+
+
+
+
 Assume that the rewards $|\reward_t|\leq 1$  almost surely. Then for some universal constant $c>0$, with probability at least $1-\delta$, the difference of the expected cumulative rewards between $\sAlg_\EstPar$ and $\sAlg_\TS$ satisfies 
 \begin{align*}
 |\totreward_{\prior,\sAlg_\EstPar}(\totlen)-\totreward_{\prior,\sAlg_\TS}(\totlen)|
@@ -2082,12 +2082,12 @@ The proof of Proposition~\ref{prop:app_opt_diff_reward} is contained in Appendix
 
 
 
-% Next, we choose the class of algorithms $\{\sAlg_\Par,\Par\in\Parspace\}$ to be algorithms induced by transformers. We show that such classes of algorithms has the potential to imitate state-up-the-art algorithms in  bandits and Markov Decision Processes (MDPs) settings. As a consequence, the algorithms we derived from transformers also have benign regret guarantee
+
 
 
 \section{Approximation by transformers}\label{sec:ICRL}
 
-In this section, we demonstrate the capability of transformers to implement prevalent reinforcement learning algorithms that produce near-optimal regret bounds. Specifically, we illustrate the implementation of LinUCB for stochastic linear bandits in Section~\ref{sec:LinUCB-statement}, Thompson sampling for stochastic linear bandits in Section~\ref{sec:TS-statement}, and UCB-VI for tabular Markov decision process in Section~\ref{sec:Tabular-MDP-statement}. %\sm{Add explanations of $\conO$, $\cO$, $\tcO$}
+In this section, we demonstrate the capability of transformers to implement prevalent reinforcement learning algorithms that produce near-optimal regret bounds. Specifically, we illustrate the implementation of LinUCB for stochastic linear bandits in Section~\ref{sec:LinUCB-statement}, Thompson sampling for stochastic linear bandits in Section~\ref{sec:TS-statement}, and UCB-VI for tabular Markov decision process in Section~\ref{sec:Tabular-MDP-statement}. 
 
 \subsection{LinUCB for linear bandits}\label{sec:LinUCB-statement}
 
@@ -2095,17 +2095,17 @@ A stochastic linear bandit environment is defined by $\inst=(\TrueLBPar,\Noisedi
 
 
 
-% Consider a class of linear bandit problems, in which at time $t\in[\totlen]$ the learner selects an action $\action_t\in\R^{d}$ from an action set $\sA_t=\{\ba_{t,1},\ldots,\ba_{t,\Numact}\}$ that consists of $\Numact$ actions, and observe the reward $\reward_t=\<\action_t,\TrueLBPar\>+\Noise_t$, where $\Noise_t\sim\Noisedist$ are i.i.d. zero mean noise and $\TrueLBPar\in\R^{d}$ is the unknown parameter vector. We allow the action sets $\aset_t$ to be vary across $t\in[\totlen]$. Note that the linear bandit instance is specified by $\inst=(\TrueLBPar,\Noisedist,\aset_1,\ldots,\aset_\totlen)$. To cast the linear bandit problem into our general framework, we assume $\inst$ follows the prior $\prior$ and let the state $\state_t=\aset_t$ for all $t\in[\totlen]$. Therefore, given the instance $\inst$, there exists only one possible state at each time $t$. 
 
-% We now demonstrate that transformers are able to approximate  LinUCB~\cite{chu2011contextual}. 
+
+
 We assume the context algorithm $\sAlg_0$ is the soft LinUCB \citep{chu2011contextual}. Specifically, for each time step $t\in[\totlen]$, the learner estimates the parameter $\TrueLBPar$ using linear ridge regression $\bw^t_{\ridge,\lambda}:=\argmin_{\bw\in\R^d} \sum_{j=1}^{t-1}(\reward_j-\<\ba_j,\bw\>)^2+ \lambda \|\bw\|_2^2$. Subsequently, the learner calculates the upper confidence bounds for the reward of each action as $v^*_{tk}:=\langle \ba_{t,k},\bw^t_{\ridge,\lambda}\rangle +\cwid \cdot (\ba_{t,k}^\top (\lambda\id_d+\sum_{j=1}^{t-1}\action_j\action_j^\top)^{-1}  \ba_{t,k})^{1/2}$. Finally, the learner selects an action $\action_t$ according to probability $\{ p^*_{t,j} \}_{j \in [\Numact]} = \softmax(\{v^*_{tj}/\temp \}_{j \in [\Numact]})$ for some sufficiently small $\temp>0$. Note that the soft LinUCB $\sAlg_{\sLinUCB(\temp)}$ recovers LinUCB as $\temp\to 0$. 
-%\lc{(shall we put this into appendix?) }
 
-% \begin{enumerate}
-%     \item For some $\lambda>0$, computes  $\bw^t_{\ridge,\lambda}:=\argmin_{\bw\in\R^d}\frac{1}{2t}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2t}\|\bw\|_2^2$.
-%     \item For each action $k\in[\Numact]$, computes $v^*_{tk}:=\<\ba_{t,k},\bw^t_{\ridge,\lambda}\>+\cwid\sqrt{\ba_{t,k}^\top \bA_{i}^{-1}  \ba_{t,k}}$ for some $\cwid$, where $\bA_t=\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$.
-%     \item Selects the action $\ba_{t,j}$ with probability $p^*_{t,j}=\frac{\exp(v^*_{tj}/\temp)}{\sum_{j=1}^\Numact\exp(v^*_{tk}/\temp)}$ for $j\in[\Numact]$ for some sufficiently small $\temp>0$.
-% \end{enumerate} 
+
+
+
+
+
+
 
 We further assume the existence of constants $\sigma,b_a,B_a,B_w>0$ such that the following conditions hold:   $|\Noise_t|\leq\sigma$, $b_a\leq\ltwo{\ba_{t,k}}\leq B_a$, and $\ltwo{\bw^*}\le B_w$ for all $t\in[\totlen],k\in[\Numact]$. Given these, the confidence parameter is defined as: $\cwid=\sqrt{\lambda}B_w+\sigma\sqrt{2\log (2B_aB_w \totlen )+d\log((d\lambda+\totlen B_a^2)/(d\lambda))} = \tcO(\sqrt{d})$. The following result shows that the soft LinUCB algorithm can be efficiently approximated by transformers, for which the proof is contained in Appendix~\ref{sec:pf_thm:approx_smooth_linucb}. 
 
@@ -2123,27 +2123,27 @@ such that taking $\sAlg_{\tfpar}$ as defined in Eq.~(\ref{eqn:transformer-algori
 Here $\conO(\cdot)$ hides some absolute constant, and  $\tilde \cO(\cdot)$ additionally hides polynomial terms in $(\sigma, b_a^{-1}, B_a, B_w, \lambda^{\pm1})$, and poly-logarithmic terms in $(\totlen, \Numact, d, 1/\eps,1/\temp)$. 
 \end{theorem}
 
-% $\cO(\cdot)$ hides absolute constant and 
-%\lc{not polynomial, but rational polynomials. Maybe do not mention this?} \lc{Also, this $D = \cO(d \Numact)$ is confusing, should be $D=O(d\Numact)$.  We have three things: universal constant, problem-dependent constant, logarithmic dependence.}
+
+
 
 A key component in proving Theorem~\ref{thm:approx_smooth_linucb} is demonstrating that the transformer can approximate the accelerated gradient descent algorithm for solving linear ridge regression (Lemma~\ref{lm:approx_ridge}), a result of independent interest. Leveraging Theorem~\ref{thm:approx_smooth_linucb}, we can derive the following regret bound for the algorithm obtained via Algorithm Distillation, with the proof provided in Appendix~\ref{sec:pf_thm:smooth_linucb}.
 
 \begin{theorem}[Regret of LinUCB and ICRL]\label{thm:smooth_linucb}
-% Take  $0<\temp\leq\log(2\Numact B_a(B_w+2\alpha/\sqrt{\lambda}))/\sqrt{4\totlen}=\tilde O(1/\sqrt{\totlen})$, 
-% the expected regret of the  smooth LinUCB satisfies 
-%  \begin{align*}
-%      \sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\sLinUCB}(\totlen)\leq\sqrt{8 d ({B_a}/{\sqrt{\lambda}}+1)^2T\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+1+\sqrt{T}\leq Cd\sqrt{T}\log(T)
-%  \end{align*}
-% for some problem-dependent constant $C>0$ and all problem instance $\inst$. 
+
+
+
+
+
+
 Let $\Theta = \Theta_{D, L, M, \hidden, B}$ be the class of transformers satisfying Eq.~\eqref{eq:linucb_tf_param} with $\eps=1/\totlen^3$ and $\temp = 1/ \log(4\totlen\Numact B_a(B_w+2\alpha/\sqrt{\lambda}))/\sqrt{4\totlen}=\tcO(\totlen^{-1/2})$, and choose the clip value $\log\clipval = \tcO(1)$. Let both the context algorithm $\sAlg_0$ and the expert algorithm $\sAlg_\shortexp$ coincide with the soft LinUCB algorithm $\sAlg_{\sLinUCB(\tau)}$ with parameter $\tau$ during supervised pretraining. Then with probability at least $1-\delta$, the learned algorithm $\sAlg_{\esttfpar}$, a solution to Eq.~\eqref{eq:general_mle}, entails the regret bound
 \begin{align*}
 \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)\Big]&\leq   \cO\bigg( d\sqrt{\totlen}\log(\totlen)+ \totlen^2\sqrt{\frac{\log ( \cN_{\Parspace} \cdot \totlen/\delta )}{n} } \bigg),
-% &\leq Cd\sqrt{T}\log(T)+\tilde O\Big(\totlen^2 \sqrt{\frac{\log(\Numobs/\delta)}{\Numobs}}\Big)
+
 \end{align*}
 where $\log \cN_{\Parspace} \le \tcO(\layer^2\embd(\head\embd+\hidden) \log\Numobs) \leq \tcO(\totlen^{3.5} d^2 \Numact^3\log\Numobs)$. Here $\cO$ hides polynomial terms in $(\sigma, b_a^{-1}, B_a, \\B_w, \lambda^{\pm1})$, and $\tcO$ additionally hides poly-logarithmic terms in $(\totlen, \Numact, d, 1/\eps,1/\temp)$. 
 \end{theorem}
 
-% \lc{do we want to hide $\log n$?}
+
 
 
 \subsection{Thompson sampling for linear bandit}\label{sec:TS-statement}
@@ -2151,22 +2151,22 @@ where $\log \cN_{\Parspace} \le \tcO(\layer^2\embd(\head\embd+\hidden) \log\Numo
 
 We continue to examine the stochastic linear bandit framework of Section~\ref{sec:LinUCB-statement}, now assuming a Gaussian prior $\bw^\star\sim \cN(0,\Tpspar\id_d)$ and Gaussian noises $\{ \eps_t \}_{t \ge 0} \sim_{iid} \cN(0,\Tpsparn)$. Additionally, we assume existence of $(b_a, B_a)$ such that $b_a\leq\ltwo{\ba_{t,k}}\leq B_a$. In this model, Thompson sampling also utilizes linear ridge regression. Subsequently, we establish that transformers trained under the DPT methodology can learn Thompson sampling algorithms. We state the informal theorem in Theorem~\ref{thm:approx_thompson_linear} below, where its formal statement and proof are contained in Appendix~\ref{example:ts-app}. 
 
-% \begin{theorem}[Approximating the Thompson sampling, Formal statement]\label{thm:approx_thompson_linear-formal}
-% For any $0<\delta_0<1/2$, consider the same embedding mapping $\embedmap$ and extraction mapping $\extractmap$ as for soft LinUCB in \ref{sec:tf_embed_bandit},
-% %\sm{Link}\lc{same as before},
-% and consider the standard concatenation operator $\cat$. Under Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear}, for $\eps<(\Trunregp\wedge1)/4$, there exists a  transformer $\TF_\btheta(\cdot)$ with \sm{$\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$?}
-% \begin{align}
-% &D=\tcO(T^{1/4}Ad),~L= \tcO(\sqrt{T}),~\sup_{l\in[L]}M^{\lth}=\tcO(AT^{1/4}),~\hidden=\tcO(A(T^{1/4}d+\neuron))~,\notag\\
-% &~~~\nrmp{\btheta}\leq \tcO(T+AT^{1/4}+\sqrt{ \neuron A}+\weightn),\label{eq:ts_tf_param-formal}
-% \end{align} 
-% such that 
-% $\log\frac{\sAlg_{\TS}(\action_t|\dset_{t-1},\state_t)}{\sAlg_{\tfpar}(\action_t|\dset_{t-1},\state_t)}\leq \eps$ for all $t\in[T],k\in[A]$ with probability at least $1-\delta_0$.  Here  
-% $\neuron,\weightn$ are the values defined in   Assumption~\ref{ass:thompson_mlp_approx_linear} with $\trunprob=\eps/(4A),\Trunregpa=\Trunregp,\delta=\delta_0$, and $\tcO(\cdot)$ hides rational polynomial terms in $(\lambda,\Tpsparn,b_a,B_a)$ and logarithmic terms in $(\totlen,A,d,1/\delta_0,1/\eps)$.
-% \end{theorem}
+
+
+
+
+
+
+
+
+
+
+
+
 
 \begin{theorem}[Approximating the Thompson sampling, Informal]\label{thm:approx_thompson_linear}
 Consider the embedding mapping $\embedmap$, extraction mapping $\extractmap$, and concatenation operator $\cat$ as in \ref{sec:tf_embed_bandit}. 
-% Consider the same embedding mapping $\embedmap$ and extraction mapping $\extractmap$ as for soft LinUCB in \ref{sec:tf_embed_bandit}, and consider the standard concatenation operator $\cat$. 
+
 Under Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear}, for sufficiently small $\eps$, there exists a transformer $\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$, 
 \begin{equation}\label{eq:ts_tf_param-main}
 \begin{aligned}
@@ -2179,18 +2179,18 @@ such that taking $\sAlg_{\tfpar}$ as defined in Eq.~(\ref{eqn:transformer-algori
  \log \sAlg_{\TS}(\ba_{t,k}|\dset_{t-1},\state_t) - \log \sAlg_{\tfpar}(\ba_{t,k}|\dset_{t-1},\state_t) \leq \eps,~~~~\forall t\in[T],k\in[A]. 
 \]
 Here, $\tcO(\cdot)$ hides polynomial terms in $(\neuron,\weightn, \Tpspar^{\pm1}, \Tpsparn^{\pm1}, b_a^{-1}, B_a)$, and poly-logarithmic terms in $(\totlen, \Numact, d, 1/\eps,\\ 1/\delta_0)$, where $(\neuron, \weightn)$ are parameters in Assumption~\ref{ass:thompson_mlp_approx_linear} and \ref{ass:thompson_mlp_diff_action_linear}. 
-%Here $M,C$ are the values defined in   Assumption~\ref{ass:thompson_mlp_approx_linear} with $\trunprob=c\eps/K$ for some universal constant $c>0$, and $\tilde O(\cdot)$ hides logarithmic dependency on $\totlen,K,d,1/\delta_0,1/\eps$.\lc{the dependence on $M,C$ is written in terms of the dependence on other variables.}
+
 \end{theorem}
 
 Central to proving Theorem~\ref{thm:approx_thompson_linear} is establishing that the transformer can approximate matrix square roots via Pade decomposition (\cref{sec:pf_thm:approx_thompson_linear-formal}), a result of independent interest. Theorem~\ref{thm:approx_thompson_linear} thereby implies the subsequent regret bound for transformers trained under DPT. 
 
 \begin{theorem}
 [Regret of Thompson sampling and ICRL]\label{thm:ts_linear_regret}
-% Let the distributional assumptions stated in Section~\ref{example:ts} holds. %Thompson sampling achieves the Bayes regret 
-% \begin{align*}  \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]\leq Cd\sqrt{\totlen}\log(\totlen d)
-% \end{align*}
-% for some problem-dependent constant $C>0$. 
-% Suppose in addition Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear} are in force. 
+
+
+
+
+
 Follow the assumptions of Theorem~\ref{thm:approx_thompson_linear}. Let $\Theta = \Theta_{D, L, M, \hidden, B}$ be the class of transformers satisfying Eq.~\eqref{eq:ts_tf_param-main} with $\eps=1/(\distratio\totlen^3)$,   $\delta_0=\delta/(2n)$, and choose the clip value $\log \clipval = \tcO(1)$. Assume the trajectories are collected by some context algorithm $\sAlg_0$, and we choose the expert algorithm $\sAlg_\shortexp(\state_t,\inst)=\action^*_t=\argmax_{\ba\in\sA_t}\<\ba,\bw^*\>$ to be the optimal action of the bandit instance $\inst$ for each trajectory. Then with probability at least $1-\delta$, the learned algorithm $\sAlg_{\esttfpar}$, a solution to Eq.~\eqref{eq:general_mle}, entails regret bound
 \begin{align*}
 \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)\Big]&\leq \cO \bigg( d\sqrt{T}\log(Td)+ \sqrt{\distratio} \cdot\totlen^2\sqrt{\frac{\log ( \cN_{\Parspace} \totlen/\delta ) }{n} } \bigg), 
@@ -2198,7 +2198,7 @@ Follow the assumptions of Theorem~\ref{thm:approx_thompson_linear}. Let $\Theta 
 where $\distratio = \distratio_{\sAlg_\TS,\sAlg_0}$, and $\log \cN_{\Parspace} \le \tcO(\layer^2\embd(\head\embd+\hidden)\log \Numobs )  \leq\tcO(\totlen^{5/4}\Numact^2 d(\neuron+\Numact\sqrt{\totlen}d)\log\Numobs)$. Here $\cO$ hides polynomial terms in $(\Tpspar^{\pm1}, \Tpsparn^{\pm1}, b_a^{-1}, B_a)$, and $\tcO$ additionally hides poly-logarithmic terms in   $(\neuron,\weightn,\\~ \totlen, \Numact, d, 1/\eps, 1/\delta_0)$. 
 \end{theorem}
 
-% \lc{the $\delta_0=\delta/(2n)$ dependence is annoying. This means $\log(1/\delta)$ contains polylogarithmic terms in $n$... may need to redefine $\tcO(\cdot)$ to include $\log n$ terms?}\lc{Also, do we want to remove the term $\log(Td)$?}
+
 
 
 
@@ -2206,29 +2206,29 @@ where $\distratio = \distratio_{\sAlg_\TS,\sAlg_0}$, and $\log \cN_{\Parspace} \
 
 
 A finite-horizon tabular MDP is specified by $\inst=(\statesp,\actionsp, \horizon, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\init)$, with $\horizon$ being the time horizon, $\statesp$ the state space of size $\Numst$, $\actionsp$ the action space of size $\Numact$, and $\init\in\Delta(\statesp)$ defining the initial state distribution. At each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp \to \Delta(\statesp)$ denotes the state transition dynamics and $\rewardfun_h:\statesp \times \actionsp \to [0,1]$ gives the reward function. A policy $\plc:=\{\plc_h:(\statesp \times\actionsp \times \R)^{h-1}\times\statesp \to\Delta(\actionsp)\}_{h \in [\horizon]}$ maps history and state to a distribution over actions. The value of policy $\pi$ interacting with environment $\inst$ is defined as the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \rewardfun_h (\state_h,\action_h)]$. A policy $\optplc$ is said to be optimal if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
-%We use $\plcset$ to denote all possible deterministic policies,  and let $\Delta(\plcset)$ be either the set of all  policies or the set of all  distributions over the  deterministic policies. $\optplc$ is said to be an optimal policy if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
+
 
 
 We let the context algorithm $\sAlg_0$ interact with an MDP instance $\inst$ to generate $\Numepi$ episodes, each consisting of $\horizon$ horizon sequences $ (\state_{k,h},\action_{k,h},\reward_{k,h})_{k \in [\Numepi], h \in [\horizon]}$. These can be reindexed into a single trajectory $\dset_{\totlen} = \{ (\state_t,\action_t,\reward_t) \}_{t \in [\totlen]}$ with $t=H(k-1)+h$ and $\totlen=\Numepi\horizon$. The Bayes regret of any algorithm $\sAlg$ gives $\E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg}(\totlen)]$. 
-%We may view the whole interaction trajectory of length $\totlen$ as $\Numepi$ episodes from the finite-horizon MDP. For any $t\in[\totlen]$, write $t=H(k-1)+h$ for some and denote $\state_t,\action_t,\reward_t$ by $\state_{k,h},\action_{k,h},\reward_{k,h}$, respectively.
 
-% \paragraph{The UCB-VI algorithm} 
+
+
 
 Near minimax-optimal regret for tabular MDPs can be attained through the UCB-VI algorithm \citep{azar2017minimax}. We demonstrate that transformers are capable of approximating the soft UCB-VI algorithm $\sAlg_{\sUCBVI(\tau)}$, a slight modification of UCB-VI formalized in Appendix~\ref{sec:tf_embed_mdp}. 
 
-% Namely, UCB-VI implements the following steps:
 
-% for each episode $k\in[\Numepi]$ and each step $h=\horizon,\ldots,1$
-% \begin{enumerate}
-%     \item Compute the estimated transition matrix $\tresttransit_h(\state'|\state,\action):=   \frac{\Numvi_h(\state,\action,\state')}{\Numvi_h(\state,\action)\vee 1}$,  where $\Numvi_h(\state,\action,\state')$ denotes the number of times the state-action-next-state tuples has been visited in the first $k-1$ episodes, and $\Numvi_h(\state,\action)=\sum_{\state'}\Numvi_h(\state,\action,\state')$ (we assume $\Numvi_\horizon(\state,\action,\state')=0$ and $\Numvi_\horizon(\state,\action)$  be the number of times $(\state,\action)$ is visited at timestep $\horizon$).
-%     \item Calculate the estimated Q-function \begin{align*}
-% \trestQfun_h(\state,\action)=\min\{\horizon,\reward_h(\state,\action)+\bonus_h(\state,\action)+\sum_{\state'\in\statesp}\tresttransit_h(\state'\mid\state,\action)\trestVfun_{h+1}(\state')\},\end{align*}
-% where the bonus $\bonus_h(\state,\action)=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{\Numvi_h(\state,\action)\vee1}}$,  $\trestVfun_{\horizon+1}(\state):=0$ for all $\state\in\statesp$ and $\trestVfun_h(\state):=\max_{\action\in\actionsp}\trestQfun_h(\state,\action)$. 
-% \end{enumerate}
-% During policy execution, at each step $h\in[\horizon]$, UCB-VI takes the greedy action $\action_h:=\argmax_{\action}\trestQfun(\state_h,\action)$ and observes the reward and next state $(\reward_h,\state_{h+1})$. To facilitate pretraining, in this work we consider a smoothed version of UCB-VI, which takes action $\action_h$  following the softmax policy $\plc_h(\action|\state_h)=\frac{\exp(\trestQfun(\state_h,\action)/\temp)}{\lone{\exp(\trestQfun(\state_h,\action)/\temp)}}$ for some sufficiently small $\temp>0$. Note that the smoothed UCB-VI recovers UCB-VI as $\temp\to 0$.
+
+
+
+
+
+
+
+
+
 
 \begin{theorem}[Approximating the soft UCB-VI]\label{thm:approx_ucbvi}
-% Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
+
 Consider the embedding mapping $\embedmap$, extraction mapping $\extractmap$, and concatenation operator $\cat$ as in Appendix~\ref{sec:tf_embed_mdp}. There exists a transformer $\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$, 
 \begin{equation}\label{eq:ucbvi_tf_param-main}
 \begin{aligned}
@@ -2252,36 +2252,36 @@ where $\log \cN_{\Parspace} \le \tcO(\layer^2\embd(\head\embd+\hidden) \log\Numo
 \section{Experiments}
 \label{sec:experiments}
 
-% \sm{LinUCB imitation ReLU}
 
-% \sm{TS K-arm, Bernoulli}
+
+
 
 
 In this section, we perform preliminary simulations to demonstrate the ICRL capabilities of transformers and validate our theoretical findings. We remark that while similar experiments have been conducted in existing works~\citep{laskin2022context,lee2023supervised}, our setting differs in several aspects such as imitating the entire interaction trajectory in our pretrain loss~\eqref{eq:general_mle} as opposed to on the last (query) state only as in~\citet{lee2023supervised}. The code is available at~\href{https://github.com/licong-lin/in-context-rl}{https://github.com/licong-lin/in-context-rl}.
 
 
-% as we train the transformer to imitate the whole interaction trajectory.\lc{not precise?}
+
 
 
 We compare pretrained transformers against empirical average, LinUCB (or UCB), and Thompson sampling. We use a GPT-2 model~\cite{garg2022can,lee2023supervised} with $L = 8$ layers, $M=4$ heads, and embedding dimension $D=32$. We utilize ReLU attention layers, aligning with our theoretical construction. We pretrain the transformer with two setups: (1) Both context algorithm $\sAlg_0$ and expert algorithm $\sAlg_{\shortexp}$ use LinUCB (the Algorithm Distillation approach); (2) Context algorithms $\sAlg_0$ mixes uniform policy and Thompson sampling, while expert $\sAlg_{\shortexp} = \action_t^*$ provides optimal actions (DPT). See Appendix \ref{sec:exp_details} for further experimental details. 
 
-% In this section, we investigate the performance of ICRL empirically on  stochastic linear bandit problems, and compare it with other online bandit algorithms including empirical average,  LinUCB (or UCB)  and Thompson sampling. We refer the reader to Appendix~\ref{sec:exp_details} for more details. In the experiments,  we use an $8$-layer transformer GPT-2 model with ReLU attention layers and pretrain the model with two different choices of context and expert algorithms. Namely, we consider (1). the context algorithm $\sAlg_{0}$ and the expert algorithm $\sAlg_{\shortexp}$  both to be LinUCB (i.e., Algorithm distillation). (2). The context algorithm $\sAlg_{0}$ is a mixture of the uniform policy and Thompson sampling, while  the expert  gives the optimal action $\sAlg_{\shortexp}=\action_t^*$  (i.e., the DPT approach). 
+
 
 In the first setup, we consider stochastic linear bandits with $d=5$ and $A=10$. At each $t \in [200]$, the agent chooses an action $\action_t$ and receives reward $\reward_t=\<\action_t,\bw^*\>+\eps_t$ where $\eps_t\sim\cN(0,1.5^2)$. The parameter $\bw^*$ is from ${\rm Unif}([0,1]^d)$. The action set $\sA_t=\sA$ is fixed over time with actions i.i.d. from ${\rm Unif}([-1, 1]^d)$. We generate 100K trajectories using $\sAlg_0=\sAlg_{\shortexp}=\LinUCB$ and train transformer $\TF_\EstPar(\cdot)$ via Eq.~\eqref{eq:general_mle}. Figure~\ref{fig:regret_1} (left) shows regrets of the transformer (TF), empirical average (Emp), LinUCB, and Thompson sampling (TS). The transformer outperforms Thompson sampling and empirical average, and is comparable to LinUCB, agreeing with Theorem~\ref{thm:smooth_linucb}. The small regret gap between TF and LinUCB may stem from the limited capacity of the GPT2 model.
 
 
-% For the first case, we consider a stochastic linear bandit with $d=5,A=10$.  We choose the time step $\totlen=200$. At each time $t\in[\totlen]$, the agent deploys an action $\action_t$ and the environment generates the reward $\reward_t=\<\action_t,\bw^*\>+\eps_t$, where the noise $\eps_t\sim\cN(0,\sigma^2)$ and $\sigma=1.5$.  We assume the true parameter $\bw^*$ is generated from the uniform distribution on $[0,1]^d$. Moreover, we assume the action set $\sA_t=\sA$ is fixed across time and the actions are i.i.d. samples from the uniform distribution on $[-1,1]^d$.  We generate $100000$ interaction trajectories with $\sAlg_0=\sAlg_{\shortexp}=\LinUCB$ and find the transformer $\TF_\EstPar(\cdot)$ via solving Eq.~\eqref{eq:general_mle}. We see in Figure~\ref{fig:regret_1} (left) that the transformer outperforms Thompson sampling and empirical average and is close to  LinUCB  in terms of regret. This aligns with our theoretical findings in Theorem~\ref{thm:smooth_linucb}. Moreover, we conjecture that the minor gap between TF and LinUCB is likely due to the limited expressivity of our small transformer model.
+
 
 
 In the second setup, we consider multi-armed Bernoulli bandits with $d = 5$. The parameter $\bw^*$ is from ${\rm Unif}([0,1]^d)$. The fixed action set $\sA_t=\sA$ contains one-hot vectors $\{\be_i\}_{i=1}^d$ (multi-armed bandits). At each $t \in [200]$, the agent selects $\action_t$ receives reward $r_t \sim {\rm Bern}(\<\action_t,\bw^*\>)$. Let $\sAlg_{\mathrm{unif}}$ be the uniform policy. We use $\sAlg_{\mathrm{unif}}$ and $\sAlg_\TS$ as context algorithms to generate $50$K trajectories each. The expert is fixed as $\sAlg_\shortexp=\action^*$. We train transformer $\TF_\EstPar(\cdot)$ via Eq.~\eqref{eq:general_mle}. Figure~\ref{fig:regret_1} (right) shows regrets for the pretrained transformer (TF), empirical average (Emp), UCB, and Thompson sampling (TS).  The transformer aligns with Thompson sampling, validating Theorem~\ref{thm:ts_linear_regret}. However, TS underperforms UCB for Bernoulli bandits, as shown. 
 
-% For the second case, we study a multi-armed Bernoulli bandit problem with $d=5$ and time step $\totlen=200$. We assume the true parameter $\bw^*$ is also generated following the uniform distribution on $[0,1]^d$ and the action set $\sA_t=\sA$  consists of the one-hot vectors $\{\be_i\}_{i=1}^d$.  At each time $t\in[\totlen]$, the agent selects an action $\action_t$ and the environment generates a reward $r_t$ from $\mathrm{Bern}(\<\action_t,\bw^*\>)$. Let $\sAlg_{\mathrm{unif}}$ denote the policy that  uniformly chooses  an action $\action_t$ at each time step. For both $\sAlg_\TS$ and $\sAlg_{\mathrm{unif}}$, we utilize them as the context algorithms and $\sAlg_\shortexp=\action_t^*$ as the expert to produce $50000$ i.i.d. interaction trajectories. These datasets are then merged to form one with $\sAlg_0=[\sAlg_{\TS}+\sAlg_{\mathrm{unif}}]/2$ and $\sAlg_\shortexp=\action_t^*$. We find $\TF_{\EstPar}$ via solving Eq.~\eqref{eq:general_mle} and the result is displayed in Figure~\ref{fig:regret_1}~(right). We observe that the regret of transformer is aligned with that of Thompson sampling, validating our finding in Theorem~\ref{thm:ts_linear_regret}. Moreover, it should be noted that TS is sub-optimal in Figure~\ref{fig:regret_1}~(right) since we only consider a small number of time steps.
+
 
 
 
 
 \begin{figure}[t]
-\centering  % Center the figure
+\centering  
 \includegraphics[width=0.35\linewidth]{Sections/figs/record_2_cum_True.pdf}
 \hspace{2em}
 \includegraphics[width=0.35\linewidth]{Sections/figs/record_1_cum_True.pdf}
@@ -2303,7 +2303,7 @@ Finally, we discuss the limitations of our results and provide additional discus
 \section*{Acknowledgement}
 
 The authors would like to thank Peter L. Bartlett for the valuable discussions, and Jonathan Lee for the valuable discussions regarding Decision-Pretrained Transformers as well as providing an early version of its implementation. This work is supported by NSF CCF-2315725, DMS-2210827, NSF Career award DMS-2339904, and an Amazon Research Award.
-% \clearpage
+
 \bibliography{references}
 \bibliographystyle{plainnat}
 
@@ -2314,7 +2314,7 @@ The authors would like to thank Peter L. Bartlett for the valuable discussions, 
 \clearpage
 
 
-% \input{Sections/app-clipped-transformer.tex}
+
 
 
 \section{Limitation and discussion}
@@ -2324,14 +2324,14 @@ In this section, we discuss some limitations of our work and some potential futu
 \paragraph{Distribution ratio} In Theorem~\ref{thm:diff_reward}, our regret bound of the learned algorithms $\sAlg_{\esttfpar}$ depends on the distribution ratio $\distratio_{\sAlg_{\shortexp},\sAlg_0}$. While in cases like algorithm distillation~\citep{laskin2022context} the distribution ratio equals one since the offline algorithm matches the expert algorithm, in the worst case, the ratio can exponentially depend on $\totlen$ or even become arbitrarily large. To control the distribution ratio in practice, one approach is to augment the offline trajectory dataset with a portion of trajectories generated by an expert algorithm or no-regret algorithms resembling the expert algorithm. On the other hand, further research could investigate structural assumptions of decision-making problems that avoid pessimistic dependence on the distribution ratio in regret bounds. 
 
 \paragraph{Guarantee of pretrained transformer} Our statistical result (Theorem~\ref{thm:diff_reward}) only guarantees that the pretrained transformer learns an ``algorithm'' matching the expert algorithm under the pre-training distribution, even though our approximation results (Theorem~\ref{thm:approx_smooth_linucb},~\ref{thm:approx_thompson_linear},~\ref{thm:approx_ucbvi}) show the existence of a transformer approximating the expert algorithm over the entire input space. In our early experiments, we noticed the learned transformers do not generalize well on out-of-distribution instances, such as with shifted reward distributions or increased number of runs $\totlen$. Similar phenomena occur in other in-context learning problems (e.g.~\cite{garg2022can}). Understanding the actual algorithm implemented by the pretrained transformer through theoretical and empirical analysis is an interesting question for future work.
-%Hence, it is important to understand in the future, through both empirical and theoretical analysis, if pretrained transformers truly imitate expert algorithms or simply implement alternative algorithms that mimic expert behaviors on the specific problem distribution $\prior$. 
+
 
 
 \paragraph{Alternative pretraining methods} Our theoretical results study pretraining the transformer by maximizing the log-likelihood of i.i.d. offline trajectories as in Eq.~(\ref{eq:general_mle}). This aligns with standard supervised pretraining of large language models. However, alternative pretraining methods may also be effective. For instance, one could replace the log-probability in Eq.~(\ref{eq:general_mle}) with an $\ell_2$ loss for continuous action spaces, consider other objectives like cumulative reward \citep{duan2016rl}, or explore goal-conditioned reinforcement learning \citep{chen2021decision} for in-context RL. While our work focuses on log-likelihood pretraining, theoretical investigation of alternative methods is an interesting direction for future work. 
 
 \paragraph{Possibility of surpassing the expert algorithm by online training} Our work considers offline pretraining by imitating the expert algorithm (i.e., $\osAlg_\shortexp$), which can only learn a transformer matching the expert's performance at best. However, through online training, where the transformer interacts with the environment, the learned transformer may surpass existing experts by training to improve itself rather than imitating a specific algorithm. Investigating whether online training enables surpassing expert algorithms is an interesting direction for future work. 
 
-% \paragraph{Internal behaviors of transformers} Our work demonstrates the ability of transformers to implement complicated RL algorithms efficiently, and establishes that via supervised pretraining an algorithm performs as well as the constructed RL algorithm on the problem distribution $\prior$ can be learned. However, the internal workings of transformers are still not well-understood. It is important to understand in the future, through both empirical and theoretical analysis, if transformers truly replicate expert algorithms or simply implement alternative algorithms that mimic expert behaviors on the specific problem distribution $\prior$. \red{ (do we want this part or not?) }
+
 
 
 
@@ -2343,10 +2343,10 @@ Furthermore, as discussed previously, the distribution ratio between the offline
 
 \section{Experimental details}\label{sec:exp_details}
 
-% \lc{Should be put into appendix later.}
+
 
 This section provides implementation details of our experiments and some additional simulations.
-% Our code is available at \url{https://anonymous.4open.science/r/in-context-rl}.
+
 
 \subsection{Implementation details}
 \paragraph{Model and embedding}
@@ -2368,19 +2368,19 @@ We provide additional experiments and plots in this section. In all experiments,
 Additional plots of suboptimality $\<\action_t^*-\action_t,\bw^*\>$ over time are shown in Figure~\ref{fig:subopt_1} for the two experiments in Section~\ref{sec:experiments}. In both cases, the transformer is able to imitate the expected expert policy $\osAlg_{\shortexp}$, as its suboptimality closely matches   $\osAlg_{\shortexp}$ (LinUCB and TS for the left and right panel, respectively).  While the empirical average (Emp) has lower suboptimality early on, its gap does not converge to zero. In contrast, both LinUCB and Thompson sampling are near-optimal up to $\tcO(1)$ factors in terms of their (long-term) regret.\lc{Is this correct?} 
 
 \begin{figure}[ht]
-\centering  % Center the figure
+\centering  
 \includegraphics[width=0.46\linewidth]{Sections/figs/record_2_cum_False.pdf}
 \includegraphics[width=0.45\linewidth]{Sections/figs/record_1_cum_False.pdf}
-\caption{Suboptimalities of transformer (TF), empirical average (Emp), Thompson sampling (TS), and LinUCB (or UCB). Left: linear bandit with $d=5$, $A=10$, $\sigma=1.5$, $\sAlg_0=\sAlg_\shortexp=\LinUCB$. Right: Bernoulli bandit with $d=5$, $\sAlg_0=(\sAlg_{\mathrm{unif}}+\sAlg_{\TS})/2$, and $\sAlg_\shortexp=\action_t^*$. The simulation is repeated 500 times. Shading displays the standard deviation of the sub-optimality estimates. %\sm{Check the shades}
+\caption{Suboptimalities of transformer (TF), empirical average (Emp), Thompson sampling (TS), and LinUCB (or UCB). Left: linear bandit with $d=5$, $A=10$, $\sigma=1.5$, $\sAlg_0=\sAlg_\shortexp=\LinUCB$. Right: Bernoulli bandit with $d=5$, $\sAlg_0=(\sAlg_{\mathrm{unif}}+\sAlg_{\TS})/2$, and $\sAlg_\shortexp=\action_t^*$. The simulation is repeated 500 times. Shading displays the standard deviation of the sub-optimality estimates. 
 } 
 \label{fig:subopt_1} 
 \end{figure}
 
 
-Additional simulations were run with $\sAlg_0=\sAlg_{\shortexp}=\UCB$ for Bernoulli bandits, which has fewer actions ($\Numact=5$) than linear bandits ($\Numact=10$). Figure~\ref{fig:linucb_bernoulli} shows the regret and suboptimality of UCB and the transformer overlap perfectly, with both algorithms exhibiting optimal behavior. This suggests the minor gaps between LinUCB and transformer in the left panel of Figure~\ref{fig:regret_1} and \ref{fig:subopt_1} are likely due to limited model capacity. %, compared with the complexity of the bandit problem.
+Additional simulations were run with $\sAlg_0=\sAlg_{\shortexp}=\UCB$ for Bernoulli bandits, which has fewer actions ($\Numact=5$) than linear bandits ($\Numact=10$). Figure~\ref{fig:linucb_bernoulli} shows the regret and suboptimality of UCB and the transformer overlap perfectly, with both algorithms exhibiting optimal behavior. This suggests the minor gaps between LinUCB and transformer in the left panel of Figure~\ref{fig:regret_1} and \ref{fig:subopt_1} are likely due to limited model capacity. 
 
 \begin{figure}[ht]
-\centering  % Center the figure
+\centering  
 \includegraphics[width=0.47\linewidth]{Sections/figs/record_3_cum_True.pdf}
 \includegraphics[width=0.45\linewidth]{Sections/figs/record_3_cum_False.pdf}
 \caption{Regrets and suboptimalities of transformer (TF), empirical average (Emp), Thompson sampling (TS), and  UCB. Settings: Bernoulli bandit with $d=5$, and $\sAlg_0=\sAlg_\shortexp=\LinUCB$. 
@@ -2399,7 +2399,7 @@ Figure~\ref{fig:compare_ratio} evaluates the learned transformers against Thomps
 
 
 \begin{figure}[ht]
-\centering  % Center the figure
+\centering  
 \includegraphics[width=0.45\linewidth]{Sections/figs/record_compare_diff_False.pdf}
 \includegraphics[width=0.45\linewidth]{Sections/figs/record_compare_diff_True.pdf}
 \caption{Regrets and difference of regrets between transformers and Thompson sampling, for different context algorithms. Settings: Bernoulli bandit with $d=5$, $\sAlg_\shortexp=\action_t^*$ and $\sAlg_0=\alpha\sAlg_\TS+(1-\alpha)\sAlg_\unif$ with $\alpha \in \{0,0.1,0.5,1\}$. The simulation is repeated 500 times. Shading displays the standard deviation of the estimates. } 
@@ -2444,11 +2444,11 @@ where the second line uses a Taylor expansion of $e^x$, the fourth line uses the
 \end{proof}
 
 
-% Suppose in addition the token vectors $\bh^{(\ell)}$ are clipped such that the values in all entries are between $[-\clipval,\clipval]$ after each layer of transformer. 
-We have the following upper bound on the covering number of the transformer class $\{\TF^\clipval_{\tfpar}:\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}\}$.  %~\yub{moved (feel free to move back)}\lc{need to be moved to other places.}
+
+We have the following upper bound on the covering number of the transformer class $\{\TF^\clipval_{\tfpar}:\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}\}$.  
 \begin{lemma}\label{lm:cover_num_bound}
 For the space of transformers $\{\TF^\clipval_{\tfpar}:\tfpar\in\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}\}$ with 
-% \sm{We didn't define $M^{(\ell)}$}
+
 \begin{align*}
 \bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}:= \Big\{\tfpar=(\tfpar^{[\layer]}_\attn,\tfpar^{[\layer]}_\mlp):\max_{\ell\in[\layer]}\head^\lth\leq \head, \max_{\ell\in[\layer]}\hidden^\lth\leq \hidden, \nrmp{\tfpar}\leq\normb \Big\}, 
 \end{align*}where $\head^\lth,\hidden^\lth$ denote the number  of heads and hidden neurons in the $\ell$-th layer respectively, the covering number of the set of induced algorithms $\{\sAlg_\tfpar,\tfpar\in\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}\}$ (c.f. Eq.~\ref{eqn:transformer-algorithm}) satisfies
@@ -2457,17 +2457,17 @@ For the space of transformers $\{\TF^\clipval_{\tfpar}:\tfpar\in\bar{\tfparspace
     &\leq c\layer^2\embd(\head\embd+\hidden)\log\Big(2+\frac{\max\{\normb,\layer,\clipval\}}{\rho}\Big)
 \end{align*} for some universal constant $c>0$. 
 
-% Moreover, if the number of heads $M$ and the hidden dimension $D'$ are bounded in each layer by some $M_\ell,D'_\ell >0$  for $\ell\in[L]$, we have a refined bound 
-% \begin{align*}
-%   \log \cN_{\tfparspace_{\layer,\head,\hidden,\normb}}(\rho)   &\leq cLD\Big[\sum_{\ell\in[L]} (M_\ell D+D'_\ell)\Big]\log\Big(2+\frac{\max\{\normb,\layer,\clipval\}}{\rho}\Big).  
-% \end{align*}
-% \lc{This proof works only for clipped TFs. Later in TF constructions need to show the token matrix has bounded norm with high probability in each layer. }
+
+
+
+
+
 
 \end{lemma}
 \textbf{Remark of Lemma~\ref{lm:cover_num_bound}.} Note that the transformer classes ${\tfparspace}_{D, \layer,\head,\hidden,\normb},\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ have the same expressivity as one can augment any $\TF_\tfpar\in \bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ such that the resulting $\TF_{\tfpar,\mathrm{aug}}\in{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ by adding heads or hidden neurons with fixed zero weights. Therefore, the same bound in Lemma~\ref{lm:cover_num_bound} follows for ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$, and  throughout the paper we do not distinguish ${\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and $\bar{\tfparspace}_{D, \layer,\head,\hidden,\normb}$ and use them interchangeably. We also use $\head^\lth,\hidden^\lth$ to  represent the number  of heads and hidden neurons in the $\ell$-th layer of transformers, respectively. 
 
 \begin{proof}[Proof of Lemma~\ref{lm:cover_num_bound}]
-%\label{sec:pf_lm:cover_num_bound}
+
 We start with introducing Proposition J.1 in~\cite{bai2023transformers}. 
 \begin{proposition}[Proposition J.1 in~\cite{bai2023transformers}]\label{prop:bai_j1}
 The function $\TF^\clipval$ is $(\layer\normb^{\layer}_{H}\normb_{\Theta})$-Lipschitz w.r.t. $\tfpar\in\tfparspace_{D, \layer,\head,\hidden,\normb}$ for any fixed input $\tfmat$. Namely, for any $\tfpar_1,\tfpar_2\in\tfparspace_{D, \layer,\head,\hidden,\normb}$, we have
@@ -2510,7 +2510,7 @@ Define $\bw:=\bu-\bv$. Then
 
 \end{proof}
 
-% \subsection{Convergence of GD and AGD}
+
 
 We present the following standard results on the convergence of GD and AGD. We refer the reader to~\cite{nesterov2003introductory} for the proof of these results. 
 
@@ -2535,8 +2535,8 @@ The gradient descent iterates $\bw^{\sst+1}_{\GD}:=\bw^{\sst}_{\GD}-\eta\nabla L
     L(\bw^{\sst}_{\AGD})-L(\bw^*)
     &\leq \frac{\alpha+\beta}{2} \exp(-\frac{\sst}{\sqrt\kappa})\|\bw^{0}_{\AGD}-\bw^*\|_2^2.
 \end{align*}
-% Moreover, if $L(\bw)$ is quadratic in $\bw$, then $ \|\bw^{t}_{\AGD}-\bw^*\|_2
-%     \leq\|\bw^{0}_{\AGD}-\bw^*\|_2$ for all $t\geq1$ (see e.g.,~\cite{assran2020convergence,attia2021algorithmic} for stability results of the AGD trajectory).
+
+
 \end{enumerate}
     
 \end{proposition}
@@ -2628,8 +2628,8 @@ for probability densities $\{ \P_i\}_{i=1,2,3,4}$ with respect to some base meas
 \begin{align*}
  &~ \Big| \E_{\inst\sim\prior,\action\sim\osAlg_{\shortexp}}[f(\dset_\totlen)]-
    \E_{\inst\sim\prior,\action\sim\sAlg_\EstPar}[f(\dset_\totlen)]\Big|\\
-%    \leq &~
-% cF\sqrt{\distratio_{\osAlg_{\shortexp},\sAlg_0}}\cdot\totlen\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} + \geneps}\\
+
+
   \leq &~cF\sqrt{\distratio_{\osAlg_{\shortexp},\sAlg_0}}\cdot\totlen\Big(\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n}} + \sqrt{\geneps}\Big)
 \end{align*}
 with probability at least $1-\delta$ for some universal constant $c>0$. Letting $f(\dset_\totlen)=\sum_{t=1}^\totlen\reward_t$  and noting that  $|f(\dset_\totlen)|\leq\totlen$ concludes the proof of Theorem~\ref{thm:diff_reward}.
@@ -2670,7 +2670,7 @@ Suppose Assumption~\ref{asp:realizability} holds. Then  the solution to~Eq.~\eqr
 \end{align*}
 with probability at least $1-\delta$ for some universal constant $c>0$.
 \end{lemma}
-% See the proof in Section~\ref{sec:pf_lm:general_imit}. 
+
 
 
 
@@ -2778,7 +2778,7 @@ This section is organized as follows. Section~\ref{sec:tf_embed_bandit} discusse
 
 \subsection{Embedding and extraction mappings}\label{sec:tf_embed_bandit}
 
-% \sm{Explicitly write the operator $\embedmap$, $\extractmap$, $\cat$} 
+
 Consider the embedding in which for each $t\in[\totlen]$, we have two tokens $\bh_{2t-1},\bh_{2t}\in\R^D$ such that
 \[
 \begin{aligned}
@@ -2794,15 +2794,15 @@ Consider the embedding in which for each $t\in[\totlen]$, we have two tokens $\b
       \bzero\\ \posv_{2t-1}
 \end{array}
 \right]
-% \begin{bmatrix}
-%      \bzero_{d+1} \\
-%      \hdashline
-%      \sA_t\\  
-%      \hdashline
-%      \bzero_A\\  
-%      \hdashline
-%       \bzero\\ \posv_{2t-1}
-% \end{bmatrix}
+
+
+
+
+
+
+
+
+
 =:
 \begin{bmatrix}
      \bh_{2t-1}^{\parta} \\  \bh_{2t-1}^{\partb}\\  \bh_{2t-1}^{\partc}\\   \bh_{2t-1}^{\partd}\\
@@ -2851,38 +2851,38 @@ To integrate the above construction into the  framework described in Section~\re
 
 
 
-% \subsection{Embedding}
-% Consider the linear stochastic bandit problem where at each time $t$ the agent plays an action $\ba_t\in\sA_t$ and receives an reward  $r_t=\<\ba_t,\bw^*\>+\eta_t$,  where $\eta_t$ is some zero mean noise with $|\eta_t|\leq\sigma$. Assume  $\ba_t,\bw^*\in\R^d$ with $\alb\leq\|\ba_t\|_2\leq B_a$, $\|\bw^*\|_2\leq B_w$, and the action set $\sA_t=\{\ba_{t,1},\ldots,\ba_{t,A}\}$ for some $A\geq 1$ and all $t\geq1$. We let $R$ to be some constant sufficiently large that may vary in different problems.
-
-% Consider the embedding where 
-% \begin{align*}
-% \bh_{2t-1}=
-% \begin{bmatrix}
-%      \bh_{2t-1}^{\parta} \\  \bh_{2t-1}^{\partb}\\  \bh_{2t-1}^{\partc}\\   \bh_{2t-1}^{\partd}
-% \end{bmatrix},~~
-% \bh_{2t}=
-% \begin{bmatrix}
-%     \bh_{2t}^{\parta} \\  \bh_{2t}^{\partb}\\   \bh_{2t}^{\partc}\\   \bh_{2t}^{\partd}
-% \end{bmatrix},
-% \end{align*}
-% where $\bh^\parta_{2t-1}=\bzero_{d+1},\bh^\partb_{2t}=\bzero_{Ad},\bh^\partc_{2t}=\bzero_{A}$; $\bh_{2t}^{\parta}=\begin{bmatrix}
-%     \ba_t^\top &r_t
-% \end{bmatrix}^\top$ denotes the action and the observed reward at time $i$;  $\bh_{2t-1}^{\partb}=\begin{bmatrix}
-%     \ba_{t,1}^\top &\ldots & \ba_{t,A}^\top
-% \end{bmatrix}^\top$ denotes the action set at time $i$; $\bh_{2t-1}^{\partc}=\begin{bmatrix}
-%     u_{t1} &\ldots u_{tA}
-% \end{bmatrix}^\top\in\Delta^A$ denotes the (unnormalized) policy used to select the action $\ba_t$ at time $i$;  $\bh_{2t-1}^{\partd}=\begin{bmatrix}
-%     \bzero^\top_{d+dA+2A} & \bzero^\top  &(2t-1) &(2t-1)^2 &1
-% \end{bmatrix}^\top$,  $\bh_{2t}^{\partd}=\begin{bmatrix}
-%     \bzero^\top_{d+dA+2A} & \bzero^\top  &2t &(2t)^2 &1
-% \end{bmatrix}^\top$ denotes the extra positional embedding. Note that the embedding dimension $D\geq O(dA)$.
-
-% At each time $i$ the transformer takes in $\bH^{\pre}_{t}=[\bH^{\post}_{t-1},\bh^{\pre}_{2t-1}]\in\R^{D\times i}$ and outputs $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_{2t-1}]\in\R^{D\times i}$, where  $\bh^{\pre,\parta}_{2t-1}=\bzero_{d+1},\bh^{\post,\parta}_{2t-1}=\bzero_{d+1}$; $\bh^{\pre,\partc}_{2t-1}=\bzero_{A}$, and $\bh^{\post,\partc}_{2t-1}\in[0,1]^A$ denotes the unnormalized policy at time $i$. The agent   selects an action $\ba_t$ according to the normalized  policy $\bp_t:=\frac{\exp(\bh^{\post,\partc}_{2t-1}/\temp)}{\|\exp(\bh^{\post,\partc}_{2t-1}/\temp)\|_1}$ for some constant $\temp$, observes the reward $r_t$ and denotes $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_{2t-1},\bh^{\post}_{2t}]$ where $\bh^{\post,\parta}_{2t}=\begin{bmatrix}
-%     \ba_t^\top & r_t
-% \end{bmatrix}^\top$, $\bh^{\post,\partb}_{2t}=\bzero_{Ad},\bh^{\post,\partc}_{2t}=\bzero_{A}$ and $\bh^{\post,\partd}_{2t}=\bh^\partd_{2t}$ is the positional embedding.
 
 
-% A standard algorithm for this problem is LinUCB~\citep{chu2011contextual}. We will show that there exists a transformer that approximately implement LinUCB. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2908,9 +2908,9 @@ In this work, to facilitate the analysis of supervised pretraining, we consider 
 
 
 
-% By Theorem 19.2, Corollary 19.3 in Lattimore and Szepesvari~\cite{lattimore2020bandit}, we have the regret $$\bR(T)=\sum_{t=1}^T \max_{j\in[A]}\<\ba_{t,j},\bw^*\>-\<\ba_t,\bw^*\>$$ satisfies $\bR(T)\leq\sqrt{8 dT\alpha\log((d\lambda+TB_a^2)/(d\lambda))}$ with probability over $1-\delta$. Choosing $\delta=1/T$ gives $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some  problem-dependent constant $C>0$.
 
-% We will show that for any $\eps>0$ there exists a transformer that can perform an approximate LinUCB algorithm such that $\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$.
+
+
 
 
 
@@ -2919,26 +2919,26 @@ In this work, to facilitate the analysis of supervised pretraining, we consider 
 \subsection{Approximation of the ridge estimator}\label{app:approx-ridge-estimator}
 In this section, we present a lemma on how transformers can  approximately implement the ridge regression estimator in-context. 
 
-% \begin{theorem}[Approximated LinUCB]\label{thm:approx_linucb}
-% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
-% For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
-% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ such that 
-% $|v^*_{tk}-\max_{j\in[k]}v_{tj}^*|\leq \eps$ for all $t\in[T]$ and  $k$ such that $p_{tk}>0$. 
-% Here $\tcO(\cdot)$ hides constants and logarithmic dependence on $T,A,\log(1/\delta),1/\eps$.
 
-% \end{theorem}
 
-% See the proof in Section~\ref{sec:pf_thm:approx_linucb}.
 
-% \begin{corollary}[Regret analysis of approximated LinUCB ]\label{cor:approx_linucb}
-%     For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
-% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ that approximately implements LinUCB such that the regret
-% $$\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$$
-% with probability over $1-\delta$. Moreover, choosing $\eps=1/\sqrt{T},\delta=1/{T}$ gives a transformer the implements approximated  LinUCB with the regret
-% $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some problem-dependent constant $C>0$, with probability over $1-1/T$.
-% \end{corollary}
 
-% See the proof in Section~\ref{sec:pf_cor:approx_linucb}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Throughout the proof, for $t\in[2\totlen]$,  we let $\bh_{t}^{(L)}$ denote the $i$-th token in the output token matrix obtained after passing through an $L$-layer transformer. We also define  $\read_{\bw_\ridge}: \R^{D}\mapsto\R^{d}$ be the operator that gives the values of  $d$ coordinates  in the token vector that are used to store the estimation of  the ridge estimate.
 
@@ -2951,14 +2951,14 @@ Moreover, there exists a  transformer $\TF_\btheta(\cdot)$ with  \begin{align*}&
 &~~~~~~\max_{\ell\in[L]}\hidden^{\lth}\leq 4d,~~~\nrmp{\btheta}\leq  10+\frac{\lambda+2}{B_a^2+\lambda}=\cO(1) \end{align*}
  such that $\|\read_{\bw_{\ridge}}(h_{2t-1}^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
 \end{lemma}
-% See the proof is Section~\ref{sec:pf_lm:approx_ridge}.
+
 
 
 Results similar to Lemma~\ref{lm:approx_ridge} have been shown in~\cite{bai2023transformers} under a different scenario.   However, we remark that  the second part of Lemma~\ref{lm:approx_ridge} has a weaker requirement on the number of layers as we prove that transformers can implement accelerated gradient descent (AGD,~\cite{nesterov2003introductory}) in-context.
 
 
 \begin{proof}[Proof of Lemma~\ref{lm:approx_ridge}]
-%\label{sec:pf_lm:approx_ridge}
+
 Note that $\lambda\id_d\preceq \bA_t\preceq (TB_a^2+\lambda)\id_d$. Therefore the optimization problem 
 $$\bw^t_{\ridge,\lambda}=\argmin_{\bw\in\R^d}L(\bw):=\argmin_{\bw\in\R^d}\frac{1}{2(2t-1)}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2(2t-1)}\|\bw\|_2^2$$
 is $\lambda/(2t-1)$-strongly convex  and $(B_a^2+\lambda)$-smooth and the condition number $\kappa\leq 2T(B_a^2+\lambda)/\lambda$. Moreover, by the definition of $\bw_{\ridge,\lambda}^t$ we have 
@@ -3152,7 +3152,7 @@ Finally, combining Step~\ref{slinucb_step1}---\ref{slinucb_step3} with $\alpha=\
 
 \paragraph{Proof of Step~\ref{slinucb_step2}}
 Note that $$\bA_{t}^{-1}\ba_{t,k}=\argmin_{\bx\in\R^d}\frac{1}{2(2t-1)}\bx^\top\bA_t\bx-\frac{1}{(2t-1)}\<\bx,\ba_{t,k}\>=:\argmin_{\bx\in\R^d}L_k(\bx)$$ is the global minimizer of a $\lambda/(2t-1)$-strongly convex  and $(B_a^2+\lambda)$-smooth  quadratic function with the condition number $\kappa\leq 2T(B_a^2+\lambda)/\lambda$. Moreover, we have $$\|\bA_{t}^{-1}\ba_{t,k}\|_2\leq \lops{\bA_{t}^{-1}}\|\ba_{t,k}\|_2\leq B_a/\lambda.$$ It follows from  Proposition~\ref{prop:conv_gd_agd} that $L=\lceil2\sqrt{2 T(B_a^2+\lambda)/\lambda}\log((1+\kappa)B_a/(\lambda\eps))\rceil$ steps of accelerated gradient descent finds $\widehat{\bA_{t}^{-1}\ba_{t,k}}$   with $\|\widehat{\bA_{t}^{-1}\ba_{t,k}}-\bA_{t}^{-1}\ba_{t,k}\|_2\leq\eps$. 
-% Moreover, the gradient $\nabla L_k(\bx)=(\bA_t\bx-\ba_{t,k})/i$. 
+
 
 Similar to the proof of Lemma~\ref{lm:approx_ridge}, we can construct a transformer such that each (self-attention+MLP) layer implements one step of the accelerated gradient descent (AGD) for all $k\in[A]$. Denote the $(k+2)d+1\sim (k+3)d, (A+1+2k)d+1\sim (A+2+2k)d, (A+2+2k)d+1\sim (A+3+2k)d$ entries of  $\bh_{2t-1}^{\partd}$ by $\hat\bw_{a,tk},\hat\bw_{b,k},\hat\bv_{k}$ for $k\in[A]$. Note that in the input vector $\bh_{2t-1}^{\pre,\partd}$ we have $\hat\bw^0_{a,tk},\hat\bw^0_{b,k},\hat\bv^0_{k}=\bzero_d$.
 
@@ -3293,7 +3293,7 @@ Therefore,
 
 
 
- % Moreover, since $\<\ba_{t,k},\widehat{\bA_t^{-1}\ba_{t,k}}\>\in[\lran/T,\uran]$, it follows that a symmetrically extended version of $f(x)=\sqrt{x},x\in[\lran/T,\uran]$ onto $[-\uran,\uran]$ that is smooth on $[-\lran/T,\lran/T]$, and that $\sup|f(x)|\leq\uran$, $\sup|\nabla f(x)|\leq T/(2\lran),~\sup|\nabla^2 f(x)|\leq T^{3/2}/(4\lran^{3/2})$, is $(\eps_{\appr},\uran,M,C_1)$-approximable by sum of relus  with  $C_1=c\cdot \sqrt{\uran}[(\uran/\lran)^{3/2}+1]T^{3/2}$ and $M=c \cdot C_1^2\log(1+C_1/\eps_{\appr})/\eps^2_{\appr}$  for some universal constant $c>0$.   \lc{need to import results from~\cite{bai2023transformers}}
+ 
  
  Choose $\eps_{\appr}=\temp\eps/\alpha$. Substituting the expressions for $N,\eps_\appr$ into the upper bounds on the norms, we obtain
  $$\lops{\bW_1^{(1)}}\leq \cO(({\alpha T/(\temp\eps)})^{1/4}),~~\lops{\bW_2^{(1)}}\leq \cO(T^{3/4}({\alpha/(\temp\eps)})^{1/4}),~~\hidden\leq \cO(A({\alpha T/(\temp\eps)})^{1/2}).$$
@@ -3326,32 +3326,32 @@ with $\|\hat v_{tk}/\temp-v_{tk}/\temp\|\leq \eps$ for all $k\in[A]$. We verify 
 
 
 
-% \subsection{Proof of Corollary~\ref{cor:approx_linucb}}\label{sec:pf_cor:approx_linucb}
-% This corollary follows directly from the standard regret analysis of LinUCB (see e.g. Theorem 19.2 in Lattimore and Szepesvari~\cite{lattimore2020bandit}) and the approximation result given in Theorem~\ref{thm:approx_linucb}. Concretely, note that $v_{tj}^*=\<\bw^t_{\ridge,\lambda},\ba_{t,k}\>+\alpha\sqrt{\<\ba_{t,k}, {\bA_t^{-1} \ba_{t,k}}\>}$ is the solution to the optimization problem 
-% \begin{align*}&\text{maximize }~~~\<\bw,\ba_{t,k}\>
-% \\
-% &\text{subject to }~~~\bw\in \sC_t:=\{\bw|(\bw-\bw^t_{\ridge,\lambda})^\top\bA_t(\bw-\bw^t_{\ridge,\lambda})\leq\alpha^2\}.
-% \end{align*}
-% Moreover, standard analysis as in the proof of Theorem 19.2 in Lattimore and Szepesvari~\cite{lattimore2020bandit} shows with probability over $1-\delta$ we have $\bw^*\in\sC_t$ for all $t\in[T]$. As shown in Theorem~\ref{thm:approx_linucb}, we can construct a transformer that implements an approximated LinUCB with  approximation error less than $\eps$. Let $k$ denotes the action chosen by the approximated algorithm at time $i$ (following the policy $\bp_t$). On the event $\bw^*\in\sC_t$, we have
-% \begin{align*}
-%      \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>\leq  \max_{j\in[A]}v^*_{tj}\leq v^*_{tk}+\eps =\<\tilde{\bw},\ba_{t,k}\>+\eps
-% \end{align*}
-% for some $\tilde{\bw}\in\sC_t$.
-% Therefore for  each $t\in[T]$
-% \begin{align*}
-%     \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\<\bw^*,\ba_{t,k}\>\leq \eps+ \<\tilde{\bw}-\bw^*,\ba_{t,k}\>\leq \eps+ \|\tilde{\bw}-\bw^*\|_{\bA_t}\cdot\|\ba_{t,k}\|_{\bA^{-1}_t}
-%     \leq \eps+ 2\alpha\|\ba_{t,k}\|_{\bA^{-1}_t}.
-% \end{align*}
-%  Moreover, note that $ \max_{j\in[A]}\<\bw^*,\ba_{t,j}\>-\<\bw^*,\ba_{t,k}\>\leq 2B_wB_a\leq2\alpha$.
-% Summing over $t\in[T]$ gives
-% \begin{align*}
-%    \bR(T)&\leq 2\sum_{t=1}^T\alpha(1\wedge\|\ba_{t,k}\|_{\bA^{-1}_t})+\eps T\\
-%    &\leq 
-% 2\alpha\sqrt{T}\sqrt{\sum_{t=1}^T(1\wedge\|\ba_{t,k}\|^2_{\bA^{-1}_t})}+\eps T\\
-% &\leq 
-% \sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T,
-% \end{align*}
-% where the second line uses Cauchy-Schwatz inequality and the last line follows from Lemma 19.4 of Lattimore and Szepesvari~\cite{lattimore2020bandit}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3473,121 +3473,121 @@ Moreover, the second part of Theorem~\ref{thm:smooth_linucb} (i.e., the upper bo
 
 
 
-% \section{LinUCB for linear stochastic bandit}
-
-% Consider the linear stochastic bandit problem where at each time $t$ the agent plays an action $\ba_t\in\sA_t$ and receives an reward  $r_t=\<\ba_t,\bw^*\>+\eta_t$,  where $\eta_t$ is some zero mean noise with $|\eta_t|\leq\sigma$. Assume  $\ba_t,\bw^*\in\R^d$ with $\alb\leq\|\ba_t\|_2\leq B_a$, $\|\bw^*\|_2\leq B_w$, and the action set $\sA_t=\{\ba_{t,1},\ldots,\ba_{t,A}\}$ for some $A\geq 1$ and all $t\geq1$. We let $R$ to be some constant sufficiently large that may vary in different problems.
-
-% Consider the embedding where 
-% \begin{align*}
-% \bh_t=
-% \begin{bmatrix}
-%     \bh_t^{\parta} \\  \bh_t^{\partb}\\  \bh_t^{\partc}\\   \bh_t^{\partd}
-% \end{bmatrix},
-% \end{align*}
-% where $\bh_t^{\parta}=\begin{bmatrix}
-%     \ba_t^\top &r_t
-% \end{bmatrix}^\top$ denotes the action and the observed reward at time $i$;  $\bh_t^{\partb}=\begin{bmatrix}
-%     \ba_{t,1}^\top &\ldots & \ba_{t,A}^\top
-% \end{bmatrix}^\top$ denotes the action set at time $i$; $\bh_t^{\partc}=\begin{bmatrix}
-%     u_{t1} &\ldots u_{tA}
-% \end{bmatrix}^\top\in\Delta^A$ denotes the (unnormalized) policy used to select the action $\ba_t$ at time $i$;  $\bh_t^{\partd}=\begin{bmatrix}
-%     \bzero^\top_{d+dA+2A} & \bzero^\top &i &i^2 &1
-% \end{bmatrix}^\top$ denotes the extra positional embedding. Note that the embedding dimension $D\geq O(dA)$.
-
-% At each time $i$ the transformer takes in $\bH^{\pre}_{t}=[\bH^{\post}_{t-1},\bh^{\pre}_t]\in\R^{D\times i}$ and outputs $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_t]\in\R^{D\times i}$, where  $\bh^{\pre,\parta}_{t}=\bzero_{d+1},\bh^{\post,\parta}_{t}=\bzero_{d+1}$; $\bh^{\pre,\partc}_{t}=\bzero_{A}$, and $\bh^{\post,\partc}_{t}\in[0,1]^A$ denotes the unnormalized policy at time $i$. The agent   selects an action according to the normalized  policy $\bp_t:=\bh^{\post,\partc}_{t}/\|\bh^{\post,\partc}_{t}\|_1$, observes the reward and denotes $\bH^{\post}_{t}=[\bH^{\post}_{t-1},\bh^{\post}_t]$ where  $\bh^{\post,\parta}_{t}=\begin{bmatrix}
-%     \ba_t^\top & r_t
-% \end{bmatrix}^\top$, $\bh^{\post,\star}_{t}=\bh^{\post,\star}_{t}$ for $\star$ in $\{\partb,\partc,\partd\}$.
-
-% A standard algorithm for this problem is LinUCB~\citep{chu2011contextual}. We will show that there exists a transformer that approximately implement LinUCB. 
 
 
 
 
 
 
-% \subsection{tnteraction, algorithm and regret bound}
-% Let $T$ be the total time and $\lambda,\cwid>0$ be some prespecified values. At each time $t\in[T]$, LinUCB consists of the following steps: 
-% \begin{enumerate}
-%     \item Computes the ridge estimator $\bw^t_{\ridge,\lambda}=\argmin_{\bw\in\R^d}\frac{1}{2t}\sum_{j=1}^{t-1}(r_j-\<\ba_j,\bw\>)^2+\frac{\lambda}{2t}\|\bw\|_2^2$.
-%     \item For each action $k\in[A]$, computes $v^*_{tk}:=\<\ba_{t,k},\bw^t_{\ridge,\lambda}\>+\cwid\sqrt{\ba_{t,k}^\top \bA_{t}^{-1}  \ba_{t,k}}$, where $\bA_t=\lambda\id_d+\sum_{j=1}^{t-1}\ba_j\ba_j^\top$.
-%     \item Selects the action $\ba_{t,j}$ with $j:=\argmax_{k\in[A]}v^*_{tk}$.
-% \end{enumerate}
-
-% Unless stated otherwise, we choose $\cwid=B_aB_w\vee [\sqrt{\lambda}B_w+\sigma\sqrt{2\log(1/\delta)+d\log((d\lambda+TB_a^2)/(d\lambda))}]$\lc{we don't need the $B_aB_w$ term for the soft linucb case.}. By Theorem 19.2, Corollary 19.3 in Lattimore and Szepesvari~\cite{lattimore2020bandit}, we have the regret $$\bR(T)=\sum_{t=1}^T \max_{j\in[A]}\<\ba_{t,j},\bw^*\>-\<\ba_t,\bw^*\>$$ satisfies $\bR(T)\leq\sqrt{8 dT\alpha\log((d\lambda+TB_a^2)/(d\lambda))}$ with probability over $1-\delta$. Choosing $\delta=1/T$ gives $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some  problem-dependent constant $C>0$.
-
-% We will show that for any $\eps>0$ there exists a transformer that can perform an approximate LinUCB algorithm such that $\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$.
 
 
 
 
 
-% \subsection{TF construction}
-
-% \begin{theorem}[Approximated LinUCB]\label{thm:approx_linucb}
-% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
-% For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
-% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ such that 
-% $|v^*_{tk}-\max_{j\in[k]}v_{tj}^*|\leq \eps$ for all $t\in[T]$ and  $k$ such that $p_{tk}>0$. 
-% Here $\tcO(\cdot)$ hides constants and logarithmic dependence on $T,A,\log(1/\delta),1/\eps$.
-
-% \end{theorem}
-
-% See the proof in Section~\ref{sec:pf_thm:approx_linucb}.
-
-% \begin{corollary}[Regret analysis of approximated LinUCB ]\label{cor:approx_linucb}
-%     For any small $\eps,\delta>0$, there exists a  transformer $\DTF_\btheta(\cdot)$ with 
-% $$L=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4A,~~~ \nrmp{\btheta}\leq \tcO(A+T^{3/2}(1+\alpha/\eps))=\tcO(A+T^{3/2}\sqrt{d+\log(1/\delta)}/\eps)  $$ that approximately implements LinUCB such that the regret
-% $$\bR(T)\leq\sqrt{8 dT\alpha^2\log((d\lambda+TB_a^2)/(d\lambda))}+\eps T$$
-% with probability over $1-\delta$. Moreover, choosing $\eps=1/\sqrt{T},\delta=1/{T}$ gives a transformer the implements approximated  LinUCB with the regret
-% $$\bR(T)\leq Cd\sqrt{T}\log(T)$$ for some problem-dependent constant $C>0$, with probability over $1-1/T$.
-% \end{corollary}
-
-% See the proof in Section~\ref{sec:pf_cor:approx_linucb}.
 
 
 
-% \begin{proposition}[Convergence guarantee of GD and AGD]\label{prop:conv_gd_agd}
-% Suppose $L(\bw)$ is a $\alpha$-strongly convex and $\beta$-smooth function on $\R^d$. Denote the condition number $\kappa:=\beta/\alpha$ and $\bw^*:=\argmin_{\bw}L(\bw)$.
-% \begin{enumerate}
-% \item[(a).]
-% The gradient descent iterates $\bw^{t+1}_{\GD}:=\bw^{t}_{\GD}-\eta\nabla L(\bw^{t}_{\GD})$ with stepsize $\eta=1/\beta$ and initial point $\bw^{0}_{\GD}=\bzero_d$ satisfies
-% \begin{align*}
-%     \|\bw^{t}_{\GD}-\bw^*\|_2^2
-%     &\leq\exp(-\frac{t}{\kappa}) \|\bw^{0}_{\GD}-\bw^*\|_2^2,
-%     \\
-%     L(\bw^{t}_{\GD})-L(\bw^*)
-%     &\leq \frac{\beta}{2} \exp(-\frac{t}{\kappa})\|\bw^{0}_{\GD}-\bw^*\|_2^2.
-% \end{align*}
-%     \item [(b).] 
-%     The accelerated gradient descent (AGD, Nestrov~\cite{nesterov2003introductory}) iterates $\bw^{t+1}_{\AGD}:=\bv^{t}_{\GD}-\frac{1}{\beta} L(\bv^{t}_{\AGD}),~~ \bv^{t+1}_{\AGD}:=\bw^{t+1}_{\AGD}+\frac{\sqrt{\kappa}-1}{\sqrt{\kappa}+1}(\bw^{t+1}_{\AGD}-\bw^{t}_{\AGD})$ with $\bw^{0}_{\AGD}=\bv^{0}_{\AGD}=\bzero_d$ satisfies
-%     \begin{align*}
-%     \|\bw^{t}_{\AGD}-\bw^*\|_2^2
-%     &\leq(1+\kappa)\exp(-\frac{t}{\sqrt{\kappa}}) \|\bw^{0}_{\AGD}-\bw^*\|_2^2,
-%     \\
-%     L(\bw^{t}_{\AGD})-L(\bw^*)
-%     &\leq \frac{\alpha+\beta}{2} \exp(-\frac{t}{\sqrt\kappa})\|\bw^{0}_{\AGD}-\bw^*\|_2^2.
-% \end{align*}
-% % Moreover, if $L(\bw)$ is quadratic in $\bw$, then $ \|\bw^{t}_{\AGD}-\bw^*\|_2
-% %     \leq\|\bw^{0}_{\AGD}-\bw^*\|_2$ for all $t\geq1$ (see e.g.,~\cite{assran2020convergence,attia2021algorithmic} for stability results of the AGD trajectory).
-% \end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
-% \end{proposition}
 
-% \begin{lemma}[Approximate the ridge regression]\label{lm:approx_ridge}
-% For any small $\eps>0$, there exists a masked self-attention layer only transformer $\DTF_\btheta^0(\cdot)$ with 
-% $$L=\Big\lceil\frac{2T(B_a^2+\lambda)}{\lambda}\log({TB_a(B_aB_w+\sigma)}/({\lambda}\eps))\Big\rceil=\tcO(T),~~\max_{\ell\in[L]}M^{(l)}\leq3,~~~ \nrmp{\btheta}\leq  \sqrt{2}+(\lambda+2)/(B_a^2+\lambda) $$ such that $\|\read_{\bw_{\ridge}}(h_t^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
 
-% Moreover, there exists a decoder-based transformer $\DTF_\btheta(\cdot)$ with  $$L=\Big\lceil2\sqrt{T}\sqrt{\frac{B_a^2+\lambda}{\lambda}}\log\Big(\frac{(T(B_a^2+\lambda)+\lambda)TB_a(B_aB_w+\sigma)}{\lambda^2\eps}\Big)\Big\rceil=\tcO(\sqrt{T}),~~\max_{\ell\in[L]}M^{(l)}\leq4,~~~ \nrmp{\btheta}\leq  11+(\lambda+2)/(B_a^2+\lambda) $$
-%  such that $\|\read_{\bw_{\ridge}}(h_t^{(L)})-\bw^t_{\ridge,\lambda}\|_2\leq\eps$ for all $t\in[T]$. 
-% \end{lemma}
-% See the proof is Section~\ref{sec:pf_lm:approx_ridge}.
+
+
+
+
+
+
+
+
 \section{Thompson sampling for stochastic linear bandit}\label{example:ts-app}
 
 Throughout this section, we use $c>0$ to denote universal constants whose values may vary from line to line.
 Moreover, for notational simplicity, we use $\conO(\cdot)$ to hide universal constants, $\cO(\cdot)$ to hide polynomial terms in the problem parameters  $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$. We also use the bold font letter $\ba_t\in\R^d$ to denote the selected action $\action_t$ at time $t\in[\totlen]$.
 
 
-%\sm{Write a road map. Here I copied the roadmap for LinUCB proof section. This section is organized as follows. Section~\ref{sec:tf_embed_bandit} discusses the input-output format of transformers for the stochastic linear bandit environment. Section~\ref{sec:soft-LinUCB} describes the LinUCB and the soft LinUCB algorithms. Section~\ref{app:approx-ridge-estimator} introduces and proves a lemma on approximating the linear ridge regression estimator, which is important for proving Theorem~\ref{thm:approx_smooth_linucb}. We prove Theorem~\ref{thm:approx_smooth_linucb} in Section~\ref{sec:pf_thm:approx_smooth_linucb} and prove Theorem~\ref{thm:smooth_linucb} in Section~\ref{sec:pf_thm:smooth_linucb}. }
+
 This section is organized as follows. Section~\ref{app:ts_algorithm_formula} describes the Thompson sampling algorithm for stochastic linear bandits. Section~\ref{app:thompson_def_ass} introduces some additional definitions, assumptions, and the formal version of Theorem~\ref{thm:approx_thompson_linear} as in Theorem~\ref{thm:approx_thompson_linear-formal}.
 We prove Theorem~~\ref{thm:approx_thompson_linear-formal} in Section~\ref{sec:pf_thm:approx_thompson_linear-formal} and prove Theorem~\ref{thm:ts_linear_regret} in Section~\ref{sec:pf_prop:ts_linear_regret}. Lastly, the proof of Lemma~\ref{lm:lip_of_tps} used in the proof of Theorem~\ref{thm:approx_thompson_linear-formal} is provided in Section~\ref{sec:pf_lm:lip_of_tps}.
 
@@ -3610,7 +3610,7 @@ Consider the stochastic linear bandit setup as in Section~\ref{sec:LinUCB-statem
 Note that Thompson sampling is equivalent to the posterior sampling procedure in our stochastic linear bandit setup, i.e., we select an action with probability that equals  the posterior probability of the action being optimal.  We allow $\Tpspar$ to be either some constant independent of $\totlen,d$,  or has the form $\Tpspar=\Tpspar_0/d$ for some constant $\Tpspar_0>0$.  The latter case is considered so that the bandit parameter vector $\bw^*$ has $\ell_2$ norm of order  $\tcO(1)$ with high probability. In this case, we use $\cO(\cdot)$ to hide polynomial terms in the problem parameters $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$, and $\tcO(\cdot)$ to hide both poly-logarithmic terms in $(\neuron,\weightn,T,A,d,1/\eps,1/\delta_0)$ and polynomial terms in  $(\lambda_0^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$. 
 
 
-% \lc{In Proposition~\ref{prop:ts_linear_regret} we only need $\lambda$ less than constant, but in the construction of TF $\lambda$ can not be too smaller because of the $\log(\tilde\lambda)$ dependence and the $poly(\tilde\lambda)$ dependence in step 2c.}
+
 
 
 \subsection{Definitions and assumptions}\label{app:thompson_def_ass}
@@ -3642,11 +3642,11 @@ f_{\neuron, \weightn}(\mathbf{z})=\sum_{\ssm=1}^\neuron c_\ssm \sigma\left(\math
 \end{align*}
 such that $\sup _{\mathbf{z} \in[-R, R]^d}\left|g(\mathbf{z})-f_{\neuron,\weightn}(\mathbf{z})\right| \leq \eps$.
 
-% Similarly,  a function $g: \sZ_{\geq0}^d \rightarrow \mathbb{R}$ is $(\eps, R, M, C)$-approximable by sum of relus, if there exists 
-% \begin{align*}
-% f_{M, C}(\mathbf{z})=\sum_{m=1}^M c_m \sigma\left(\mathbf{a}_m^{\top}[\mathbf{z} ; 1]\right) \quad \text { with } \quad \sum_{m=1}^M\left|c_m\right| \leq C, \max _{m \in[M]}\left\|\mathbf{w}_m\right\|_1 \leq 1, \quad \mathbf{w}_m \in \mathbb{R}^{d+1}, c_m \in \mathbb{R},
-% \end{align*}
-% such that $\sup _{\mathbf{z} \in[0, R]^d\cap\sZ_{\geq0}^d}\left|g(\mathbf{z})-f_{M, C}(\mathbf{z})\right| \leq \eps$.
+
+
+
+
+
 \end{definition}
 
 
@@ -3658,7 +3658,7 @@ R_\delta:=2B_a\sqrt{\lambda}(1+2\sqrt{\log(2/\delta)}+\sqrt{d})=\tcO(\sqrt{\lamb
 $
 
 \end{assumption}
-Assumption~\ref{ass:thompson_mlp_approx_linear} states that the (truncated) log-policy of  Thompson sampling  can be approximated via a two-layer MLP on a compact set with  $\tcO(\sqrt{d})$-radius when $\lambda=\tcO(1)$ (or with $\tcO(1)$--radius when $\lambda=\lambda_0/d=\tcO(1/d)$).  %For Theorem~\ref{thm:approx_thompson_linear-formal} to hold,  alternative assumptions\lc{add reference here?} on the uniform approximability of many layers of MLP, in which only a smaller $\neuron$ is required,  may be made in place of Assumption~\ref{ass:thompson_mlp_approx_linear}. We present Assumption~\ref{ass:thompson_mlp_approx_linear} on a single MLP layer for conceptual simplicity.
+Assumption~\ref{ass:thompson_mlp_approx_linear} states that the (truncated) log-policy of  Thompson sampling  can be approximated via a two-layer MLP on a compact set with  $\tcO(\sqrt{d})$-radius when $\lambda=\tcO(1)$ (or with $\tcO(1)$--radius when $\lambda=\lambda_0/d=\tcO(1/d)$).  
 
 \begin{assumption}[Difference between the actions]\label{ass:thompson_mlp_diff_action_linear}
  There exists some $\Trunregp>0$  such that for all instances $\inst$ and any time $t\in[T]$, we have $\|\ba_{t,j}-\ba_{t,k}\|_2\geq\Trunregp$ for all $1\leq j< k\leq A$.
@@ -3670,7 +3670,7 @@ With the definitions and assumptions at hand, we now present the formal statemen
 
 \begin{theorem}[Approximating the Thompson sampling, Formal statement of Theorem~\ref{thm:approx_thompson_linear}]\label{thm:approx_thompson_linear-formal}
 For any $0<\delta_0<1/2$, consider the same embedding mapping $\embedmap$ and extraction mapping $\extractmap$ as for soft LinUCB in \ref{sec:tf_embed_bandit},
-%\sm{Link}\lc{same as before},
+
 and consider the standard concatenation operator $\cat$. Under Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear}, for $\eps<(\Trunregp\wedge1)/4$, there exists a  transformer $\TF_\btheta^{\clipval}(\cdot)$ with $\log \clipval = \tcO(1)$, 
 \begin{align}
 &D=\tcO(T^{1/4}Ad),~L= \tcO(\sqrt{T}),~ M =\tcO(AT^{1/4}),~\hidden=\tcO(A(T^{1/4}d+\neuron))~,\notag\\
@@ -3683,18 +3683,18 @@ such that with probability at least $1-\delta_0$ over $(\inst, \dset_{\totlen}) 
 Here  $\neuron,\weightn$ are the values defined in   Assumption~\ref{ass:thompson_mlp_approx_linear} with $\trunprob=\eps/(4A),\Trunregpa=\Trunregp,\delta=\delta_0$, and $\tcO(\cdot)$ hides polynomial terms in $(\lambda^{\pm1},\Tpsparn^{\pm1},b_a^{-1},B_a)$ and poly-logarithmic terms in $(\neuron,\weightn,\totlen,A,d,1/\delta_0,1/\eps)$.
 \end{theorem}
 
-% \begin{theorem}
-% [Regret of Thompson sampling and ICRL]\label{thm:ts_linear_regret-formal}
-%     Under the distributional assumptions stated in Section~\ref{example:ts}, Thompson sampling achieves the Bayes regret 
-%     \begin{align*}  \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\TS}(\totlen)\Big]\leq Cd\sqrt{\totlen}\log(\totlen d)
-%     \end{align*}
-%     for some problem-dependent constant $C>0$. Suppose in addition Assumption~\ref{ass:thompson_mlp_approx_linear},~\ref{ass:thompson_mlp_diff_action_linear} are in force.   Moreover, let  $\tfparspace$ be the class of transformers satisfying Eq.~\eqref{eq:ts_tf_param} with $\eps=1/\totlen^3,\delta_0=\delta/(2n)$ and choose $\sAlg_\shortexp(\state_t,\inst)=\action^*_t=\argmax_{\ba\in\sA_t}\<\ba,\bw^*\>$ be the optimal action during pretraining. Then the solution to Eq.~\eqref{eq:general_mle} has the regret
-%   \begin{align*}
-%      \E_{\inst\sim\prior}\Big[\sum_{t=1}^\totlen\max_{k}\<\ba_{t,k},\bw^*\>-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)\Big]&\leq   Cd\sqrt{T}\log(Td)+ C\sqrt{\distratio_{\sAlg_\TS,\sAlg_0}} \cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} },\\
-%      % &\leq Cd\sqrt{T}\log(Td)+\tcO\Big(\totlen^2 \sqrt{\frac{\log(\Numobs/\delta)}{\Numobs}}\Big)
-%   \end{align*} with probability at least $1-\delta$ for some problem-dependent constant $C>0$.
-% \end{theorem}\lc{Lemma~\ref{lm:general_imit} does not apply directly here since we only have a high probability bound in Theorem~\ref{thm:approx_thompson_linear}. The choice of $\delta_0$ comes from a union bound over all trajectories.} 
-%See the proof in Section~\ref{sec:pf_prop:ts_linear_regret}. 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4036,24 +4036,24 @@ $\bQ_{kj1,kj2,kj3}^{(\ell)},\bK_{kj1,kj2,kj3}^{(\ell)},\bV_{kj1,kj2,kj3}^{(\ell)
     \end{bmatrix},~~\bV_{kj1}^{(\ell)}\bh^{(\ell-1)}_{2s-1}=\bzero,\\
     &
     \bQ_{kj2}^{(\ell)}=-\bQ_{kj1}^{(\ell)},~~ \bK_{kj2}^{(\ell)}=\bK_{kj1}^{(\ell)},~~  \bV_{kj2}^{(\ell)}=-\bV_{kj1}^{(\ell)},\\
-    %  &
-    %  \bQ_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
-    %      1\\1-2t\\ 1\\\bzero
-    % \end{bmatrix},~~ \bK_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2j}=\begin{bmatrix}
-    %     1\\ 1 \\2j\\\bzero
-    % \end{bmatrix},~~ 
-    % \bK_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2j-1}=\begin{bmatrix}
-    %     1\\ 1 \\2j-1\\\bzero
-    % \end{bmatrix},~~ \bV_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\eta\begin{bmatrix}
-    %     \bzero\\ \ba_{j,k}-\lambda\hat\bv_k^{\ell-1}\\ \bzero
-    % \end{bmatrix},\\
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
      &
      \bQ_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\begin{bmatrix}
          1\\-(2t-1)\\ 1\\\bzero
     \end{bmatrix}, 
-    % \bK_{kj4}^{(\ell)}\bh^{(\ell)}_{2j}=\begin{bmatrix}
-    %     1\\ 1 \\(2j)^2\\\bzero
-    % \end{bmatrix}, 
+    
+    
+    
 \bK_{kj3}^{(\ell)}\bh^{(\ell)}_{2s-1}=\begin{bmatrix}
         1\\ 1 \\(2s-1)\\\bzero
     \end{bmatrix}, \\&\qquad~\bV_{kj3}^{(\ell)}\bh^{(\ell-1)}_{2t-1}=\eta\begin{bmatrix}
@@ -4373,7 +4373,7 @@ Likewise, for any $j\neq k$ we have
 
 
 
-%\input{Sections/app-TS-bernoulli.tex}    %new, don't add!
+
 \section{Learning in-context RL in markov decision processes}
 
 
@@ -4405,11 +4405,11 @@ This section is organized as follows. Section~\ref{sec:tf_embed_mdp} discusses t
 
 
 
-% A finite-horizon tabular MDP is specified by $\inst=(\statesp,\actionsp, \horizon, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\init)$, with $\horizon$ being the time horizon, $\statesp$ the state space of size $\Numst$, $\actionsp$ the action space of size $\Numact$, and $\init\in\Delta(\statesp)$ defining the initial state distribution. At each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp \to \Delta(\statesp)$ denotes the state transition dynamics and $\rewardfun_h:\statesp \times \actionsp \to [0,1]$ gives the reward function. A policy $\plc:=\{\plc_h:(\statesp \times\actionsp \times \R)^{h-1}\times\statesp \to\Delta(\actionsp)\}_{h \in [\horizon]}$ maps history and state to a distribution over actions. The value of policy $\pi$ interacting with environment $\inst$ is defined as the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \rewardfun_h (\state_h,\action_h)]$. A policy $\optplc$ is said to be optimal if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
-% %We use $\plcset$ to denote all possible deterministic policies,  and let $\Delta(\plcset)$ be either the set of all  policies or the set of all  distributions over the  deterministic policies. $\optplc$ is said to be an optimal policy if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
 
 
-% We let the context algorithm $\sAlg_0$ interact with an MDP instance $\inst$ to generate $\Numepi$ episodes, each consisting of $\horizon$ horizon sequences $ (\state_{k,h},\action_{k,h},\reward_{k,h})_{k \in [\Numepi], h \in [\horizon]}$. These can be reindexed into a single trajectory $\dset_{\totlen} = \{ (\state_t,\action_t,\reward_t) \}_{t \in [\totlen]}$ with $t=H(k-1)+h$ and $\totlen=\Numepi\horizon$. The Bayes regret of any algorithm $\sAlg$ gives $\E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg}(\totlen)]$.
+
+
+
 
 
 
@@ -4506,16 +4506,16 @@ In this case, we have the input token matrix  $$\bH=\bH^\pre_{\roll,t}: = \cat(\
 
 
 
-% Our general framework also includes Markov decision processes (MDPs).   Consider a finite-horizon tabular MDP specified by $\inst=(\statesp,\actionsp, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\horizon,\init)$, where $\horizon$ is the problem horizon, $\statesp$ is the state space, $\actionsp$ is the action space. We denote the number of states and actions by $\Numst,\Numact$, respectively.  At each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp\mapsto\Delta(\statesp)$ is the transition function, $\rewardfun_h:\statesp\times\actionsp\mapsto[0,1]$ is the reward function. The process ends after $\horizon$ steps, and $\init\in\Delta(\statesp)$ specifies the distribution of the initial state.
 
 
-% A finite-horizon tabular MDP is specified by $\inst=(\statesp,\actionsp, \horizon, \{\transit_h\}_{h\in[\horizon]},\{\rewardfun_h\}_{h\in[\horizon]},\init)$, where $\horizon$ is the time horizon, $\statesp$ is the state space of size $\Numst$, $\actionsp$ is the action space of size $\Numact$, and $\init\in\Delta(\statesp)$ is the initial state distribution. For each time step $h\in[\horizon]$, $\transit_h: \statesp\times\actionsp \to \Delta(\statesp)$ represents the state transition dynamics and $\rewardfun_h:\statesp \times \actionsp \to [0,1]$ is the reward function. A policy $\plc:=\{\plc_h:(\statesp \times\actionsp \times \R)^{h-1}\times\statesp \to\Delta(\actionsp)\}_{h \in [\horizon]}$ maps the history and state to a distribution over actions.  policy $\pi$ in environment $\inst$ is the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \rewardfun_h (\state_h,\action_h)]$. A policy $\optplc$ is optimal if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$.
-
-% The context algorithm $\sAlg_0$ interacts with an MDP instance $\inst$ to generate $\Numepi$ episodes, with each consisting of $\horizon$ horizon sequences $(\state_{k,h},\action_{k,h},\reward_{k,h})_{k \in [\Numepi], h \in [\horizon]}$. These sequences can be combined into a single trajectory $\dset_{\totlen} = \{ (\state_t,\action_t,\reward_t) \}_{t \in [\totlen]}$ where $t=H(k-1)+h$ and $\totlen=\Numepi\horizon$. We define the Bayes regret of any algorithm $\sAlg$ as as $\E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg}(\totlen)]$.
 
 
-%  We assume the trajectory is collected through the interaction of the MDP instance $\inst$ with an algorithm $\sAlg$, which specifies the probabilities $\sAlg(\cdot|\dset_{t-1},\state_t)\in\Delta(\actionsp)$ for $t\in[\totlen]$. Suppose $\totlen=\Numepi\horizon$. We may view the whole interaction trajectory of length $\totlen$ as $\Numepi$ episodes from the finite-horizon MDP. 
-% For any $t\in[\totlen]$, write $t=H(k-1)+h$ for some $k,h\geq 1$ and denote $\state_t,\action_t,\reward_t$ by $\state_{k,h},\action_{k,h},\reward_{k,h}$, respectively.  For an MDP instance $\inst$, a policy $\plc:=\{\plc_h:(\statesp\times\actionsp\times\R)^{h-1}\times\statesp\mapsto\Delta(\actionsp)\}$ is a collection of $\horizon$ functions.  The value of a policy is defined as the expected cumulative reward $\valuefun_\inst(\plc)=\E_{\inst,\plc}[\sum_{h=1}^\horizon \reward(\state_h,\action_h)]$. We use $\plcset$ to denote all possible deterministic policies,  and let $\Delta(\plcset)$ be either the set of all  policies or the set of all  distributions over the  deterministic policies. $\optplc$ is said to be an optimal policy if $\optplc=\argmax_{\pi\in\Delta(\plcset)}\valuefun_\inst(\pi)$. 
+
+
+
+
+
+
 
 
 
@@ -4541,60 +4541,60 @@ During policy execution, at each step $h\in[\horizon]$, UCB-VI takes the greedy 
 \end{align*}
 using the estimated $Q$-function for some sufficiently small $\temp>0$. Note that soft UCB-VI recovers UCB-VI as $\temp\to 0$.
 
-% \sm{Consider to restate. }
-
-% \begin{theorem}[Approximating UCB-VI]\label{thm:approx_ucbvi}
-% % Let $R=2\max\{(B_a+\alpha/\sqrt{\lambda})\}$.
-%  There exists a  transformer $\TF_\btheta(\cdot)$ with 
-% \begin{align}L= 2\horizon+8,~~~\max_{\ell\in[L]}\head^{\lth}= O(\horizon\Numst^2\Numact),~~~ \max_{\ell\in[\layer]}\hidden^\lth= O(\Numepi^2\horizon\Numst^2\Numact),~~~~\nrmp{\btheta}\leq \tilde O(\Numepi^2\horizon\Numst^2\Numact+\Numepi^3+1/\temp),\label{eq:ucbvi_tf_param}
-% \end{align} such that 
-% $\Big|\log\frac{\sAlg_{\sUCBVI}(\action_t|\dset_{t-1},\state_t)}{\sAlg_{\tfpar}(\action_t|\dset_{t-1},\state_t)}\Big|=0$ for all $t\in[T]$. Here $\tilde O(\cdot)$ hides logarithmic dependencies.
-% \end{theorem} \lc{need to check the tokens are bounded.}
-
-% \begin{theorem}[Regret of UCB-VI and ICRL]\label{thm:ucbvi_icrl}
-% Take  $0<\temp\leq1/\Numepi$ and $\delta=1/(\Numepi\horizon)$ in smoothed UCB-VI.  Then  it achieves the regret
-% \begin{align*}
-% \E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\sUCBVI}(\totlen)]\leq \tilde O (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)
-% \end{align*} for all MDP instances $\inst$, where $\tilde O(\cdot)$ hides logarithmic dependencies on $\horizon,\Numepi,\Numst,\Numact$.
-% Moreover, let  $\tfparspace$ be the class of transformers satisfying Eq.~\eqref{eq:ucbvi_tf_param} with  $\sAlg_0=\sAlg_\shortexp=\sAlg_{\sUCBVI}$ during pretraining. Then the solution to Eq.~\eqref{eq:general_mle} has the expected regret
-% \begin{align*}
-% \E_{\inst\sim\prior}[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\esttfpar}(\totlen)]\leq \tilde O (\horizon^2\sqrt{\Numst\Numact\Numepi}+\horizon^3\Numst^2\Numact)+
-%  C \cdot\totlen^2\sqrt{\frac{\log \brac{ \cN_{\Parspace}(1/(\Numobs\totlen)^2) \totlen/\delta } }{n} }.
-% % &\leq Cd\sqrt{T}\log(T)+\tilde O\Big(\totlen^2 \sqrt{\frac{\log(\Numobs/\delta)}{\Numobs}}\Big)
-% \end{align*} with probability at least $1-\delta$ for some problem-dependent constant $C>0$.  ~\lc{in the proof need to show the token matrices at each step are bounded.}
-
-% \end{theorem}
-
-
-
-% \yub{Use lookup table to exactly implement division and square root.}
 
 
 
 
 
 
-% Denote the policy given by UCB-VI and smoothed UCB-VI at episode $k\in[\Numepi]$ by $\plc^{k}=(\plc^k_1,\ldots,\plc^k_\horizon),\plc^k_{\s}=(\plc^k_{\s,1},\ldots,\plc^k_{\s,\sh},\ldots\plc^k_{\s,\horizon})$. We also introduces the notation 
-% $$
-% \plc^{k}_{\ccc,\sh}:=(\plc^k_{\s,1},\ldots,\plc^k_{\s,\sh},\plc^k_{\sh+1},\ldots,\plc^k_\horizon)
-% $$ to denote the concatenated policies with first $\sh$ steps following $\plc_\s^k$ and the rest following $\plc^k$ for all $\sh\in \{0\}\cup[\horizon]$. By Theorem 1 in~\cite{azar2017minimax} with $\delta=1/(\Numepi\horizon)$,  the regret of UCB-VI satisfies
-% \begin{align*}
-%   \E[\Numepi\Vfun_\inst(\plc^*)-\totreward_{\inst,\sAlg_\UCBVI}(\totlen)]]
-%   &=  
-%   \sum_{k=1}^\Numepi(\Vfun_\inst(\plc^*)-\Vfun_\inst(\plc^{k}))\leq\tilde O(\horizon^{3/2}\sqrt{\Numst\Numact\Numepi}+\horizon^2\Numst^2\Numact)
-% \end{align*}
-%  Now it sufficies to control the different of rewards between $\UCBVI$ and $\sUCBVI$. Note that
-% \begin{align*}
-%  &\quad\E[\totreward_{\inst,\sAlg_\UCBVI}(\totlen)-\totreward_{\inst,\sAlg_\sUCBVI}(\totlen)]\\
-%  &=
-%  \sum_{k=1}^\Numepi
-%  (\Vfun_\inst(\plc^k)-\Vfun_\inst(\plc_{\s}^{k}))\\
-%  &= \sum_{k=1}^\Numepi\sum_{\sh=1}^{\horizon}
-%  (\Vfun_\inst(\plc_{\ccc,\sh-1}^k)-\Vfun_\inst(\plc_{\ccc,\sh}^k))\\
-%  &=
-%  \sum_{k=1}^\Numepi\sum_{\sh=1}^{\horizon}
-%  \E_{\plc^k_{\s,1:\sh-1}}\Big[\E_{\action_{k,\sh}\sim\plc^k_\sh}\Qfun_{\inst,\sh}(\state_{k,h},\action_{k,h})-\E_{\action_{k,\sh}\sim\plc^k_\sh}\Qfun_{\inst,\sh}(\state_{k,h},\action_{k,h})\Big]
-% \end{align*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -4674,11 +4674,11 @@ $$\layer=3,~~\max_{\ell\in[\layer]}\head^\lth=\conO(\horizon\Numact),~~\nrmp{\bt
 From the construction of Step~\ref{mdp_step1}---\ref{mdp_step4}, we verify that one can choose the constructed transformer to have the embedding dimension $D=\conO(\horizon\Numst^2\Numact)$. Moreover, due to the boundedness of the reward function, $Q$-function  and the fact that the bonus $\bonus(\state,\action)\leq\tcO(\horizon)$, we verify that there exists some $\clipval>0$ with $\log \clipval=\tcO(1)$ such that $\|\bh_i^{\lth}\|_2\leq \clipval$ for all layer $\ell\in[\layer]$ and all token $i\in[\Numepi(2\horizon+1)]$. Therefore, similar to what we do in the proof of Theorem~\ref{thm:approx_smooth_linucb},~\ref{thm:approx_thompson_linear}, we may w.l.o.g. consider transformers without truncation (i.e.,  $\clipval=\infty$) in our construction of step 1---4 in~\eqref{eq:ucbvi_roadmap}.
 
 
-% Denote the errors $\eps$ appear in step 2--4   by $\eps_2,\eps_3,\eps_4$, respectively. By the Lipschitz continuity of the log-softmax function shown in Lemma~\ref{lm:log_softmax}, we have
-% \begin{align*}
-% \Big|\log\frac{\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t)}{\sAlg_\tfpar(\cdot|\dset_{t-1},\state_t)}\Big|\leq 2\linf{\estQfun_h(\state_t,\cdot)/\temp-\trestQfun_\sh(\state_t,\cdot)/\temp}=2\eps_4.
-% \end{align*}
-% Thus, choosing (w.l.o.g. assume $\eps<1$) $$\eps_4=\frac\eps2,~~~\eps_3=\frac{\eps_4\temp}{2},~~~\eps_2=\frac{\eps_3}{\horizon(\Numst\horizon+2)}=\frac{\temp\eps}{4\horizon(\Numst\horizon+2)}$$ completes the proof.
+
+
+
+
+
 
 
 \paragraph{Proof of Step~\ref{mdp_step1}} We prove this step by constructing a transformer that implements the following two steps:
@@ -4967,7 +4967,7 @@ $, and the number of hidden neurons $\hidden=\conO(\Numepi^2\horizon\Numst^2\Num
 
 
 
-% Therefore, we may construct approximations  $\tresttransit_\sh,\estbonus_\sh$ using an two-layer MLP  to approximate the functions $f_1(x,y)=\frac{x}{y\vee1},f_2(y)=2\horizon\sqrt{\frac{\log(\Numst\Numact\totlen/\delta)}{y\vee 1}}$ for $x,y\in[\Numepi]$. Moreover, we can construct an approximation $\estreward_\sh(\state,\action)$ such that $\estreward_\sh(\state,\action)\approx \reward_\sh(\state,\action)$ when $\Numvi_\sh(\state,\action)>0$ and otherwise $\estreward_\sh(\state,\action)\geq 3\horizon$. This can be achieved by constructing an two-layer MLP approximating $f_3(x,y)=\frac{x}{y\vee 1}+4\horizon\sigma(1-y)$, which can be approximated as accurate as $f_1$ by adding an additional neuron. Using Proposition A.1 in~\cite{bai2023transformers}, it can be verified that for all $\eps_0>0$ a smooth extension of $f_1(x,y)$ is $(\eps_0,\Numepi,\tilde c\Numepi^6/\eps_0^2,c\Numepi^3)$-approximable by sum of relus, where $c>0$ is some numerical constant and $\tilde c$ hides logarithmic dependence on $1/\eps_0$ and $\Numepi$. Similarly, we verify that $f_2,f_3$ are $(\eps_0,\Numepi,\tilde c\Numepi^4/\eps_0^2,c\Numepi^2)$-approximable by sum of relus for all $\eps_0>0$. Therefore, choosing $\eps_0=\eps$, we can construct a two-layer MLP with $\lops{\bW_1}\leq \tilde c\Numepi^3/\eps,\lops{\bW_2}\leq c\Numepi^3$ and $\hidden=\tilde O(\Numepi^6\horizon\Numst^2\Numact/\eps^2)$  that approximately computes $\transit_\sh(\state,\action,\state'),\bonus_\sh(\state,\action),\reward_\sh(\state,\action)$ such that satisfies the condition in step 2.
+
 
 
 
@@ -5050,34 +5050,34 @@ such that for any state-action pair $(\state,\action)\in\statesp\times\actionsp$
  Using the upper bounds on the operator norm of the  weight matrices, we further have $\nrmp{\tfpar}\leq\conO(\Numst\Numact+\horizon)$. 
 Combining the steps concludes the construction in Step~\ref{mdp_step3}. 
 
- % Next, we provide a upper bound for the approximation error  $\linf{\estQfun_\sh-\trestQfun_\sh},\linf{\estVfun_\sh-\trestVfun_\sh}$ for all $\sh\in[\horizon]$. Denote the approximation error we achieved in step 2 by $\eps_2$. 
  
- % We claim that $\linf{\estQfun_\sh-\trestQfun_\sh}\leq \eps_{3,\sh},\linf{\estVfun_\sh-\trestVfun_\sh}\leq\eps_{3,\sh}$ for all $\sh\in[\horizon]$ with $$\eps_{3,\sh}=[2+(\horizon-\sh)(\Numst\horizon+2)]\eps_2.$$
- % We prove this by induction. When $\Numvi_\sh(\state,\action)=0$, we have $\trestQfun_\sh(\state,\action)=\horizon$ by definition. Moreover, by our construction in step 2 we have 
- % \begin{align*}
- % \horizon\geq\estQfun_\sh(\state,\action) &=  \max\{\min\{\horizon,\estreward_\sh(\state,\action)+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\},0\} \\
- % &\geq 
- % \min\{\horizon,3\horizon+\estbonus_\sh(\state,\action)+\sum_{\state'\in\statesp}\esttransit_\sh(\state'\mid\state,\action)\estVfun_{\sh+1}(\state')\} \\
- %  &\geq 
- % \min\{\horizon,3\horizon-\eps_2-\horizon-\Numst\horizon\eps_2\}=\horizon, 
- % \end{align*}where the line follows from the assumption on $\eps_2$ and the approximation results we obtain in step 2.  Therefore, $\estQfun_\sh(\state,\action)=\trestQfun_\sh(\state,\action)$ when $\Numvi_\sh(\state,\action)=0$. Now, w.l.o.g., we assume all $\Numvi_\sh(\state,\action)\geq1$. 
  
- % First, it can be verified that the claim is true for $\sh=\horizon$ as $$\linf{\estVfun_\horizon-\trestVfun_\horizon}
- % \leq
- % \linf{\estQfun_\horizon-\trestQfun_\horizon}\leq\linf{\estreward_\horizon-\reward_\horizon}+\linf{\estbonus_\horizon-\bonus_\horizon}\leq2\eps_2.$$ Now, suppose the claim holds for $\sh+1$, then we have
- % \begin{align*}
- %     \linf{\estVfun_\sh-\trestVfun_\sh}
- % \leq
- % \linf{\estQfun_\sh-\trestQfun_\sh}
- % &\leq
- % \linf{\estreward_\sh-\reward_\sh}+\linf{\estbonus_\sh-\bonus_\sh}+\linf{\esttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\trestVfun_{\sh+1}}\\
- % &\leq
- % \linf{\estreward_\sh-\reward_\sh}+\linf{\estbonus_\sh-\bonus_\sh}+\linf{\esttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\estVfun_{\sh+1}}+\linf{\tresttransit_\sh\estVfun_{\sh+1}-\tresttransit_\sh\trestVfun_{\sh+1}}\\
- % &\leq\eps_2+\eps_2+\Numst\linf{\esttransit_\sh-\tresttransit_\sh}\linf{\estVfun_{\sh+1}}+\linf{\estVfun_{\sh+1}-\trestVfun_{\sh+1}}\\
- % &\leq (2+\Numst\horizon)\eps_2+\linf{\estVfun_{\sh+1}-\trestVfun_{\sh+1}}\\
- % &\leq \eps_{3,\sh},
- % \end{align*}
- % where first inequality use the fact that $\linf{\max_{\action}f(\state,\action)-\max_{\action}\tilde f(\state,\action)}\leq \linf{f(\state,\action)-\tilde f(\state,\action)}$, the last second inequality uses $\linf{\estVfun_{\sh+1}}\leq\horizon$ and the last inequality follows from the induction assumption. Therefore the error bound requirements in step 3 are satisfied when $\eps_2\leq \eps/(\horizon(\Numst\horizon+2))$.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
 
  \paragraph{Proof of Step~\ref{mdp_step4}}
