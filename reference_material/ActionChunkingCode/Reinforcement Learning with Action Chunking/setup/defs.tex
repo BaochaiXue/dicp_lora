@@ -1,0 +1,127 @@
+\definecolor{darkblue}{rgb}{0,0.08,0.45}
+\definecolor{cred}{HTML}{D62728}
+\definecolor{cblue}{HTML}{1F77B4}
+\definecolor{cgreen}{HTML}{79AB76}
+\definecolor{cgrey}{rgb}{0.6,0.6,0.6}
+
+
+
+
+\newcommand{\expect}[2]{\mathbb{E}_{#1} \left[ #2 \right] }
+
+\newcommand{\jsd}[2]{D_\text{JSD}({#1} \parallel {#2})}
+\newcommand{\kld}[2]{D_\text{KL}({#1} \parallel {#2})}
+\newcommand{\fdiv}[2]{D_f({#1} \mid\mid {#2})}
+
+\newcommand{\boydmax}[1]{\operatorname*{maximize}\limits_{#1}}
+\newcommand{\grad}{\nabla}
+
+\newcommand{\indicator}[1]{\mathbbm{1}\left[#1\right]}
+
+
+\newcommand{\dd}[1]{\mathrm{d}#1}
+
+\newcommand{\lsm}{\mathrm{lsm}}
+\newcommand{\omegaspace}{\mathcal{W}}
+\newcommand{\bY}{\mathbf{Y}}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+
+\newcommand{\ours}[0]{\textsc{QC}}
+\newcommand{\ourslong}[0]{Q-Chunking}
+\newcommand{\hourpurple}[1]{\textbf{\color{ourpurple}{#1}}}
+\newcommand{\hourblue}[1]{\textbf{\color{ourblue}{#1}}}
+\newcommand{\hourmiddle}[1]{\textbf{\color{ourmiddle}{#1}}}
+
+\newcommand{\rrc}[2]{\mathbf{r}_{#1:#2}}
+\newcommand{\ac}[2]{\mathbf{a}_{#1:#2}}
+\newcommand{\ssc}[2]{\mathbf{s}_{#1:#2}}
+
+\newcommand{\te}[1]{\texttt{#1}}
+
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\renewcommand{\mathbf}{\boldsymbol}
+
+\newcommand{\conv}{\circledast}
+\newcommand{\mb}{\mathbf}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mf}{\mathfrak}
+\newcommand{\md}{\mathds}
+\newcommand{\bb}{\mathbb}
+\newcommand{\msf}{\mathsf}
+\newcommand{\magnitude}[1]{ \left| #1 \right| }
+\newcommand{\set}[1]{\left\{ #1 \right\}}
+\newcommand{\condset}[2]{ \left\{ #1 \;\middle|\; #2 \right\} }
+
+
+\newcommand{\reals}{\bb R}
+\newcommand{\proj}{\mathrm{proj}}
+
+\newcommand{\Cp}{\bb C}
+\newcommand{\Z}{\bb Z}
+\newcommand{\N}{\bb N}
+\newcommand{\Sp}{\bb S}
+\newcommand{\Ba}{\bb B}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\rvline}{\hspace*{-\arraycolsep}\vline\hspace*{-\arraycolsep}}
+\makeatletter
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\supp}{\mr{supp}}
+\DeclareMathOperator{\vect}{vec}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\mini}{minimize}
+\DeclareMathOperator{\maxi}{maximize}
+
+
+\newcommand{\event}{\mc E}
+
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\im}{\mathrm{i}}
+\newcommand{\rconcave}{r_\fgecap}
+\newcommand{\Lconcave}{\mc L^\fgecap}
+\newcommand{\rconvex}{r_\fgecup}
+\newcommand{\Rconvex}{R_\fgecup}
+\newcommand{\Lconvex}{\mc L^\fgecup}
+
+\newcommand{\wh}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\ol}{\overline}
+
+
+\newcommand{\betaconcave}{\beta_\fgecap}
+\newcommand{\betagrad}{\beta_{\mathrm{grad}}}
+
+\newcommand{\norm}[2]{\left\| #1 \right\|_{#2}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\row}[1]{\text{row}\left( #1 \right)}
+\newcommand{\innerprod}[2]{\left\langle #1,  #2 \right\rangle}
+\newcommand{\prob}[1]{\bb P\left[ #1 \right]}
+\newcommand{\function}[2]{#1 \left(#2\right}
+\newcommand{\integral}[4]{\int_{#1}^{#2}\; #3\; #4}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\brac}[1]{\left[ #1 \right]}
+\newcommand{\Brac}[1]{\left\{ #1 \right\}}
+
+
+\newcommand{\here}{{\color{purple}{\bf [Writing here]}}}
+\newcommand{\sz}[1]{{\color{blue}{\bf Simon: #1}}}
+\newcommand{\cl}[1]{{\color{brown}{\bf Colin: #1}}}
+\newcommand{\highlight}[1]{{\color{red}{\bf #1}}}
+\newcommand{\note}[1]{{\color{red}{\bf note: #1}}} 
+\newcommand{\mr}{\mathrm}
+\newcommand{\sym}{\mathrm{Sym}}
+\newcommand{\sks}{\mathrm{Skew}}
+\newcommand{\inprod}[2]{\langle#1,#2\rangle}
+\newcommand{\parans}[1]{\left(#1\right}
+

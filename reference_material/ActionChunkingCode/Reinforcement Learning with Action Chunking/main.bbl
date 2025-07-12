@@ -1,0 +1,436 @@
+\begin{thebibliography}{84}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Agarwal et~al.(2022{\natexlab{a}})Agarwal, Schwarzer, Castro, Courville, and Bellemare]{NEURIPS2022_ba1c5356}
+Rishabh Agarwal, Max Schwarzer, Pablo~Samuel Castro, Aaron~C Courville, and Marc Bellemare.
+\newblock Reincarnating reinforcement learning: Reusing prior computation to accelerate progress.
+\newblock In S.~Koyejo, S.~Mohamed, A.~Agarwal, D.~Belgrave, K.~Cho, and A.~Oh, editors, \emph{Advances in Neural Information Processing Systems}, volume~35, pages 28955--28971. Curran Associates, Inc., 2022{\natexlab{a}}.
+
+\bibitem[Agarwal et~al.(2022{\natexlab{b}})Agarwal, Schwarzer, Castro, Courville, and Bellemare]{agarwal2022reincarnating}
+Rishabh Agarwal, Max Schwarzer, Pablo~Samuel Castro, Aaron~C Courville, and Marc Bellemare.
+\newblock Reincarnating reinforcement learning: Reusing prior computation to accelerate progress.
+\newblock \emph{Advances in neural information processing systems}, 35:\penalty0 28955--28971, 2022{\natexlab{b}}.
+
+\bibitem[Ajay et~al.(2021)Ajay, Kumar, Agrawal, Levine, and Nachum]{ajay2020opal}
+Anurag Ajay, Aviral Kumar, Pulkit Agrawal, Sergey Levine, and Ofir Nachum.
+\newblock {OPAL}: Offline primitive discovery for accelerating offline reinforcement learning.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+\newblock URL \url{https://openreview.net/forum?id=V69LGwJ0lIN}.
+
+\bibitem[Bacon et~al.(2017)Bacon, Harb, and Precup]{bacon2017option}
+Pierre-Luc Bacon, Jean Harb, and Doina Precup.
+\newblock The option-critic architecture.
+\newblock In \emph{Proceedings of the AAAI conference on artificial intelligence}, volume~31, 2017.
+
+\bibitem[Bagaria and Konidaris(2019)]{bagaria2019option}
+Akhil Bagaria and George Konidaris.
+\newblock Option discovery using deep skill chaining.
+\newblock In \emph{International Conference on Learning Representations}, 2019.
+
+\bibitem[Bagaria et~al.(2024)Bagaria, Abbatematteo, Gottesman, Corsaro, Rammohan, and Konidaris]{bagaria2024effectively}
+Akhil Bagaria, Ben Abbatematteo, Omer Gottesman, Matt Corsaro, Sreehari Rammohan, and George Konidaris.
+\newblock Effectively learning initiation sets in hierarchical reinforcement learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Ball et~al.(2023)Ball, Smith, Kostrikov, and Levine]{ball2023efficient}
+Philip~J Ball, Laura Smith, Ilya Kostrikov, and Sergey Levine.
+\newblock Efficient online reinforcement learning with offline data.
+\newblock In \emph{International Conference on Machine Learning}, pages 1577--1594. PMLR, 2023.
+
+\bibitem[Bharadhwaj et~al.(2024)Bharadhwaj, Vakil, Sharma, Gupta, Tulsiani, and Kumar]{bharadhwaj2024roboagent}
+Homanga Bharadhwaj, Jay Vakil, Mohit Sharma, Abhinav Gupta, Shubham Tulsiani, and Vikash Kumar.
+\newblock Roboagent: Generalization and efficiency in robot manipulation via semantic augmentations and action chunking.
+\newblock In \emph{2024 IEEE International Conference on Robotics and Automation (ICRA)}, pages 4788--4795. IEEE, 2024.
+
+\bibitem[Chen et~al.(2024)Chen, Zhu, Agrawal, Zhang, and Gupta]{chen2024self}
+Boyuan Chen, Chuning Zhu, Pulkit Agrawal, Kaiqing Zhang, and Abhishek Gupta.
+\newblock Self-supervised reinforcement learning that transfers using random features.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Chentanez et~al.(2004)Chentanez, Barto, and Singh]{chentanez2004intrinsically}
+Nuttapong Chentanez, Andrew Barto, and Satinder Singh.
+\newblock Intrinsically motivated reinforcement learning.
+\newblock \emph{Advances in neural information processing systems}, 17, 2004.
+
+\bibitem[Chi et~al.(2023)Chi, Xu, Feng, Cousineau, Du, Burchfiel, Tedrake, and Song]{chi2023diffusion}
+Cheng Chi, Zhenjia Xu, Siyuan Feng, Eric Cousineau, Yilun Du, Benjamin Burchfiel, Russ Tedrake, and Shuran Song.
+\newblock Diffusion policy: Visuomotor policy learning via action diffusion.
+\newblock \emph{The International Journal of Robotics Research}, page 02783649241273668, 2023.
+
+\bibitem[Dalal et~al.(2021)Dalal, Pathak, and Salakhutdinov]{dalal2021accelerating}
+Murtaza Dalal, Deepak Pathak, and Russ~R Salakhutdinov.
+\newblock Accelerating robotic reinforcement learning via parameterized action primitives.
+\newblock \emph{Advances in Neural Information Processing Systems}, 34:\penalty0 21847--21859, 2021.
+
+\bibitem[Daniel et~al.(2016)Daniel, Neumann, Kroemer, and Peters]{daniel2016hierarchical}
+Christian Daniel, Gerhard Neumann, Oliver Kroemer, and Jan Peters.
+\newblock Hierarchical relative entropy policy search.
+\newblock \emph{Journal of Machine Learning Research}, 17\penalty0 (93):\penalty0 1--50, 2016.
+
+\bibitem[Dayan and Hinton(1992)]{dayan1992feudal}
+Peter Dayan and Geoffrey~E Hinton.
+\newblock Feudal reinforcement learning.
+\newblock \emph{Advances in neural information processing systems}, 5, 1992.
+
+\bibitem[de~Mello~Koch et~al.(2025)de~Mello~Koch, Bagaria, Huo, Zhou, Allen, and Konidaris]{de2025learning}
+Anita de~Mello~Koch, Akhil Bagaria, Bingnan Huo, Zhiyuan Zhou, Cameron Allen, and George Konidaris.
+\newblock Learning transferable sub-goals by hypothesizing generalizing features.
+\newblock 2025.
+
+\bibitem[Dietterich(2000)]{dietterich2000hierarchical}
+Thomas~G Dietterich.
+\newblock Hierarchical reinforcement learning with the maxq value function decomposition.
+\newblock \emph{Journal of artificial intelligence research}, 13:\penalty0 227--303, 2000.
+
+\bibitem[Fedus et~al.(2020)Fedus, Ramachandran, Agarwal, Bengio, Larochelle, Rowland, and Dabney]{fedus2020revisiting}
+William Fedus, Prajit Ramachandran, Rishabh Agarwal, Yoshua Bengio, Hugo Larochelle, Mark Rowland, and Will Dabney.
+\newblock Revisiting fundamentals of experience replay.
+\newblock In \emph{International conference on machine learning}, pages 3061--3071. PMLR, 2020.
+
+\bibitem[Fox et~al.(2017)Fox, Krishnan, Stoica, and Goldberg]{fox2017multi}
+Roy Fox, Sanjay Krishnan, Ion Stoica, and Ken Goldberg.
+\newblock Multi-level discovery of deep options.
+\newblock \emph{arXiv preprint arXiv:1703.08294}, 2017.
+
+\bibitem[Frans et~al.(2024)Frans, Park, Abbeel, and Levine]{frans2024unsupervised}
+Kevin Frans, Seohong Park, Pieter Abbeel, and Sergey Levine.
+\newblock Unsupervised zero-shot reinforcement learning via functional reward encodings.
+\newblock In Ruslan Salakhutdinov, Zico Kolter, Katherine Heller, Adrian Weller, Nuria Oliver, Jonathan Scarlett, and Felix Berkenkamp, editors, \emph{Proceedings of the 41st International Conference on Machine Learning}, volume 235 of \emph{Proceedings of Machine Learning Research}, pages 13927--13942. PMLR, 21--27 Jul 2024.
+\newblock URL \url{https://proceedings.mlr.press/v235/frans24a.html}.
+
+\bibitem[Fu et~al.(2020)Fu, Kumar, Nachum, Tucker, and Levine]{fu2020d4rl}
+Justin Fu, Aviral Kumar, Ofir Nachum, George Tucker, and Sergey Levine.
+\newblock {D4RL}: Datasets for deep data-driven reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2004.07219}, 2020.
+
+\bibitem[Gehring et~al.(2021)Gehring, Synnaeve, Krause, and Usunier]{gehring2021hierarchical}
+Jonas Gehring, Gabriel Synnaeve, Andreas Krause, and Nicolas Usunier.
+\newblock Hierarchical skills for efficient exploration.
+\newblock \emph{Advances in Neural Information Processing Systems}, 34:\penalty0 11553--11564, 2021.
+
+\bibitem[George and Farimani(2023)]{george2023one}
+Abraham George and Amir~Barati Farimani.
+\newblock One act play: Single demonstration behavior cloning with action chunking transformers.
+\newblock \emph{arXiv preprint arXiv:2309.10175}, 2023.
+
+\bibitem[Ghasemipour et~al.(2021)Ghasemipour, Schuurmans, and Gu]{ghasemipour2021emaq}
+Seyed Kamyar~Seyed Ghasemipour, Dale Schuurmans, and Shixiang~Shane Gu.
+\newblock Emaq: Expected-max q-learning operator for simple yet effective offline and online rl.
+\newblock In \emph{International Conference on Machine Learning}, pages 3682--3691. PMLR, 2021.
+
+\bibitem[Haarnoja et~al.(2018)Haarnoja, Zhou, Abbeel, and Levine]{haarnoja2018soft}
+Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, and Sergey Levine.
+\newblock Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor.
+\newblock In \emph{International conference on machine learning}, pages 1861--1870. PMLR, 2018.
+
+\bibitem[Hessel et~al.(2018)Hessel, Modayil, Van~Hasselt, Schaul, Ostrovski, Dabney, Horgan, Piot, Azar, and Silver]{hessel2018rainbow}
+Matteo Hessel, Joseph Modayil, Hado Van~Hasselt, Tom Schaul, Georg Ostrovski, Will Dabney, Dan Horgan, Bilal Piot, Mohammad Azar, and David Silver.
+\newblock Rainbow: Combining improvements in deep reinforcement learning.
+\newblock In \emph{Proceedings of the AAAI conference on artificial intelligence}, volume~32, 2018.
+
+\bibitem[Hilton(2023)]{hilton2023kl}
+Jacob Hilton.
+\newblock Kl divergence of max-of-n, 2023.
+\newblock URL \url{https://www.jacobh.co.uk/bon_kl.pdf}.
+
+\bibitem[Hu et~al.(2023)Hu, Yang, Ye, Mai, and Zhang]{hu2023unsupervised}
+Hao Hu, Yiqin Yang, Jianing Ye, Ziqing Mai, and Chongjie Zhang.
+\newblock Unsupervised behavior extraction via random intent priors.
+\newblock In \emph{Thirty-seventh Conference on Neural Information Processing Systems}, 2023.
+\newblock URL \url{https://openreview.net/forum?id=4vGVQVz5KG}.
+
+\bibitem[Kapturowski et~al.(2018)Kapturowski, Ostrovski, Quan, Munos, and Dabney]{kapturowski2018recurrent}
+Steven Kapturowski, Georg Ostrovski, John Quan, Remi Munos, and Will Dabney.
+\newblock Recurrent experience replay in distributed reinforcement learning.
+\newblock In \emph{International conference on learning representations}, 2018.
+
+\bibitem[Kim et~al.(2019)Kim, Ahn, and Bengio]{kim2019variational}
+Taesup Kim, Sungjin Ahn, and Yoshua Bengio.
+\newblock Variational temporal abstraction.
+\newblock \emph{Advances in Neural Information Processing Systems}, 32, 2019.
+
+\bibitem[Konidaris(2011)]{konidaris2011autonomous}
+George~Dimitri Konidaris.
+\newblock \emph{Autonomous robot skill acquisition}.
+\newblock University of Massachusetts Amherst, 2011.
+
+\bibitem[Kostrikov et~al.(2021)Kostrikov, Nair, and Levine]{kostrikov2021offline}
+Ilya Kostrikov, Ashvin Nair, and Sergey Levine.
+\newblock Offline reinforcement learning with implicit {Q}-learning.
+\newblock \emph{arXiv preprint arXiv:2110.06169}, 2021.
+
+\bibitem[Kozuno et~al.(2021)Kozuno, Tang, Rowland, Munos, Kapturowski, Dabney, Valko, and Abel]{kozuno2021revisiting}
+Tadashi Kozuno, Yunhao Tang, Mark Rowland, R{\'e}mi Munos, Steven Kapturowski, Will Dabney, Michal Valko, and David Abel.
+\newblock Revisiting peng’s q ($\lambda$) for modern reinforcement learning.
+\newblock In \emph{International Conference on Machine Learning}, pages 5794--5804. PMLR, 2021.
+
+\bibitem[Kulkarni et~al.(2016)Kulkarni, Narasimhan, Saeedi, and Tenenbaum]{kulkarni2016hierarchical}
+Tejas~D Kulkarni, Karthik Narasimhan, Ardavan Saeedi, and Josh Tenenbaum.
+\newblock Hierarchical deep reinforcement learning: Integrating temporal abstraction and intrinsic motivation.
+\newblock \emph{Advances in neural information processing systems}, 29, 2016.
+
+\bibitem[Kumar et~al.(2020)Kumar, Zhou, Tucker, and Levine]{kumar2020conservative}
+Aviral Kumar, Aurick Zhou, George Tucker, and Sergey Levine.
+\newblock Conservative {Q}-learning for offline reinforcement learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 33:\penalty0 1179--1191, 2020.
+
+\bibitem[Lee et~al.(2022)Lee, Seo, Lee, Abbeel, and Shin]{lee2022offline}
+Seunghyun Lee, Younggyo Seo, Kimin Lee, Pieter Abbeel, and Jinwoo Shin.
+\newblock Offline-to-online reinforcement learning via balanced replay and pessimistic {Q}-ensemble.
+\newblock In \emph{Conference on Robot Learning}, pages 1702--1712. PMLR, 2022.
+
+\bibitem[Li et~al.(2024)Li, Zhang, Ghosh, Zhang, and Levine]{li2024accelerating}
+Qiyang Li, Jason Zhang, Dibya Ghosh, Amy Zhang, and Sergey Levine.
+\newblock Accelerating exploration with unlabeled prior data.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Lillicrap et~al.(2015)Lillicrap, Hunt, Pritzel, Heess, Erez, Tassa, Silver, and Wierstra]{lillicrap2015continuous}
+Timothy~P Lillicrap, Jonathan~J Hunt, Alexander Pritzel, Nicolas Heess, Tom Erez, Yuval Tassa, David Silver, and Daan Wierstra.
+\newblock Continuous control with deep reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:1509.02971}, 2015.
+
+\bibitem[Liu et~al.(2022)Liu, Gong, and Liu]{liu2022flow}
+Xingchao Liu, Chengyue Gong, and Qiang Liu.
+\newblock Flow straight and fast: Learning to generate and transfer data with rectified flow.
+\newblock \emph{arXiv preprint arXiv:2209.03003}, 2022.
+
+\bibitem[Luo et~al.(2023)Luo, Kay, Grefenstette, and Deisenroth]{luo2023finetuning}
+Yicheng Luo, Jackie Kay, Edward Grefenstette, and Marc~Peter Deisenroth.
+\newblock Finetuning from offline reinforcement learning: Challenges, trade-offs and practical solutions.
+\newblock \emph{arXiv preprint arXiv:2303.17396}, 2023.
+
+\bibitem[Mandlekar et~al.(2021)Mandlekar, Xu, Wong, Nasiriany, Wang, Kulkarni, Fei-Fei, Savarese, Zhu, and Mart\'{i}n-Mart\'{i}n]{robomimic2021}
+Ajay Mandlekar, Danfei Xu, Josiah Wong, Soroush Nasiriany, Chen Wang, Rohun Kulkarni, Li~Fei-Fei, Silvio Savarese, Yuke Zhu, and Roberto Mart\'{i}n-Mart\'{i}n.
+\newblock What matters in learning from offline human demonstrations for robot manipulation.
+\newblock In \emph{arXiv preprint arXiv:2108.03298}, 2021.
+
+\bibitem[Mannor et~al.(2004)Mannor, Menache, Hoze, and Klein]{mannor2004dynamic}
+Shie Mannor, Ishai Menache, Amit Hoze, and Uri Klein.
+\newblock Dynamic abstraction in reinforcement learning via clustering.
+\newblock In \emph{Proceedings of the twenty-first international conference on Machine learning}, page~71, 2004.
+
+\bibitem[Menache et~al.(2002)Menache, Mannor, and Shimkin]{menache2002q}
+Ishai Menache, Shie Mannor, and Nahum Shimkin.
+\newblock {Q}-cut—dynamic discovery of sub-goals in reinforcement learning.
+\newblock In \emph{Machine Learning: ECML 2002: 13th European Conference on Machine Learning Helsinki, Finland, August 19--23, 2002 Proceedings 13}, pages 295--306. Springer, 2002.
+
+\bibitem[Merel et~al.(2018)Merel, Hasenclever, Galashov, Ahuja, Pham, Wayne, Teh, and Heess]{merel2018neural}
+Josh Merel, Leonard Hasenclever, Alexandre Galashov, Arun Ahuja, Vu~Pham, Greg Wayne, Yee~Whye Teh, and Nicolas Heess.
+\newblock Neural probabilistic motor primitives for humanoid control.
+\newblock \emph{arXiv preprint arXiv:1811.11711}, 2018.
+
+\bibitem[Mnih et~al.(2016)Mnih, Badia, Mirza, Graves, Lillicrap, Harley, Silver, and Kavukcuoglu]{mnih2016asynchronous}
+Volodymyr Mnih, Adria~Puigdomenech Badia, Mehdi Mirza, Alex Graves, Timothy Lillicrap, Tim Harley, David Silver, and Koray Kavukcuoglu.
+\newblock Asynchronous methods for deep reinforcement learning.
+\newblock In \emph{International conference on machine learning}, pages 1928--1937. PmLR, 2016.
+
+\bibitem[Nachum et~al.(2018)Nachum, Gu, Lee, and Levine]{nachum2018data}
+Ofir Nachum, Shixiang~Shane Gu, Honglak Lee, and Sergey Levine.
+\newblock Data-efficient hierarchical reinforcement learning.
+\newblock \emph{Advances in neural information processing systems}, 31, 2018.
+
+\bibitem[Nair et~al.(2020)Nair, Gupta, Dalal, and Levine]{nair2020awac}
+Ashvin Nair, Abhishek Gupta, Murtaza Dalal, and Sergey Levine.
+\newblock Awac: Accelerating online reinforcement learning with offline datasets.
+\newblock \emph{arXiv preprint arXiv:2006.09359}, 2020.
+
+\bibitem[Nakamoto et~al.(2024)Nakamoto, Zhai, Singh, Sobol~Mark, Ma, Finn, Kumar, and Levine]{nakamoto2024cal}
+Mitsuhiko Nakamoto, Simon Zhai, Anikait Singh, Max Sobol~Mark, Yi~Ma, Chelsea Finn, Aviral Kumar, and Sergey Levine.
+\newblock {Cal-QL}: Calibrated offline {RL} pre-training for efficient online fine-tuning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Nasiriany et~al.(2022)Nasiriany, Gao, Mandlekar, and Zhu]{nasiriany2022learning}
+Soroush Nasiriany, Tian Gao, Ajay Mandlekar, and Yuke Zhu.
+\newblock Learning and retrieval from prior data for skill-based imitation learning.
+\newblock In \emph{Conference on Robot Learning}, 2022.
+
+\bibitem[Oh et~al.(2017)Oh, Singh, and Lee]{oh2017value}
+Junhyuk Oh, Satinder Singh, and Honglak Lee.
+\newblock Value prediction network.
+\newblock \emph{Advances in neural information processing systems}, 30, 2017.
+
+\bibitem[Paraschos et~al.(2013)Paraschos, Daniel, Peters, and Neumann]{paraschos2013probabilistic}
+Alexandros Paraschos, Christian Daniel, Jan~R Peters, and Gerhard Neumann.
+\newblock Probabilistic movement primitives.
+\newblock \emph{Advances in neural information processing systems}, 26, 2013.
+
+\bibitem[Park et~al.(2024{\natexlab{a}})Park, Frans, Eysenbach, and Levine]{ogbench_park2024}
+Seohong Park, Kevin Frans, Benjamin Eysenbach, and Sergey Levine.
+\newblock Ogbench: Benchmarking offline goal-conditioned rl.
+\newblock \emph{ArXiv}, 2024{\natexlab{a}}.
+
+\bibitem[Park et~al.(2024{\natexlab{b}})Park, Frans, Eysenbach, and Levine]{park2024ogbench}
+Seohong Park, Kevin Frans, Benjamin Eysenbach, and Sergey Levine.
+\newblock Ogbench: Benchmarking offline goal-conditioned rl.
+\newblock \emph{arXiv preprint arXiv:2410.20092}, 2024{\natexlab{b}}.
+
+\bibitem[Park et~al.(2024{\natexlab{c}})Park, Kreiman, and Levine]{park2024foundation}
+Seohong Park, Tobias Kreiman, and Sergey Levine.
+\newblock Foundation policies with hilbert representations.
+\newblock In \emph{Forty-first International Conference on Machine Learning}, 2024{\natexlab{c}}.
+\newblock URL \url{https://openreview.net/forum?id=LhNsSaAKub}.
+
+\bibitem[Park et~al.(2025)Park, Li, and Levine]{park2025flow}
+Seohong Park, Qiyang Li, and Sergey Levine.
+\newblock Flow {Q}-learning.
+\newblock \emph{arXiv preprint arXiv:2502.02538}, 2025.
+
+\bibitem[Peng et~al.(2017)Peng, Berseth, Yin, and Van De~Panne]{peng2017deeploco}
+Xue~Bin Peng, Glen Berseth, KangKang Yin, and Michiel Van De~Panne.
+\newblock Deeploco: Dynamic locomotion skills using hierarchical deep reinforcement learning.
+\newblock \emph{Acm transactions on graphics (tog)}, 36\penalty0 (4):\penalty0 1--13, 2017.
+
+\bibitem[Pertsch et~al.(2021)Pertsch, Lee, and Lim]{pertsch2021accelerating}
+Karl Pertsch, Youngwoon Lee, and Joseph Lim.
+\newblock Accelerating reinforcement learning with learned skill priors.
+\newblock In \emph{Conference on robot learning}, pages 188--204. PMLR, 2021.
+
+\bibitem[Ren et~al.(2024)Ren, Lidard, Ankile, Simeonov, Agrawal, Majumdar, Burchfiel, Dai, and Simchowitz]{ren2024diffusion}
+Allen~Z Ren, Justin Lidard, Lars~L Ankile, Anthony Simeonov, Pulkit Agrawal, Anirudha Majumdar, Benjamin Burchfiel, Hongkai Dai, and Max Simchowitz.
+\newblock Diffusion policy policy optimization.
+\newblock \emph{arXiv preprint arXiv:2409.00588}, 2024.
+
+\bibitem[Riedmiller et~al.(2018)Riedmiller, Hafner, Lampe, Neunert, Degrave, Wiele, Mnih, Heess, and Springenberg]{riedmiller2018learning}
+Martin Riedmiller, Roland Hafner, Thomas Lampe, Michael Neunert, Jonas Degrave, Tom Wiele, Vlad Mnih, Nicolas Heess, and Jost~Tobias Springenberg.
+\newblock Learning by playing solving sparse reward tasks from scratch.
+\newblock In \emph{International conference on machine learning}, pages 4344--4353. PMLR, 2018.
+
+\bibitem[Schrittwieser et~al.(2020)Schrittwieser, Antonoglou, Hubert, Simonyan, Sifre, Schmitt, Guez, Lockhart, Hassabis, Graepel, et~al.]{schrittwieser2020mastering}
+Julian Schrittwieser, Ioannis Antonoglou, Thomas Hubert, Karen Simonyan, Laurent Sifre, Simon Schmitt, Arthur Guez, Edward Lockhart, Demis Hassabis, Thore Graepel, et~al.
+\newblock Mastering atari, go, chess and shogi by planning with a learned model.
+\newblock \emph{Nature}, 588\penalty0 (7839):\penalty0 604--609, 2020.
+
+\bibitem[Seo and Abbeel(2024)]{seo2024reinforcement}
+Younggyo Seo and Pieter Abbeel.
+\newblock Reinforcement learning with action sequence for data-efficient robot learning.
+\newblock \emph{arXiv preprint arXiv:2411.12155}, 2024.
+
+\bibitem[Shankar and Gupta(2020)]{shankar2020learning}
+Tanmay Shankar and Abhinav Gupta.
+\newblock Learning robot skills with temporal variational inference.
+\newblock In \emph{International Conference on Machine Learning}, pages 8624--8633. PMLR, 2020.
+
+\bibitem[{\c{S}}im{\c{s}}ek and Barto(2004)]{csimcsek2004using}
+{\"O}zg{\"u}r {\c{S}}im{\c{s}}ek and Andrew~G Barto.
+\newblock Using relative novelty to identify useful temporal abstractions in reinforcement learning.
+\newblock In \emph{Proceedings of the twenty-first international conference on Machine learning}, page~95, 2004.
+
+\bibitem[{\c S}im{\c s}ek and Barto(2007)]{csimcsek2007betweenness}
+{\"O}zg{\"u}r {\c S}im{\c s}ek and {Andrew G.} Barto.
+\newblock Betweenness centrality as a basis for forming skills.
+\newblock Workingpaper, University of Massachusetts Amherst, April 2007.
+
+\bibitem[Singh et~al.(2021)Singh, Liu, Zhou, Yu, Rhinehart, and Levine]{singh2020parrot}
+Avi Singh, Huihan Liu, Gaoyue Zhou, Albert Yu, Nicholas Rhinehart, and Sergey Levine.
+\newblock Parrot: Data-driven behavioral priors for reinforcement learning.
+\newblock In \emph{International Conference on Learning Representations}, 2021.
+\newblock URL \url{https://openreview.net/forum?id=Ysuv-WOFeKR}.
+
+\bibitem[Song et~al.(2023)Song, Zhou, Sekhari, Bagnell, Krishnamurthy, and Sun]{song2022hybrid}
+Yuda Song, Yifei Zhou, Ayush Sekhari, Drew Bagnell, Akshay Krishnamurthy, and Wen Sun.
+\newblock Hybrid {RL}: Using both offline and online data can make {RL} efficient.
+\newblock In \emph{The Eleventh International Conference on Learning Representations}, 2023.
+\newblock URL \url{https://openreview.net/forum?id=yyBis80iUuU}.
+
+\bibitem[Srinivas et~al.(2016)Srinivas, Krishnamurthy, Kumar, and Ravindran]{srinivas2016option}
+Aravind Srinivas, Ramnandan Krishnamurthy, Peeyush Kumar, and Balaraman Ravindran.
+\newblock Option discovery in hierarchical reinforcement learning using spatio-temporal clustering.
+\newblock \emph{arXiv preprint arXiv:1605.05359}, 2016.
+
+\bibitem[Stiennon et~al.(2020)Stiennon, Ouyang, Wu, Ziegler, Lowe, Voss, Radford, Amodei, and Christiano]{stiennon2020learning}
+Nisan Stiennon, Long Ouyang, Jeffrey Wu, Daniel Ziegler, Ryan Lowe, Chelsea Voss, Alec Radford, Dario Amodei, and Paul~F Christiano.
+\newblock Learning to summarize with human feedback.
+\newblock \emph{Advances in neural information processing systems}, 33:\penalty0 3008--3021, 2020.
+
+\bibitem[Sutton et~al.(1998)Sutton, Barto, et~al.]{sutton1998reinforcement}
+Richard~S Sutton, Andrew~G Barto, et~al.
+\newblock \emph{Reinforcement learning: An introduction}, volume~1.
+\newblock MIT press Cambridge, 1998.
+
+\bibitem[Sutton et~al.(1999)Sutton, Precup, and Singh]{sutton1999between}
+Richard~S Sutton, Doina Precup, and Satinder Singh.
+\newblock Between {MDPs} and {semi-MDPs}: A framework for temporal abstraction in reinforcement learning.
+\newblock \emph{Artificial intelligence}, 112\penalty0 (1-2):\penalty0 181--211, 1999.
+
+\bibitem[Tarasov et~al.(2024)Tarasov, Kurenkov, Nikulin, and Kolesnikov]{tarasov2024revisiting}
+Denis Tarasov, Vladislav Kurenkov, Alexander Nikulin, and Sergey Kolesnikov.
+\newblock Revisiting the minimalist approach to offline reinforcement learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Tian et~al.(2025)Tian, Li, Zhou, Celik, and Neumann]{tian2025chunking}
+Dong Tian, Ge~Li, Hongyi Zhou, Onur Celik, and Gerhard Neumann.
+\newblock Chunking the critic: A transformer-based soft actor-critic with n-step returns.
+\newblock \emph{arXiv preprint arXiv:2503.03660}, 2025.
+
+\bibitem[Touati et~al.(2022)Touati, Rapin, and Ollivier]{touati2022does}
+Ahmed Touati, J{\'e}r{\'e}my Rapin, and Yann Ollivier.
+\newblock Does zero-shot reinforcement learning exist?
+\newblock In \emph{The Eleventh International Conference on Learning Representations}, 2022.
+
+\bibitem[Vezhnevets et~al.(2016)Vezhnevets, Mnih, Osindero, Graves, Vinyals, Agapiou, et~al.]{vezhnevets2016strategic}
+Alexander Vezhnevets, Volodymyr Mnih, Simon Osindero, Alex Graves, Oriol Vinyals, John Agapiou, et~al.
+\newblock Strategic attentive writer for learning macro-actions.
+\newblock \emph{Advances in neural information processing systems}, 29, 2016.
+
+\bibitem[Vezhnevets et~al.(2017)Vezhnevets, Osindero, Schaul, Heess, Jaderberg, Silver, and Kavukcuoglu]{vezhnevets2017feudal}
+Alexander~Sasha Vezhnevets, Simon Osindero, Tom Schaul, Nicolas Heess, Max Jaderberg, David Silver, and Koray Kavukcuoglu.
+\newblock Feudal networks for hierarchical reinforcement learning.
+\newblock In \emph{International conference on machine learning}, pages 3540--3549. PMLR, 2017.
+
+\bibitem[Wang et~al.(2023)Wang, Yang, Gao, Lin, Chen, Wu, Jia, Song, and Huang]{wang2023train}
+Shenzhi Wang, Qisen Yang, Jiawei Gao, Matthieu Lin, Hao Chen, Liwei Wu, Ning Jia, Shiji Song, and Gao Huang.
+\newblock Train once, get a family: State-adaptive balances for offline-to-online reinforcement learning.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36:\penalty0 47081--47104, 2023.
+
+\bibitem[Watkins et~al.(1989)]{watkins1989learning}
+Christopher John Cornish~Hellaby Watkins et~al.
+\newblock Learning from delayed rewards.
+\newblock 1989.
+
+\bibitem[Wilcoxson et~al.(2024)Wilcoxson, Li, Frans, and Levine]{wilcoxson2024leveraging}
+Max Wilcoxson, Qiyang Li, Kevin Frans, and Sergey Levine.
+\newblock Leveraging skills from unlabeled prior data for efficient online exploration.
+\newblock \emph{arXiv preprint arXiv:2410.18076}, 2024.
+
+\bibitem[Wurman et~al.(2022)Wurman, Barrett, Kawamoto, MacGlashan, Subramanian, Walsh, Capobianco, Devlic, Eckert, Fuchs, et~al.]{wurman2022outracing}
+Peter~R Wurman, Samuel Barrett, Kenta Kawamoto, James MacGlashan, Kaushik Subramanian, Thomas~J Walsh, Roberto Capobianco, Alisa Devlic, Franziska Eckert, Florian Fuchs, et~al.
+\newblock Outracing champion gran turismo drivers with deep reinforcement learning.
+\newblock \emph{Nature}, 602\penalty0 (7896):\penalty0 223--228, 2022.
+
+\bibitem[Xie et~al.(2021{\natexlab{a}})Xie, Bharadhwaj, Hafner, Garg, and Shkurti]{xie2021latent}
+Kevin Xie, Homanga Bharadhwaj, Danijar Hafner, Animesh Garg, and Florian Shkurti.
+\newblock Latent skill planning for exploration and transfer.
+\newblock In \emph{International Conference on Learning Representations}, 2021{\natexlab{a}}.
+\newblock URL \url{https://openreview.net/forum?id=jXe91kq3jAq}.
+
+\bibitem[Xie et~al.(2021{\natexlab{b}})Xie, Jiang, Wang, Xiong, and Bai]{xie2021policy}
+Tengyang Xie, Nan Jiang, Huan Wang, Caiming Xiong, and Yu~Bai.
+\newblock Policy finetuning: Bridging sample-efficient offline and online reinforcement learning.
+\newblock \emph{Advances in neural information processing systems}, 34:\penalty0 27395--27407, 2021{\natexlab{b}}.
+
+\bibitem[Zhang et~al.(2023)Zhang, Xu, and Yu]{zhang2023policy}
+Haichao Zhang, Wei Xu, and Haonan Yu.
+\newblock Policy expansion for bridging offline-to-online reinforcement learning.
+\newblock In \emph{The Eleventh International Conference on Learning Representations}, 2023.
+\newblock URL \url{https://openreview.net/forum?id=-Y34L45JR6z}.
+
+\bibitem[Zhao et~al.(2023)Zhao, Kumar, Levine, and Finn]{zhao2023learning}
+Tony~Z Zhao, Vikash Kumar, Sergey Levine, and Chelsea Finn.
+\newblock Learning fine-grained bimanual manipulation with low-cost hardware.
+\newblock \emph{arXiv preprint arXiv:2304.13705}, 2023.
+
+\bibitem[Zheng et~al.(2023)Zheng, Luo, Wei, Song, Li, and Jiang]{zheng2023adaptive}
+Han Zheng, Xufang Luo, Pengfei Wei, Xuan Song, Dongsheng Li, and Jing Jiang.
+\newblock Adaptive policy learning for offline-to-online reinforcement learning.
+\newblock In \emph{Proceedings of the AAAI Conference on Artificial Intelligence}, volume~37, pages 11372--11380, 2023.
+
+\bibitem[Zhou et~al.(2024)Zhou, Peng, Li, Levine, and Kumar]{zhou2024efficient}
+Zhiyuan Zhou, Andy Peng, Qiyang Li, Sergey Levine, and Aviral Kumar.
+\newblock Efficient online reinforcement learning fine-tuning need not retain offline data.
+\newblock \emph{arXiv preprint arXiv:2412.07762}, 2024.
+
+\end{thebibliography}
