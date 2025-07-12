@@ -1,19 +1,19 @@
 \documentclass{article}
 
 
-% if you need to pass options to natbib, use, e.g.:
+
 \PassOptionsToPackage{numbers, compress}{natbib}
 \usepackage[preprint]{neurips_2025}
 
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
-\usepackage{booktabs}       % professional-quality tables
-\usepackage{amsfonts}       % blackboard math symbols
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
-\usepackage{microtype}      % microtypography
-\usepackage{xcolor}         % colors
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{xcolor}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -33,8 +33,8 @@
 
 \title{Reinforcement Learning with Action Chunking}
 
-\author{%
-  Qiyang Li, Zhiyuan Zhou, Sergey Levine \\ UC Berkeley \\ \texttt{\{qcli,zhiyuan\_zhou,svlevine\}@eecs.berkeley.edu} 
+\author{
+  Qiyang Li, Zhiyuan Zhou, Sergey Levine \\ UC Berkeley \\ \texttt{\{qcli,zhiyuan\_zhou,svlevine\}@eecs.berkeley.edu}
 }
 \begin{document}
 
@@ -45,15 +45,15 @@
 
 \maketitle
 \begin{abstract}
-We present \hourpurple{Q-chunking}, a simple yet effective recipe for improving reinforcement learning (RL) algorithms for long-horizon, sparse-reward tasks. Our recipe is designed for the offline-to-online RL setting, where the goal is to leverage an offline prior dataset to maximize the sample-efficiency of online learning. Effective exploration and sample-efficient learning remain central challenges in this setting, as it is not obvious how the offline data should be utilized to acquire a good exploratory policy. 
+We present \hourpurple{Q-chunking}, a simple yet effective recipe for improving reinforcement learning (RL) algorithms for long-horizon, sparse-reward tasks. Our recipe is designed for the offline-to-online RL setting, where the goal is to leverage an offline prior dataset to maximize the sample-efficiency of online learning. Effective exploration and sample-efficient learning remain central challenges in this setting, as it is not obvious how the offline data should be utilized to acquire a good exploratory policy.
 Our key insight is that action chunking, a technique popularized in imitation learning where sequences of future actions are predicted rather than a single action at each timestep, can be applied to temporal difference (TD)-based RL methods to mitigate the exploration challenge.
-Q-chunking adopts action chunking by directly running RL in a `chunked' action space, enabling the agent to (1) leverage temporally consistent behaviors from offline data for more effective online exploration and (2) use unbiased $n$-step backups for more stable and efficient TD learning. Our experimental results demonstrate that Q-chunking exhibits strong offline performance and online sample efficiency, outperforming prior best offline-to-online methods on a range of long-horizon, sparse-reward manipulation tasks. 
+Q-chunking adopts action chunking by directly running RL in a `chunked' action space, enabling the agent to (1) leverage temporally consistent behaviors from offline data for more effective online exploration and (2) use unbiased $n$-step backups for more stable and efficient TD learning. Our experimental results demonstrate that Q-chunking exhibits strong offline performance and online sample efficiency, outperforming prior best offline-to-online methods on a range of long-horizon, sparse-reward manipulation tasks.
 \begin{figure}[H]
 
     \centering
-    \includegraphics[width=0.50\linewidth]{figures/QC-teaser.pdf}    
+    \includegraphics[width=0.50\linewidth]{figures/QC-teaser.pdf}
     \hfill
-    \includegraphics[width=0.48\linewidth]{figures/agg-ablation.pdf}  % DONE
+    \includegraphics[width=0.48\linewidth]{figures/agg-ablation.pdf}
     \caption{\footnotesize \textbf{\hourpurple{Q-chunking} uses action chunking to enable fast value backups and effective exploration with temporally coherent actions.} \emph{left:} an overview of our approach: Q-chunking operates in a temporally extended action space that allows for (1) efficient value backups and (2) effective exploration via temporally coherent actions; \emph{right:} Our method (\hourpurple{QC}) first pre-trains on an offline dataset for 1M steps (grey) and then updates with online data for another 1M steps (white). Our method achieves strong aggregated performance over five challenging long-horizon sparse-reward domains in OGBench. \hourpurple{Code:} \href{http://github.com/ColinQiyangLi/qc}{\texttt{github.com/ColinQiyangLi/qc}}}.
     \label{fig:banner}
 \end{figure}
@@ -62,16 +62,16 @@ Q-chunking adopts action chunking by directly running RL in a `chunked' action s
 \input{content/body}
 
 \section*{Acknowledgments}
-This research was partially supported by RAI, and ONR N00014-22-1-2773. This research used the Savio computational cluster resource provided by the Berkeley Research Computing program at UC Berkeley. We would like to thank Seohong Park for providing the code infrastructure and the 100M dataset for \texttt{cube-quadruple}. We would also like to thank Ameesh Shah, Chuer Pan, Oleg Rybkin, Andrew Wagenmaker, Seohong Park, Yifei Zhou, Fangchen Liu, William Chen for discussions on the method and feedback on the early draft of the paper. 
+This research was partially supported by RAI, and ONR N00014-22-1-2773. This research used the Savio computational cluster resource provided by the Berkeley Research Computing program at UC Berkeley. We would like to thank Seohong Park for providing the code infrastructure and the 100M dataset for \texttt{cube-quadruple}. We would also like to thank Ameesh Shah, Chuer Pan, Oleg Rybkin, Andrew Wagenmaker, Seohong Park, Yifei Zhou, Fangchen Liu, William Chen for discussions on the method and feedback on the early draft of the paper.
 
 \bibliography{main}
 \bibliographystyle{plainnat}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% APPENDIX
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
 \newpage
 
 \input{content/appendix}

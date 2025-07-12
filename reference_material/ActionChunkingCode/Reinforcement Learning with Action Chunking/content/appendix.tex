@@ -1,7 +1,7 @@
 \appendix
 \section{Domain Details}
 \label{appendix:domain}
-See an overview of the six domains we use in our experiments in \cref{fig:env_renders}. 
+See an overview of the six domains we use in our experiments in \cref{fig:env_renders}.
 We also include the dataset size, episode length and the action dimension in Table \ref{tab:metadata}. In the following sections, we describe each domain in details.
 
 
@@ -13,7 +13,7 @@ We also include the dataset size, episode length and the action dimension in Tab
 \texttt{puzzle-3x3-sparse}: This domain contains a $3\times3$ grid of buttons. Each button has two states represented by its color (blue or red). Pressing any button causes its color and the color of all its adjacent buttons to flip (red $\rightarrow$ blue and blue $\rightarrow$ red). The goal is to achieve a pre-specified configuration of colors. \texttt{puzzle-3x3-task2} starts with all buttons to be blue, and the goal is to flip exactly one button (the top-left one) to be red. \texttt{puzzle-3x3-task4} starts with four buttons (top-center, bottom-center, left-center, right-center) to be blue, and the goal is to turn all the buttons to be blue. The reward is binary: $-1$ if the desired configuration is not yet reached and $0$ if the desired configuration is reached (and the episode terminates).
 
 
-\texttt{cube-double/triple/quadruple}: These three domains contain 2/3/4 cubes respectively. The tasks in the three domains all involve moving the cubes to their desired locations. 
+\texttt{cube-double/triple/quadruple}: These three domains contain 2/3/4 cubes respectively. The tasks in the three domains all involve moving the cubes to their desired locations.
 The reward is $-n_{\mathrm{wrong}}$ where $n_{\mathrm{wrong}}$ is the number of the cubes that are at the wrong position. The episode terminates when all cubes are at the correct position (reward is 0).
 
 \subsection{Robomimic environments.} We use three challenging tasks from the robomimic domain~\citep{robomimic2021}.
@@ -44,7 +44,7 @@ All of the three robomimic tasks use binary task completion rewards where the ag
     \end{tabular}
     \vspace{2mm}
     \caption{\footnotesize \textbf{Domain metadata.} Dataset size (number of transitions), episode length, and the action dimension. For OGBench tasks, the action dimension is 5 ($x$ position, $y$ position, $z$ position, gripper yaw and gripper opening). For robomimic tasks, the action dimension is 7 for square to control one arm (3 degree of freedoms (DoF) for translation, 3 DoF for rotation, and one final DoF for the gripper opening).}
-    
+
     \label{tab:metadata}
 \end{table}
 
@@ -67,7 +67,7 @@ All of the three robomimic tasks use binary task completion rewards where the ag
             \caption{\footnotesize b) \texttt{puzzle-3x3}}
             \label{fig:puzzle-viz}
         \end{subfigure}
-    \end{minipage}\hfill    
+    \end{minipage}\hfill
     \begin{minipage}{0.24\textwidth}
         \begin{subfigure}{\textwidth}
             \centering
@@ -84,7 +84,7 @@ All of the three robomimic tasks use binary task completion rewards where the ag
             \label{fig:cube-triple-viz}
         \end{subfigure}
     \end{minipage}
-    
+
     \begin{minipage}{0.24\textwidth}
         \begin{subfigure}{\textwidth}
             \centering
@@ -123,14 +123,14 @@ All of the three robomimic tasks use binary task completion rewards where the ag
 
 \section{Implementation Details}
 \label{appendix:impl-details}
-In this section, we provide more implementation details on both of our Q-chunking methods and all our baselines used in our experiments. 
+In this section, we provide more implementation details on both of our Q-chunking methods and all our baselines used in our experiments.
 
 
 
 
 
 \subsection{\hourpurple{QC-FQL}}
-We build the implementation of our method on top of \hourblue{FQL}~\citep{park2025flow}, a recently proposed offline RL/offline-to-online RL method that uses TD3+BC-style objective. It is implemented with a one-step noise-conditioned policy (instead of a Gaussian policy that is commonly used in RL) and it uses a distillation loss from a behavior flow-matching policy as the BC loss. To adapt this method to use action chunking, we simply apply \hourblue{FQL} on the temporally extended action space -- the behavior flow-matching policy generates a sequence of actions, the one-step noise-conditioned policy predicts a sequence of actions, and the $Q$-network also takes in a state and a sequence of actions. More concretely, we train three networks: 
+We build the implementation of our method on top of \hourblue{FQL}~\citep{park2025flow}, a recently proposed offline RL/offline-to-online RL method that uses TD3+BC-style objective. It is implemented with a one-step noise-conditioned policy (instead of a Gaussian policy that is commonly used in RL) and it uses a distillation loss from a behavior flow-matching policy as the BC loss. To adapt this method to use action chunking, we simply apply \hourblue{FQL} on the temporally extended action space -- the behavior flow-matching policy generates a sequence of actions, the one-step noise-conditioned policy predicts a sequence of actions, and the $Q$-network also takes in a state and a sequence of actions. More concretely, we train three networks:
 \begin{enumerate}
     \item $Q_\theta(s, a_1, \cdots a_h): \mathcal{S}\times \mathcal{A}^h \mapsto \mathbb{R}$ --- the value function that takes in a state and a sequence of actions (action chunk). In practice, we train an ensemble of $Q$ networks. We denote the weight of the ensemble element as $\theta = (\theta_1, \cdots, \theta_K)$.
     \item $\mu_\psi(s, z): \mathcal{S}\times \mathbb{R}^{Ah} \mapsto \mathbb{R}^{Ah}$ --- the one-step noise-conditioned policy that takes in a state and a noise, and outputs a sequence of actions conditioned on them.
@@ -142,7 +142,7 @@ We denote our policy as $\pi_\psi(\cdot|s)$. It is implemented by first sampling
 
 \textbf{(1) Critic loss:}
 \begin{align}
-    L(\theta_k, w) = \left(Q_{\theta_k}(s_t, a_t, \cdots, a_{t+h-1}) - r^h_t - \frac{1}{K}\sum_{k'=1}^{K} Q_{\bar \theta_{k'}}(s_{t+h}, a_{t+h}, \cdots, a_{t+2h-1})\right)^2, 
+    L(\theta_k, w) = \left(Q_{\theta_k}(s_t, a_t, \cdots, a_{t+h-1}) - r^h_t - \frac{1}{K}\sum_{k'=1}^{K} Q_{\bar \theta_{k'}}(s_{t+h}, a_{t+h}, \cdots, a_{t+2h-1})\right)^2,
 \end{align}
 where $\begin{bmatrix} a_{t+h} & \cdots & a_{t+2h-1} \end{bmatrix} \sim \pi_\psi(\cdot | s_{t+h}), k \in \{1, 2, \cdots, K\}$.
 
@@ -194,7 +194,7 @@ Finally, we directly use this implicitly parameterize policy to generate actions
 \end{align}
 where $a^{i^\star}_{t+h}, \cdots, a^{i^\star}_{t+2h-1} \sim \pi(\cdot | s_{t+h})$.
 
-The baselines \hourblue{BFN-n} and \hourblue{BFN} are implemented similarly to \hourblue{FQL-n} and \hourblue{FQL} by operating in the original action space. 
+The baselines \hourblue{BFN-n} and \hourblue{BFN} are implemented similarly to \hourblue{FQL-n} and \hourblue{FQL} by operating in the original action space.
 
 
 \begin{algorithm}[t]
@@ -292,11 +292,11 @@ Unless specified otherwise, for all methods, we run 4 seeds on each OGBench task
 \caption{\footnotesize \textbf{Number of actions sampled for the expected-max $Q$ operator ($N$) for BFN methods.} }
     \label{tab:emaq}
 \end{table}
-\hourpurple{QC}, \hourblue{BFN}, \hourblue{BFN-n}. We tune the number of actions sampled, $N$, for the expcted-max $Q$ operator. On OGBench domains, we sweep over $\{2, 4, 8, 16, 32, 64, 128\}$ and select the best parameter for each domain and for each method on \texttt{task2}. We report the performance of each method with the best $\alpha$ in \cref{fig:main} and \cref{fig:banner} (on all tasks). \cref{tab:emaq} summarizes the $\alpha$ value we use for each task. 
+\hourpurple{QC}, \hourblue{BFN}, \hourblue{BFN-n}. We tune the number of actions sampled, $N$, for the expcted-max $Q$ operator. On OGBench domains, we sweep over $\{2, 4, 8, 16, 32, 64, 128\}$ and select the best parameter for each domain and for each method on \texttt{task2}. We report the performance of each method with the best $\alpha$ in \cref{fig:main} and \cref{fig:banner} (on all tasks). \cref{tab:emaq} summarizes the $\alpha$ value we use for each task.
 
-\hourpurple{QC-FQL}, \hourblue{FQL}, \hourblue{FQL-n}. We tune the behavior regularization coefficient $\alpha$. On OGBench domains, we take the default hyperparameter of \hourblue{FQL} for each domain $\alpha_{\mathrm{default}}$ and tune all methods on \texttt{task2} of each domain with three choices of $\alpha$: $\{\alpha_{\mathrm{default}} / 3, \alpha_{\mathrm{default}}, 3\alpha_{\mathrm{default}} \}$ (our $\alpha_{\mathrm{default}}$ comes from Table 6 in \citet{park2025flow}). On robomimic domain, we sweep over much large $\alpha$ values: $\{100, 1000, 10000\}$. We report the performance of each method with the best $\alpha$ in \cref{fig:main} and \cref{fig:banner} (on all tasks). \cref{tab:alpha} summarizes the $\alpha$ value we use for each task. 
+\hourpurple{QC-FQL}, \hourblue{FQL}, \hourblue{FQL-n}. We tune the behavior regularization coefficient $\alpha$. On OGBench domains, we take the default hyperparameter of \hourblue{FQL} for each domain $\alpha_{\mathrm{default}}$ and tune all methods on \texttt{task2} of each domain with three choices of $\alpha$: $\{\alpha_{\mathrm{default}} / 3, \alpha_{\mathrm{default}}, 3\alpha_{\mathrm{default}} \}$ (our $\alpha_{\mathrm{default}}$ comes from Table 6 in \citet{park2025flow}). On robomimic domain, we sweep over much large $\alpha$ values: $\{100, 1000, 10000\}$. We report the performance of each method with the best $\alpha$ in \cref{fig:main} and \cref{fig:banner} (on all tasks). \cref{tab:alpha} summarizes the $\alpha$ value we use for each task.
 
-\hourblue{RLPD}, \hourblue{RLPD-AC}, \hourpurple{QC-RLPD}. We sweep over (1) whether or not to use clipped double Q-learning (CDQ), and (2) whether or not to use entropy backup. We find that not using CDQ and not using entropy backup to perform the best for all of the RLPD baselines and use that across all domains. Even though our method and the other FQL baselines use $K=2$ critic ensemble size, we use $K=10$ critic ensemble size for \hourblue{RLPD} to keep it the same as the hyperparameter in the original paper~\citep{ball2023efficient}. 
+\hourblue{RLPD}, \hourblue{RLPD-AC}, \hourpurple{QC-RLPD}. We sweep over (1) whether or not to use clipped double Q-learning (CDQ), and (2) whether or not to use entropy backup. We find that not using CDQ and not using entropy backup to perform the best for all of the RLPD baselines and use that across all domains. Even though our method and the other FQL baselines use $K=2$ critic ensemble size, we use $K=10$ critic ensemble size for \hourblue{RLPD} to keep it the same as the hyperparameter in the original paper~\citep{ball2023efficient}.
 For \hourpurple{QC-RLPD}, we sweep over behavior regularization coefficient $\alpha \in \{0.001, 0.01, 0.1\}$ and pick $0.01$ since it works the best.
 
 
@@ -344,7 +344,7 @@ We provide more examples of the trajectory rollouts from \hourpurple{QC} and \ho
 \textbf{Main results by task.} The following plot (\cref{fig:main-all-individual} shows the performance breakdown for \cref{fig:main}.
 \begin{figure}[H]
     \centering
-\includegraphics[width=\linewidth]{figures/main-all-individual-ablation.pdf} %
+\includegraphics[width=\linewidth]{figures/main-all-individual-ablation.pdf}
     \caption{\textbf{Full OGBench results by task.} For each method on each task, we use 4 seeds.}
     \label{fig:main-all-individual}
 \end{figure}
@@ -353,7 +353,7 @@ We provide more examples of the trajectory rollouts from \hourpurple{QC} and \ho
 \textbf{Ablation results by task.} The following plot (\cref{fig:ablation-all-individual}) shows the performance breakdown for \cref{fig:ablation}.
 \begin{figure}[H]
     \centering
-\includegraphics[width=\linewidth]{figures/main-all-individual.pdf} %
+\includegraphics[width=\linewidth]{figures/main-all-individual.pdf}
     \caption{\textbf{Full OGBench results by task.} For each method on each task, we use 4 seeds.}
     \label{fig:ablation-all-individual}
 \end{figure}
@@ -363,16 +363,16 @@ We provide more examples of the trajectory rollouts from \hourpurple{QC} and \ho
 The following plot shows the performance breakdown for \cref{fig:rlpd-all}. In addition, we include a new method for comparison, \hourpurple{QC-RLPD}, where we add a behavior cloning loss to \hourblue{RLPD-AC} (\hourblue{RLPD} with action chunking).
 \begin{figure}[H]
     \centering
-\includegraphics[width=\linewidth]{figures/rlpd-qc-all-individual.pdf} %
+\includegraphics[width=\linewidth]{figures/rlpd-qc-all-individual.pdf}
     \caption{\textbf{Full \hourblue{RLPD} results by task.} For each method on each task, we use 4 seeds. \hourpurple{QC-RLPD} is \hourblue{RLPD-AC} (\hourblue{RLPD} on the temporally extended action space) where we additionally add a fixed behavior cloning coefficient of $0.01$.}
     \label{fig:rlpd-all-ind}
 \end{figure}
 
 \subsection{Robomimic ablation results}
-\cref{fig:full-robomimic} shows the performance of \hourpurple{QC}, \hourpurple{QC-FQL}, \hourmiddle{BFN-n}, \hourmiddle{FQL-n}, \hourblue{BFN}, \hourblue{FQL} our three robomimic tasks. This plot shows the performance breakdown for \cref{fig:ablation} (right). 
+\cref{fig:full-robomimic} shows the performance of \hourpurple{QC}, \hourpurple{QC-FQL}, \hourmiddle{BFN-n}, \hourmiddle{FQL-n}, \hourblue{BFN}, \hourblue{FQL} our three robomimic tasks. This plot shows the performance breakdown for \cref{fig:ablation} (right).
 \begin{figure}[H]
     \centering
-\includegraphics[width=\linewidth]{figures/robomimic-all.pdf}  %
+\includegraphics[width=\linewidth]{figures/robomimic-all.pdf}
     \caption{\textbf{Full robomimic ablation by task.} For each method on each task, we use 5 seeds.}
     \label{fig:full-robomimic}
 \end{figure}

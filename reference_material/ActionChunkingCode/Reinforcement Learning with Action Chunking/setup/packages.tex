@@ -2,7 +2,7 @@
 \usepackage[noEnd,commentColor=black]{algpseudocodex}
 
 
-% For theorems and such
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
@@ -10,12 +10,12 @@
 \usepackage{cancel}
 
 
-% if you use cleveref..
+
 \usepackage[capitalize,noabbrev]{cleveref}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% THEOREMS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
 \theoremstyle{plain}
 
 \newtheorem{theorem}{Theorem}[section]
@@ -33,74 +33,74 @@
 \newtheorem{exercise}[theorem]{Exercise}
 
 
-% Todonotes is useful during development; simply uncomment the next line
-%    and comment out the line below the next line to turn off comments
-%\usepackage[disable,textsize=tiny]{todonotes}
+
+
+
 \usepackage[textsize=tiny]{todonotes}
 
-% to compile a preprint version, e.g., for submission to arXiv, add add the
-% [preprint] option:
-    % \usepackage[preprint]{setup/neurips_2022}
 
-% to compile a camera-ready version, add the [final] option, e.g.:
-%     \usepackage[final]{neurips_2022}
 
-% to avoid loading the natbib package, add option nonatbib:
-%    \usepackage[nonatbib]{neurips_2022}
 
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-% \usepackage{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
-\usepackage{booktabs}       % professional-quality tables
-% \usepackage{amsfonts}       % blackboard math symbols
-% \usepackage{nicefrac}       % compact symbols for 1/2, etc.
+
+
+
+
+
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{url}
+\usepackage{booktabs}
+
+
 \usepackage{times}
-% \usepackage{microtype}      % microtypography
-\usepackage{xcolor} % color s
+
+\usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{blindtext}
 \usepackage[labelformat=empty, position=top]{subcaption}
 \usepackage[export]{adjustbox}
-% \usepackage[labelfont=bf]{caption}
-% \captionsetup[figure]{labelsep=space}
-% \captionsetup[table]{labelsep=space}
-% \usepackage{amsmath}
-% \usepackage[title]{appendix}
-% \usepackage{scalerel}
-% \usepackage{siunitx}
-% \usepackage{bm}
-% \usepackage{verbatim}
-% \usepackage{amssymb}
-% \usepackage{mathtools} 
+
+
+
+
+
+
+
+
+
+
+
 \usepackage{wrapfig}
-\usepackage{pifont}% http://ctan.org/pkg/pifont
-\newcommand{\cmark}{\ding{51}}%
-\newcommand{\xmark}{\ding{55}}%
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
 \definecolor{mydarkblue}{rgb}{0,0.08,0.45}
-\hypersetup{ %
+\hypersetup{
     colorlinks=true,
     linkcolor=mydarkblue,
     citecolor=mydarkblue,
-    % linkcolor=black,
-    % citecolor=gray,
+
+
     filecolor=mydarkblue,
     urlcolor=mydarkblue,
 }
 
-% \definecolor{qc-fql-color}{HTML}{}
+
 
 \usepackage[shortlabels]{enumitem}
 
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,calc}
-% \newcommand{\tikzmark}[1]{\tikz[overlay,remember picture] \node (#1) {};}
 
-\newcommand*{\AddNote}[5]{%
+
+\newcommand*{\AddNote}[5]{
     \begin{tikzpicture}[overlay, remember picture]
         \draw [decoration={brace,amplitude=0.35em},decorate,ultra thick,#5]
-            ($(#3)!(#1.north)!($(#3)-(0,1)$)$) --  
+            ($(#3)!(#1.north)!($(#3)-(0,1)$)$) --
             ($(#3)!(#2.south)!($(#3)-(0,1)$)$)
                 node [align=center, text width=5.0cm, pos=0.5, anchor=west] {#4};
     \end{tikzpicture}
-}%
+}
