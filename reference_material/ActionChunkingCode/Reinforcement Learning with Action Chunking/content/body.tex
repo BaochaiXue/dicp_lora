@@ -5,11 +5,11 @@
 Reinforcement learning (RL) holds the promise of solving any given task based only on a reward function. However, this simple and direct formulation of the RL problem is often impractical: in complex environments, exploring entirely from scratch to learn an effective policy can be prohibitively expensive, as it requires the agent to successfully solve the task through random chance before learning a good policy. Indeed, even humans and animals rarely solve new tasks entirely from scratch, instead leveraging prior knowledge and skills from past experience. Inspired by this, a number of recent works have sought to incorporate prior offline data into online RL exploration~\citep{hu2023unsupervised, li2024accelerating, wilcoxson2024leveraging}.
 But this poses a new set of challenges: the distribution of offline data might not match the policy that the agent should follow online, introducing distributional shift, and it is not obvious how the offline data should be leveraged to acquire a good online \emph{exploratory} policy.
 
-In the adjacent field of imitation learning (IL), a widely used approach in recent years has been to employ \emph{action chunking}, where instead of training policies to predict a single action based on the state observation from prior data, the policy is instead trained to predict a short sequence of future actions (an ``action chunk'')~\citep{zhao2023learning, chi2023diffusion}. While a complete explanation for the effectiveness of action chunking in IL remains an open question, its effectiveness can be at least partially ascribed to better handling of non-Markovian behavior in the offline data, essentially providing a more powerful tool for modeling the kinds of complex distributions that might occur in (for example) human-provided demonstrations or mixtures of different behaviors~\citep{zhao2023learning}. Action chunking has not been used widely in RL, perhaps because optimal policies in fully observed MDPs are Markovian~\citep{sutton1998reinforcement}, and therefore chunking may appear unnecessary. 
+In the adjacent field of imitation learning (IL), a widely used approach in recent years has been to employ \emph{action chunking}, where instead of training policies to predict a single action based on the state observation from prior data, the policy is instead trained to predict a short sequence of future actions (an ``action chunk'')~\citep{zhao2023learning, chi2023diffusion}. While a complete explanation for the effectiveness of action chunking in IL remains an open question, its effectiveness can be at least partially ascribed to better handling of non-Markovian behavior in the offline data, essentially providing a more powerful tool for modeling the kinds of complex distributions that might occur in (for example) human-provided demonstrations or mixtures of different behaviors~\citep{zhao2023learning}. Action chunking has not been used widely in RL, perhaps because optimal policies in fully observed MDPs are Markovian~\citep{sutton1998reinforcement}, and therefore chunking may appear unnecessary.
 
-We make the observation that, though we might desire a final optimal Markovian policy, the exploration problem can be better tackled with non-Markovian and temporally extended skills, and that action chunking offers a very simple and convenient recipe for obtaining this. Furthermore, action chunking provides a better way to leverage offline data (with a better handling of non-Markovian behavior in the data), and even improves the stability and efficiency of TD-based RL, by enabling unbiased $n$-step backups (where $n$ matches the length of the chunk). Thus, in combination with pretraining on offline data, action chunking offers a compelling and very simple way to mitigate the exploration challenge in RL. 
+We make the observation that, though we might desire a final optimal Markovian policy, the exploration problem can be better tackled with non-Markovian and temporally extended skills, and that action chunking offers a very simple and convenient recipe for obtaining this. Furthermore, action chunking provides a better way to leverage offline data (with a better handling of non-Markovian behavior in the data), and even improves the stability and efficiency of TD-based RL, by enabling unbiased $n$-step backups (where $n$ matches the length of the chunk). Thus, in combination with pretraining on offline data, action chunking offers a compelling and very simple way to mitigate the exploration challenge in RL.
 
-We present Q-learning with action chunking (or \hourpurple{Q-chunking} in short), a recipe for improving generic TD-based actor-critic RL algorithms in the offline-to-online RL setting (\cref{fig:banner}). The key idea is to run RL at an action sequence level --- (1) the policy predicts a sequence of actions for the next $h$ steps and executes them one-by-one open loop, and (2) the critic takes in the current state and a sequence of actions and estimates the value of carrying out the whole sequence rather than a single action. The benefits of operating RL on this extended action space are two-fold: (1) the policy can be optimized to generate temporally coherent actions by regularizing it towards some prior behavior data that exhibit such coherency, (2) the critic trained with a standard TD-backup loss is effectively performing $n$-step backups, with no off-policy bias (that typically occurs in na\"ive $n$-step return methods), since the critic takes the full action sequence into account. 
+We present Q-learning with action chunking (or \hourpurple{Q-chunking} in short), a recipe for improving generic TD-based actor-critic RL algorithms in the offline-to-online RL setting (\cref{fig:banner}). The key idea is to run RL at an action sequence level --- (1) the policy predicts a sequence of actions for the next $h$ steps and executes them one-by-one open loop, and (2) the critic takes in the current state and a sequence of actions and estimates the value of carrying out the whole sequence rather than a single action. The benefits of operating RL on this extended action space are two-fold: (1) the policy can be optimized to generate temporally coherent actions by regularizing it towards some prior behavior data that exhibit such coherency, (2) the critic trained with a standard TD-backup loss is effectively performing $n$-step backups, with no off-policy bias (that typically occurs in na\"ive $n$-step return methods), since the critic takes the full action sequence into account.
 
 Our main contribution is \hourpurple{QC}, a practical offline-to-online RL algorithm that is instantiated from our \hourpurple{Q-chunking} recipe, essentially running RL with behavior regularization in the chunked action space. QC is simple to implement, requiring only training (1) an action chunking behavior policy using a standard flow-matching loss, and (2) a temporally extended critic with the standard TD-loss (\cref{algo:qc}). QC achieves strong performance on a range of six challenging long-horizon, sparse-reward domains, outperforming prior offline-to-online methods. Moreover, Q-chunking is a generic recipe that can be applied to existing offline-to-online algorithms with minimal modification. In this work, we demonstrate one such instantiation by applying it to \hourblue{FQL}~\citep{park2025flow}, resulting in \hourpurple{QC-FQL} (\cref{algo:qc-fql}), which shows significant improvements over the original method.
 
@@ -53,20 +53,20 @@ Our main contribution is \hourpurple{QC}, a practical offline-to-online RL algor
 \label{sec:related}
 
 
-\textbf{Offline-to-online reinforcement learning} methods focus on leveraging prior offline data to accelerate reinforcement learning online~\citep{xie2021policy, song2022hybrid, lee2022offline, NEURIPS2022_ba1c5356, zhang2023policy, zheng2023adaptive, ball2023efficient, nakamoto2024cal, zhou2024efficient, li2024accelerating}. The simplest way to tackle offline-to-online RL is to use an existing offline RL algorithm to first pretrain on the offline data and then use the same offline optimization objective to continue training online using a growing dataset that combines the original offline data and the replay buffer data~\citep{nair2020awac, kumar2020conservative, kostrikov2021offline, tarasov2024revisiting, park2025flow, agarwal2022reincarnating, luo2023finetuning, lee2022offline}. While straightforward, this na\"ive approach often result in overly pessimistic that hinders exploration and consequently the online sample-efficiency. Several prior works have attempted to address this issue by adjusting the degree of pessimism online~\citep{zhou2024efficient, nakamoto2024cal, luo2023finetuning, lee2022offline, wang2023train}. 
+\textbf{Offline-to-online reinforcement learning} methods focus on leveraging prior offline data to accelerate reinforcement learning online~\citep{xie2021policy, song2022hybrid, lee2022offline, NEURIPS2022_ba1c5356, zhang2023policy, zheng2023adaptive, ball2023efficient, nakamoto2024cal, zhou2024efficient, li2024accelerating}. The simplest way to tackle offline-to-online RL is to use an existing offline RL algorithm to first pretrain on the offline data and then use the same offline optimization objective to continue training online using a growing dataset that combines the original offline data and the replay buffer data~\citep{nair2020awac, kumar2020conservative, kostrikov2021offline, tarasov2024revisiting, park2025flow, agarwal2022reincarnating, luo2023finetuning, lee2022offline}. While straightforward, this na\"ive approach often result in overly pessimistic that hinders exploration and consequently the online sample-efficiency. Several prior works have attempted to address this issue by adjusting the degree of pessimism online~\citep{zhou2024efficient, nakamoto2024cal, luo2023finetuning, lee2022offline, wang2023train}.
 However, these approaches can be difficult to tune and sometimes stills fall short in online sample efficiency compared to a simple, well-regularized online RL algorithm learning from scratch on both offline data and online replay buffer data~\citep{ball2023efficient}.
 Our approach takes a step towards improving the sample efficiency of offline-to-online RL methods via value backup acceleration and temporally coherent exploration.
 
-\textbf{Action chunking} is a technique popularized by roboticists for imitation learning (IL), where the policy predicts and executes a sequence of actions in an  open-loop manner (``an action chunk'')~\citep{zhao2023learning}. Action chunking has been shown to improve policy robustness~\citep{zhao2023learning, george2023one, bharadhwaj2024roboagent}, and handle non-Markovian behavior in offline data~\citep{zhao2023learning}. 
+\textbf{Action chunking} is a technique popularized by roboticists for imitation learning (IL), where the policy predicts and executes a sequence of actions in an  open-loop manner (``an action chunk'')~\citep{zhao2023learning}. Action chunking has been shown to improve policy robustness~\citep{zhao2023learning, george2023one, bharadhwaj2024roboagent}, and handle non-Markovian behavior in offline data~\citep{zhao2023learning}.
 Existing RL methods that incorporate action chunking typically focus on fine-tuning a policy pre-trained with imitation learning~\citep{ren2024diffusion, seo2024reinforcement}. \citet{tian2025chunking} propose to learn a critic on action chunks by integrating $n$-step returns with a transformer. However, their method only applies chunking to the critic, while still optimizing a single-step actor.
 
-\textbf{Exploration with temporally coherent actions.} 
-Existing methods either rely on temporally correlated action noises~\citep{lillicrap2015continuous} that are constructed through heuristics; hierarchically structured policies (see the next paragraph), which are often tricky to stabilize during online training; or pre-trained frozen skill policies~\citep{pertsch2021accelerating, wilcoxson2024leveraging}, which are not amendable for fine-grained online fine-tuning. Our method uses a single network to represent the policy to generate temporally extended action chunk and it is trained using a single objective function that is stable to optimize. There is also no frozen, pretrained components in our approach, ensuring its online fine-tuning flexibility. 
+\textbf{Exploration with temporally coherent actions.}
+Existing methods either rely on temporally correlated action noises~\citep{lillicrap2015continuous} that are constructed through heuristics; hierarchically structured policies (see the next paragraph), which are often tricky to stabilize during online training; or pre-trained frozen skill policies~\citep{pertsch2021accelerating, wilcoxson2024leveraging}, which are not amendable for fine-grained online fine-tuning. Our method uses a single network to represent the policy to generate temporally extended action chunk and it is trained using a single objective function that is stable to optimize. There is also no frozen, pretrained components in our approach, ensuring its online fine-tuning flexibility.
 
 
 \textbf{Hierarchical reinforcement learning, options framework.} Learning temporally extended actions have also been widely studied in the hierarchical reinforcement learning (HRL) literature~\citep{dayan1992feudal, dietterich2000hierarchical, vezhnevets2016strategic, daniel2016hierarchical, kulkarni2016hierarchical, vezhnevets2017feudal, peng2017deeploco, riedmiller2018learning, nachum2018data, ajay2020opal, shankar2020learning, pertsch2021accelerating, gehring2021hierarchical, xie2021latent}. HRL methods typically train a space of low-level policies that can directly interact with the environment along with a high-level policy that selects among these low-level policies. These low-level policies can be hand-crafted~\citep{dalal2021accelerating}, automatically discovered online~\citep{dietterich2000hierarchical, kulkarni2016hierarchical, vezhnevets2016strategic, vezhnevets2017feudal, nachum2018data}, or pretrained using offline skill discovery methods~\citep{paraschos2013probabilistic,merel2018neural,shankar2020learning, ajay2020opal, singh2020parrot, pertsch2021accelerating, touati2022does, nasiriany2022learning, hu2023unsupervised, frans2024unsupervised, chen2024self, park2024foundation}. The options framework provides a slightly more sophisticated and more powerful formulation, where the low-level policy is additionally associated with learnable initiation condition and termination condition that makes utilization of the low-level policy more flexible~\citep{sutton1999between, menache2002q, chentanez2004intrinsically, mannor2004dynamic, csimcsek2004using, csimcsek2007betweenness, konidaris2011autonomous, daniel2016hierarchical, srinivas2016option, oh2017value, fox2017multi, bacon2017option, kim2019variational, bagaria2019option, bagaria2024effectively, de2025learning}.  A long-lasting challenge in HRL is its bi-level optimization problem: when both low-level and high-level policies are updated during training, the high-level policies must optimize a moving objective function, which can lead to instability~\citep{nachum2018data}. To mitigate this, some methods keep the low-level policies frozen after initial pretraining~\citep{ajay2020opal, pertsch2021accelerating, wilcoxson2024leveraging} to improve stability during online training. Our approach is a special case of HRL where the low-level skill executes a sequence of actions open-loop. This design choice allows us to collapse the bi-level optimization problem into a standard RL objective in a temporally extended action space, while retaining many of the exploration benefits associated with HRL methods.
 
-\textbf{Multi-step latent space planning and search} is a technique commonly used in model-based RL methods where they use a learned model to optimize a short-horizon action sequence towards high-return trajectories~\citep{oh2017value, schrittwieser2020mastering}. 
+\textbf{Multi-step latent space planning and search} is a technique commonly used in model-based RL methods where they use a learned model to optimize a short-horizon action sequence towards high-return trajectories~\citep{oh2017value, schrittwieser2020mastering}.
 These approaches work by training a dynamics model on an encoded latent space, where the model takes in a latent state and an action to predict the next latent state and the associated reward value. This latent dynamics model, along with a value network on the latent state, can then provide an estimate of the $Q$-value on-the-fly for any given action sequence starting from a given latent state by simply simulating the action sequence in the latent dynamics model. In contrast, we do not learn a latent dynamics model and instead train a $Q$-network to directly estimate the value of the action sequence.
 Lastly, these approaches operate in the purely online RL setting whereas we focus on the offline-to-online RL setting.
 
@@ -94,8 +94,8 @@ and $s_t, a_t, s_{t+1}, r$ are sampled from some off-policy trajectories and $\b
     \hat{V}_{\mathrm{n\text{-}step}} := \sum_{t'=t}^{t+n-1} \left[\gamma^{t'-t}r_t'\right] + Q_{\bar \theta}(s_{t+n}, a_{t+n}), \quad a_{t+n} \sim \pi_\psi(\cdot | s_{t+n}),
     \label{eq:nstep}
 \end{align}
-where again $r_t = r(s_t, a_t)$. This value estimate of $Q(s_t, a_t)$ allows for a $n$ times speed-up in terms of the number of time steps that the value can propagate back across. This estimator is sometimes referred to as the \emph{uncorrected $n$-step return estimator}~\citep{fedus2020revisiting, kozuno2021revisiting} because it is biased when the data collection policy is different from the current policy $\pi_\psi$. 
-Nevertheless, due to the implementation simplicity of $n$-step return, it has been commonly adopted in large-scale RL systems~\citep{mnih2016asynchronous, hessel2018rainbow, kapturowski2018recurrent, wurman2022outracing}. 
+where again $r_t = r(s_t, a_t)$. This value estimate of $Q(s_t, a_t)$ allows for a $n$ times speed-up in terms of the number of time steps that the value can propagate back across. This estimator is sometimes referred to as the \emph{uncorrected $n$-step return estimator}~\citep{fedus2020revisiting, kozuno2021revisiting} because it is biased when the data collection policy is different from the current policy $\pi_\psi$.
+Nevertheless, due to the implementation simplicity of $n$-step return, it has been commonly adopted in large-scale RL systems~\citep{mnih2016asynchronous, hessel2018rainbow, kapturowski2018recurrent, wurman2022outracing}.
 
 
 
@@ -103,17 +103,17 @@ Nevertheless, due to the implementation simplicity of $n$-step return, it has be
 \label{sec:method}
 In this section, we first describe two main design principles of \hourpurple{Q-chunking}: (1) Q-learning on a temporally extended action space (the space of chunks of actions), and (2) behavior constraint in this extended action space, followed by practical implementations of Q-chunking (\hourpurple{QC}, \hourpurple{QC-FQL}) as effective TD-based offline-to-online RL algorithms.
 
-\subsection{Q-learning on a temporally extended action space} 
+\subsection{Q-learning on a temporally extended action space}
 \label{sec:qc-v}
 The first design principle of Q-chunking is to apply $Q$-learning on the temporally extended action space. Unlike normal 1-step TD-based actor-critic methods, which train a Q-function $Q(s_t, a_t)$ and a policy $\pi(a_t | s_t)$, we instead train both the critic and the actor with a span of $h$ consecutive actions:~\footnote{We use $\ac{t}{t+h}$ to denote a concatenation of $h$ consecutive actions: $\begin{bmatrix} a_t & a_{t+1} & \cdots & a_{t+h-1} \end{bmatrix} \in \mathbb{R}^{Ah}$ for notation convenience. This is similar for $\ssc{t}{t+h}$ and $\rrc{t}{t+h}$.}
 \begin{align*}
  &\text{\emph{Q-Chunking Policy: }} \pi_\psi({\color{ourpurple} \ac{t}{t+h}} | s_t) :=\pi_\psi( {\color{ourpurple} a_t, a_{t+1}, \cdots, a_{t+h-1}} | s_t) \\
- &\text{\emph{Q-Chunking Critic: }} Q_\theta(s_t, {\color{ourpurple} \ac{t}{t+h}}) := Q_\theta(s_t, {\color{ourpurple} a_t, a_{t+1}, \cdots, a_{t+h-1}})  
+ &\text{\emph{Q-Chunking Critic: }} Q_\theta(s_t, {\color{ourpurple} \ac{t}{t+h}}) := Q_\theta(s_t, {\color{ourpurple} a_t, a_{t+1}, \cdots, a_{t+h-1}})
 \end{align*}
 In practice, this involves updating the critic and the actor on batches of transitions consisting of a random state $s_t$, an action sequence followed by the state $\mathbf a_t$, and the state $h$ steps into the future, $s_{t+h}$. Specifically, we train $Q_\theta$ with the following TD loss,
 \begin{align}
     L(\theta) = \mathbb{E}_{s_t, {\color{ourpurple}\ac{t}{t+h}, s_{t+h}} \sim \mathcal{D}}
-    \left[\left(Q_\theta(s_t, {\color{ourpurple}\ac{t}{t+h}}) - {\color{ourpurple}\sum_{t'=1}^{h} \gamma^{t'}r_{t+t'}} - 
+    \left[\left(Q_\theta(s_t, {\color{ourpurple}\ac{t}{t+h}}) - {\color{ourpurple}\sum_{t'=1}^{h} \gamma^{t'}r_{t+t'}} -
     \gamma^{\color{ourpurple}h} Q_{\bar \theta}({\color{ourpurple}s_{t+h}},  {\color{ourpurple} \ac{t+h}{t+2h}})\right)^2\right]
 \end{align}
 with ${\color{ourpurple} \ac{t+h}{t+2h}} \sim \pi_\psi(\cdot | s_{t+h})$, and $\bar \theta$ being the target network parameters that are often an exponential moving average of $\theta$~\citep{haarnoja2018soft}.
@@ -124,7 +124,7 @@ The TD loss above shares striking similarity to the $n$-step return in Equation 
     Q(s_t, a_t) &\leftarrow \underbrace{\sum_{t'=t}^{t+h-1} \left[\gamma^{t'-t}r_{t'}\right]}_\text{\color{ourblue} biased} + \gamma^hQ(s_{t+h}, a_{t+h}), & \text{\color{ourblue}($n$-step return, $n=h$)} \\
     Q(s_t, {\color{ourpurple}\ac{t}{t+h}}) &\leftarrow \underbrace{\sum_{t'=t}^{t+h-1} \left[\gamma^{t'-t}r_{t'}\right]}_\text{\color{ourpurple} unbiased} + \gamma^h Q(s_{t+h}, {\color{ourpurple}\ac{t+h}{t+2h}}). & \text{\hourpurple{(Q-chunking)}}
 \end{align}
-For the standard 1-step TD, each backup step propagates the value back by only 1 time step. $n$-step return propagates the value back $h \times$ faster, but can suffer from a \emph{biased} value estimation issue when $\ssc{t}{t+h}$ and $\ac{t}{t+h}$ are off-policy~\citep{fedus2020revisiting}. This is because the discounted sum of the $n$-step rewards $\rrc{t}{t+h}$ from the dataset or replay buffer is no longer an unbiased estimate of the expected $n$-step rewards under the current policy $\pi$. Q-chunking value backup is similar to the $n$-step return where each step also propagates the value back by $h$ time steps, but \emph{does not} suffer from this biased estimation issue. Unlike $n$-step return where we are propagating the value to a 1-step $Q$-function, Q-chunking backup propagates the value back to a $h$-step $Q$-function that takes in the exact same actions that are taken to obtain the $n$-step rewards $\rrc{t}{t+h}$, eliminating the biased value estimation. As a result, Q-chunking value backup enjoys the value propagation speedup while maintaining an unbiased value estimate. 
+For the standard 1-step TD, each backup step propagates the value back by only 1 time step. $n$-step return propagates the value back $h \times$ faster, but can suffer from a \emph{biased} value estimation issue when $\ssc{t}{t+h}$ and $\ac{t}{t+h}$ are off-policy~\citep{fedus2020revisiting}. This is because the discounted sum of the $n$-step rewards $\rrc{t}{t+h}$ from the dataset or replay buffer is no longer an unbiased estimate of the expected $n$-step rewards under the current policy $\pi$. Q-chunking value backup is similar to the $n$-step return where each step also propagates the value back by $h$ time steps, but \emph{does not} suffer from this biased estimation issue. Unlike $n$-step return where we are propagating the value to a 1-step $Q$-function, Q-chunking backup propagates the value back to a $h$-step $Q$-function that takes in the exact same actions that are taken to obtain the $n$-step rewards $\rrc{t}{t+h}$, eliminating the biased value estimation. As a result, Q-chunking value backup enjoys the value propagation speedup while maintaining an unbiased value estimate.
 
 
 
@@ -143,7 +143,7 @@ For the standard 1-step TD, each backup step propagates the value back by only 1
 
 
 
-    
+
 
 
 
@@ -161,12 +161,12 @@ The second design principle of Q-chunking addresses the action incoherency issue
     L(\psi) = -\mathbb{E}_{s_t \sim \mathcal{D}, \ac{t}{t+h} \sim \pi_\psi(\cdot | s_t)}\left[Q_\theta(s_t, \ac{t}{t+h})\right], \text{s.t. }  {\transparent{0.15}\mathcolorbox{ourpurple}{\transparent{1.0}D(\pi_\psi(\ac{t}{t+h} | s_t), \pi_\beta(\ac{t}{t+h} | s_t)) \leq \varepsilon}}
     \label{eq:qc-p}
 \end{align}
-where we denote $\pi_\beta(\ac{t}{t+h} | s_t)$ as the behavior distribution in the offline data $\mathcal{D}$, and $D$ as some distance metric that measures how different the learned policy $\pi$ deviates from $\pi_\beta$. 
+where we denote $\pi_\beta(\ac{t}{t+h} | s_t)$ as the behavior distribution in the offline data $\mathcal{D}$, and $D$ as some distance metric that measures how different the learned policy $\pi$ deviates from $\pi_\beta$.
 
-Intuitively, a behavior constraint on the temporally extended action sequence allows us to leverage temporally coherent action sequences in the offline dataset. This is particularly advantageous in the temporally extended action space compared to in the original action space because offline data often exhibit non-Markovian structure (e.g., from scripted policies~\citep{park2024ogbench}, human tele-operators~\citep{robomimic2021}, or noisy expert policies for sub-tasks~\citep{park2024ogbench, fu2020d4rl}) that cannot be well captured by a Markovian behavior constraint. 
-Temporally coherent actions are desirable for online exploration because they resemble temporally extended skills (e.g., moving in a certain direction for navigation, jumping motions for going over obstacles) that help traverse the environment in a structured way rather than using random actions that often result in data that is localized near the initial states. 
-Imposing behavior constraint for an action chunking policy is a very simple way to approximately extract skills without the need of training policy with bi-level structure as often necessitated by skill-based methods (see more discussion in Section \ref{sec:related}). In reality, we do see that Q-chunking, with such behavior constraints, can interact and explore the environment with temporally coherent actions (see Section \ref{sec:results-analysis}), 
-mitigating the exploration challenge in RL.  
+Intuitively, a behavior constraint on the temporally extended action sequence allows us to leverage temporally coherent action sequences in the offline dataset. This is particularly advantageous in the temporally extended action space compared to in the original action space because offline data often exhibit non-Markovian structure (e.g., from scripted policies~\citep{park2024ogbench}, human tele-operators~\citep{robomimic2021}, or noisy expert policies for sub-tasks~\citep{park2024ogbench, fu2020d4rl}) that cannot be well captured by a Markovian behavior constraint.
+Temporally coherent actions are desirable for online exploration because they resemble temporally extended skills (e.g., moving in a certain direction for navigation, jumping motions for going over obstacles) that help traverse the environment in a structured way rather than using random actions that often result in data that is localized near the initial states.
+Imposing behavior constraint for an action chunking policy is a very simple way to approximately extract skills without the need of training policy with bi-level structure as often necessitated by skill-based methods (see more discussion in Section \ref{sec:related}). In reality, we do see that Q-chunking, with such behavior constraints, can interact and explore the environment with temporally coherent actions (see Section \ref{sec:results-analysis}),
+mitigating the exploration challenge in RL.
 
 
 
@@ -185,7 +185,7 @@ mitigating the exploration challenge in RL.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/rlpd-qc-all.pdf}  %
+\includegraphics[width=0.8\textwidth]{figures/rlpd-qc-all.pdf}
 \vspace{-0.7em}
 \caption{\footnotesize \textbf{Na\"ively using action chunking for online RL with Gaussian policies leads to poor performance.} \emph{(1)} \hourblue{RLPD} runs online RL on both offline data and online replay buffer~\citep{ball2023efficient}. \emph{(2)} \hourblue{RLPD-AC} is the same algorithm as RLPD but operates in a temporally extended action space (action chunk size of 5). \emph{(3)} \hourpurple{QC-RLPD} additionally uses a behavior cloning loss on the actor (4 seeds). }
 \vspace{-1em}
@@ -193,7 +193,7 @@ mitigating the exploration challenge in RL.
 \end{figure}
 
 \subsection{Practical implementations}
-A key implementation challenge of Q-chunking is to enforce a good behavior constraint that captures the non-Markovian behavior at the action sequence level. One prerequisites of imposing a good behavior constraint is the ability of the policy to capture the complex behavior distribution (e.g., with a flow/diffusion policy). A Gaussian policy, a default choice in online RL algorithms, does not suffice. Indeed, if we na\"ively take an off-the-shelf online algorithm, \hourblue{RLPD}~\citep{ball2023efficient} for example, and apply Q-chunking with a behavior cloning loss, we find that it often performs poorly (\cref{fig:rlpd-all}). 
+A key implementation challenge of Q-chunking is to enforce a good behavior constraint that captures the non-Markovian behavior at the action sequence level. One prerequisites of imposing a good behavior constraint is the ability of the policy to capture the complex behavior distribution (e.g., with a flow/diffusion policy). A Gaussian policy, a default choice in online RL algorithms, does not suffice. Indeed, if we na\"ively take an off-the-shelf online algorithm, \hourblue{RLPD}~\citep{ball2023efficient} for example, and apply Q-chunking with a behavior cloning loss, we find that it often performs poorly (\cref{fig:rlpd-all}).
 
 To enforce a good behavior constraint, we start by using flow-matching objective~\citep{liu2022flow} to train a behavior cloning flow policy to capture the behavior distribution. The flow policy is parameterized by a state-conditioned velocity field prediction model $f(s, \mathbf z, u): \mathcal{S} \times \mathbb{R}^{Ah} \times [0, 1] \mapsto \mathbb{R}^{Ah}$ and we denote $f_\xi(\cdot | s)$ as the action distribution that the flow policy parameterizes, which serves as an approximation of the true behavior distribution in the offline data ($f_\xi \approx \pi_\beta$). Now, we are ready to present our main method:
 
@@ -222,11 +222,11 @@ Since we approximate the policy optimization (Equation \ref{eq:qc-p}) with the b
     L(\theta) = \mathbb{E}_{\substack{s_t, \mathbf{a}_t \sim D \\ \{\color{ourblue}{\mathbf{a}^{i}_{t+h}\}_{i=1}^{N} \sim f_\xi(\cdot|s_{t+h})}}} \left[\left(Q_\theta(s_t, \mathbf{a}_t) - \sum_{t'=1}^{h} \gamma^{t'}r_{t+t'} - \gamma^{h} Q_{\bar \theta}(s_{t+h}, {\color{ourpurple}\mathbf{a}^\star_{t+h}})\right)^2\right]
     \label{eq:qc-critic}
 \end{align}
-where again ${\color{ourpurple}\mathbf{a}^\star_{t+h} := {\arg\max}_{\mathbf a \in \{\mathbf a_{t+h}^{i}\}} Q(s, \mathbf{a})}$. 
+where again ${\color{ourpurple}\mathbf{a}^\star_{t+h} := {\arg\max}_{\mathbf a \in \{\mathbf a_{t+h}^{i}\}} Q(s, \mathbf{a})}$.
 
-While QC is simple and easy to implement, it does come with some additional computational costs (sampling $N\times$). 
+While QC is simple and easy to implement, it does come with some additional computational costs (sampling $N\times$).
 
-We present a variant of our method below that leverages a cheaper off-the-shelf offline/offline-to-online RL method, \hourblue{FQL}~\citep{park2025flow}. 
+We present a variant of our method below that leverages a cheaper off-the-shelf offline/offline-to-online RL method, \hourblue{FQL}~\citep{park2025flow}.
 
 \hourpurple{QC-FQL}\textbf{: Q-chunking with 2-Wasserstein distance behavior constraint.} For this variant of our method, we leverage the optimal transport framework to impose a Wasserstein distance ($W_2$) constraint, again, through the learned behavior policy $f_\xi(\cdot | s)$:
 \begin{align}
@@ -234,7 +234,7 @@ We present a variant of our method below that leverages a cheaper off-the-shelf 
 \end{align}
 Following \hourblue{FQL}~\citep{park2025flow}, we parameterize the policy $\pi_\psi$ with a noise-conditioned action prediction model, $\mu_\psi(s, \mathbf z): \mathcal{S} \times \mathbb{R}^{Ah} \mapsto \mathbb{R}^{Ah}$, which directly outputs an action from Gaussian noise in one network forward pass. This noise-conditioned policy is trained to maximize the Q-chunking critic $Q_\theta(s_t, \ac{t}{t+h})$ while being regularized to be close to the behavioral cloning flow-matching policy via a distillation loss that is shown to be an upper-bound on the square 2-Wasserstein distance~\citep{park2025flow}:
 \begin{align}
-    L(\psi) &= \mathbb{E}_{s_t \sim \mathcal{D}, \mathbf z^0 \sim \mathcal{N}(0, \mathbf{I}_{Ah})}\left[{\color{ourblue}\alpha\left\|\mathbf z^1 - \mu_\psi(s_t, \mathbf z^0)\right\|_2^2} - Q(s_t, \mu_\psi(s_t, \mathbf z))\right] 
+    L(\psi) &= \mathbb{E}_{s_t \sim \mathcal{D}, \mathbf z^0 \sim \mathcal{N}(0, \mathbf{I}_{Ah})}\left[{\color{ourblue}\alpha\left\|\mathbf z^1 - \mu_\psi(s_t, \mathbf z^0)\right\|_2^2} - Q(s_t, \mu_\psi(s_t, \mathbf z))\right]
     \label{eq:fql-onestep}\\
     & \geq \mathbb{E}_{s_t \sim \mathcal{D}, \mathbf z^0 \sim \mathcal{N}(0, \mathbf{I}_{Ah})}\left[{\color{ourblue}\alpha W_2(\pi_\psi(\cdot | s_t), f_\xi(\cdot | s_t))^2} - Q(s_t, \mu_\psi(s_t, \mathbf z))\right],
 \end{align}
@@ -246,7 +246,7 @@ where $\mathbf z^1$ is the ODE solution from $u=0$ to $u=1$ following $\dd \math
 where again $\mathbf z \sim \mathcal{N}(0, \mathbf I_{Ah})$.
 
 
-\textbf{Offline-to-online RL considerations.} Since both variants of our methods use beahvior constraint (implicit KL for QC, explicit $W_2$ for QC-FQL), we can also directly run them for offline RL pre-training, which provides further sample efficiency gain. For both offline and online training, we use the same behavior constraint strength (e.g., $N$ for QC and $\alpha$ for QC-FQL). See Algorithm \ref{algo:qc} and \ref{algo:qc-fql} for an overview of QC and QC-FQL during online training. For offline training, we use the same algorithm and simply remove the environment interaction part. 
+\textbf{Offline-to-online RL considerations.} Since both variants of our methods use beahvior constraint (implicit KL for QC, explicit $W_2$ for QC-FQL), we can also directly run them for offline RL pre-training, which provides further sample efficiency gain. For both offline and online training, we use the same behavior constraint strength (e.g., $N$ for QC and $\alpha$ for QC-FQL). See Algorithm \ref{algo:qc} and \ref{algo:qc-fql} for an overview of QC and QC-FQL during online training. For offline training, we use the same algorithm and simply remove the environment interaction part.
 
 
 
@@ -335,7 +335,7 @@ We first consider six sparse reward robotic manipulation domains with tasks of v
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{figures/main-all-ablation.pdf} %
+    \includegraphics[width=\linewidth]{figures/main-all-ablation.pdf}
     \caption{\footnotesize \textbf{Aggregated performance per OGBench domain.} Our method, \hourpurple{QC}, achieves strong performance across all five challenging OGBench domains. We also include an aggregation performance plot for all the domains at the bottom right. The first 1M steps are offline training and the next 1M steps are online training with one environment step per training step (4 seeds per task; 5 tasks per domain).}
     \label{fig:main}
 \end{figure}
@@ -343,7 +343,7 @@ We first consider six sparse reward robotic manipulation domains with tasks of v
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{figures/robomimic-all-ablation.pdf} %
+    \includegraphics[width=\linewidth]{figures/robomimic-all-ablation.pdf}
     \caption{\footnotesize \textbf{Robomimic results.} \hourpurple{QC} achieves strong performance across all three robomimic tasks. The first 1M steps are offline and the next 1M steps are online with one environment step per training step (5 seeds).}
     \label{fig:main-robomimic}
 \end{figure}
@@ -355,25 +355,25 @@ We primarily compare with prior methods that speedup value backup as well as the
 
 \hourblue{BFN (best-of-$N$)} is a baseline that we propose to combine the expected-max $Q$ operator~\citep{ghasemipour2021emaq} with an expressive behavior flow policy. BFN operates in the original action space and uses best-of-$N$ sampling to pick the action (out of $N$) that maximizes the current $Q$-value. This baseline is an ablation to isolate the benefit of Q-chunking in \hourpurple{QC}.
 
-\hourblue{FQL}~\citep{park2025flow} is a recently proposed offline RL method that achieves strong offline and offline-to-online RL performance. 
+\hourblue{FQL}~\citep{park2025flow} is a recently proposed offline RL method that achieves strong offline and offline-to-online RL performance.
 This baseline is an ablation to isolate the benefit of Q-chunking in \hourpurple{QC-FQL}.
 
 \hourmiddle{BFN-n/FQL-n.} These baselines are the same as BFN/FQL but uses $n$-step backup with $n=1$ (Equation \ref{eq:nstep}) instead of the standard 1-step TD backup. This baseline enjoys the benefits of value backup speedup, but does not use chunked critic or actor, and potentially suffer from the bias issue.
 
-\hourblue{RLPD}~\citep{ball2023efficient}, \hourblue{RLPD-AC}. RLPD is a sample-efficient RL algorithm that treats offline data as additional off-policy data and learn from scratch online. 
+\hourblue{RLPD}~\citep{ball2023efficient}, \hourblue{RLPD-AC}. RLPD is a sample-efficient RL algorithm that treats offline data as additional off-policy data and learn from scratch online.
 RLPD-AC is the same as RLPD but operates on the temporally extended action space. Both of them do not use a behavior constraint.
 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.48\linewidth]{figures/agg.pdf}  %
+    \includegraphics[width=0.48\linewidth]{figures/agg.pdf}
     \hfill
-    \includegraphics[width=0.48\linewidth]{figures/robomimic-agg.pdf} %
+    \includegraphics[width=0.48\linewidth]{figures/robomimic-agg.pdf}
     \caption{\footnotesize \textbf{\hourpurple{QC-FQL} and $n$-step return on OGBench and robomimic.} \hourpurple{QC-FQL} obtains a similar performance compared to \hourpurple{QC}. QC is slightly better than QC-FQL on OGBench offline and robomimic online, and slightly worse than QC-FQL on robomimic offline (4 seeds for OGBench, 5 seeds for robomimic). See Appendix \ref{appendix:results}, Figure \ref{fig:ablation-all-individual} and \ref{fig:full-robomimic} for full results.}
     \label{fig:ablation}
 \end{figure}
 
-See more implementation details of our method and the baselines in Appendix \ref{appendix:impl-details}. %
+See more implementation details of our method and the baselines in Appendix \ref{appendix:impl-details}.
 
 
 
@@ -412,35 +412,35 @@ We report the aggregated performance of Q-chunking and the baselines for each of
 
 
 \begin{figure}[t]
-    \includegraphics[width=0.33\linewidth]{figures/ac-size.pdf} %
-    \includegraphics[width=0.33\linewidth]{figures/10qs.pdf} 
-    \includegraphics[width=0.33\linewidth]{figures/utd.pdf} %
+    \includegraphics[width=0.33\linewidth]{figures/ac-size.pdf}
+    \includegraphics[width=0.33\linewidth]{figures/10qs.pdf}
+    \includegraphics[width=0.33\linewidth]{figures/utd.pdf}
     \caption{\footnotesize \textbf{Sensitivity analysis: action chunk size ($h$), critic ensemble size ($K$), and update-to-data ratio (UTD).} \emph{Left:} \hourpurple{QC-FQL} with different $h$ on all 5 \texttt{cube-triple} tasks (5 seeds). QC-FQL with $h=1$ is equivalent to \hourblue{FQL}. \emph{Center:} Increasing the ensemble size to $K=10$ improves performance of both \hourpurple{QC} and \hourblue{BFN} on \texttt{cube-triple-task3} (5 seeds). \emph{Right:} \hourpurple{QC} with UTD of 5 on \texttt{cube-triple-task3} (5 seeds). We report only the online phase results, as all methods achieve near-zero success rates during the offline phase.}
     \label{fig:sensitivity}
 \end{figure}
 \begin{figure}[t]
     \centering
 \includegraphics[width=0.52\linewidth]{figures/traj_viz.pdf}
-\includegraphics[width=0.47\linewidth]{figures/eefd.pdf} %
+\includegraphics[width=0.47\linewidth]{figures/eefd.pdf}
 
 \caption{\footnotesize \textbf{End-effector movements {\color{gray}early} in the training and temporal coherency analysis on \texttt{cube-triple-task3}.} \emph{Left:} \hourpurple{QC} covers a more diverse set of states compared to \hourblue{BFN} in the first 1000 environment steps. \emph{Right:} \hourpurple{QC} exhibits a higher temporal coherency in end-effector compared to \hourblue{BFN} (4 seeds).}
 \label{fig:eef}
 \end{figure}
 
-    
+
 
 
 
 \subsection{Why does action chunking help exploration?}
-We hypothesize in Section \ref{sec:qc-p} that action chunking policy produce more temporally coherent actions and thus lead to better state coverage and exploration. In this section, we study to what degree that holds empirically. We first visualize the end-effector movements early in the training for \hourpurple{QC} and \hourblue{BFN} (Figure \ref{fig:eef}, left). \hourblue{BFN}'s trajectory contains many pauses (as indicated by a very big and dense cluster near the center of the visualization), especially when the end-effector is being lowered to pickup a cube. In contrast, \hourpurple{QC} has fewer pauses (fewer and shallower clusters) and a more diverse state coverage in the end-effector space. We include additional examples in Appendix \ref{appendix:results}, Figure \ref{fig:traj-viz-early} and Figure \ref{fig:traj-viz-late}. To get a quantitative measure of the temporal coherency in actions, we record the 3-D end-effector position throughout training every 5 time steps: $\{\mathbf{x}^{\mathrm{eef}}_0, \mathbf{x}^{\mathrm{eef}}_5, \cdots\}$ and compute the average $L_2$ norm of the difference vector of two adjacent end-effector positions. This average norm would be small if there are any pauses or jittery motions, making a good proxy for measuring the temporal coherency in actions. 
-As shown in Figure \ref{fig:eef} (right), \hourpurple{QC} exhibits a higher action temporal coherency throughout training compared to \hourblue{BFN}. This suggests that Q-chunking improves temporal coherency in actions, which explains the improved sample-efficiency that Q-chunking brings. 
+We hypothesize in Section \ref{sec:qc-p} that action chunking policy produce more temporally coherent actions and thus lead to better state coverage and exploration. In this section, we study to what degree that holds empirically. We first visualize the end-effector movements early in the training for \hourpurple{QC} and \hourblue{BFN} (Figure \ref{fig:eef}, left). \hourblue{BFN}'s trajectory contains many pauses (as indicated by a very big and dense cluster near the center of the visualization), especially when the end-effector is being lowered to pickup a cube. In contrast, \hourpurple{QC} has fewer pauses (fewer and shallower clusters) and a more diverse state coverage in the end-effector space. We include additional examples in Appendix \ref{appendix:results}, Figure \ref{fig:traj-viz-early} and Figure \ref{fig:traj-viz-late}. To get a quantitative measure of the temporal coherency in actions, we record the 3-D end-effector position throughout training every 5 time steps: $\{\mathbf{x}^{\mathrm{eef}}_0, \mathbf{x}^{\mathrm{eef}}_5, \cdots\}$ and compute the average $L_2$ norm of the difference vector of two adjacent end-effector positions. This average norm would be small if there are any pauses or jittery motions, making a good proxy for measuring the temporal coherency in actions.
+As shown in Figure \ref{fig:eef} (right), \hourpurple{QC} exhibits a higher action temporal coherency throughout training compared to \hourblue{BFN}. This suggests that Q-chunking improves temporal coherency in actions, which explains the improved sample-efficiency that Q-chunking brings.
 
 \subsection{How does action chunk length, critic ensemble size affect the performance of our method?}
-In Figure \ref{fig:sensitivity} (left), we report the performance of \hourpurple{QC-FQL} with different action chunk sizes ($h \in \{1, 5, 10, 25\}$) on the \texttt{cube-triple} domain. In general, a higher action chunk length helps but not significantly. We use $h=5$ in all our other experiments as $h=5$ is cheap to run. In Figure \ref{fig:sensitivity} (center), we study how the critic ensemble size affects the performance of our method. Using 10 critics improves both \hourpurple{QC} and \hourblue{BFN}. We use $K=2$ in our other experiments as it is cheap to run. Using $K=10$ could potentially make Q-chunking perform much better on the benchmark tasks we consider. Finally, we observe that increasing the update-to-data ratio (UTD) does not improve the sample efficiency of \hourpurple{QC} (Figure \ref{fig:sensitivity}, right). 
+In Figure \ref{fig:sensitivity} (left), we report the performance of \hourpurple{QC-FQL} with different action chunk sizes ($h \in \{1, 5, 10, 25\}$) on the \texttt{cube-triple} domain. In general, a higher action chunk length helps but not significantly. We use $h=5$ in all our other experiments as $h=5$ is cheap to run. In Figure \ref{fig:sensitivity} (center), we study how the critic ensemble size affects the performance of our method. Using 10 critics improves both \hourpurple{QC} and \hourblue{BFN}. We use $K=2$ in our other experiments as it is cheap to run. Using $K=10$ could potentially make Q-chunking perform much better on the benchmark tasks we consider. Finally, we observe that increasing the update-to-data ratio (UTD) does not improve the sample efficiency of \hourpurple{QC} (Figure \ref{fig:sensitivity}, right).
 
 
 \section{Discussions}
 \label{sec:discussions}
-We demonstrate how action chunking can be integrated into an offline-to-online RL agent with a simple recipe. Our approach speeds up value backup and explores more effectively online with temporally coherent actions. As a result, it outperforms prior offline-to-online methods on a range of challenging long-horizon tasks. Our work serves as a step towards training non-Markovian policy for effective online exploration from prior offline data. Several challenges remain, opening promising directions for future research. First, our approach use a fixed action chunk, but it is unclear how to choose this size other than task-specific hyperparameter tuning. A natural next step would be to develop mechanisms that automatically determine chunk boundaries. Second, action chunking represents only a limited subclass of non-Markovian policies and may perform poorly in settings where a high-frequency control feedback loop is essential. Developing practical techniques for training more general non-Markovian policies for online exploration would further improve the online sample efficiency of offline-to-online RL algorithms. 
+We demonstrate how action chunking can be integrated into an offline-to-online RL agent with a simple recipe. Our approach speeds up value backup and explores more effectively online with temporally coherent actions. As a result, it outperforms prior offline-to-online methods on a range of challenging long-horizon tasks. Our work serves as a step towards training non-Markovian policy for effective online exploration from prior offline data. Several challenges remain, opening promising directions for future research. First, our approach use a fixed action chunk, but it is unclear how to choose this size other than task-specific hyperparameter tuning. A natural next step would be to develop mechanisms that automatically determine chunk boundaries. Second, action chunking represents only a limited subclass of non-Markovian policies and may perform poorly in settings where a high-frequency control feedback loop is essential. Developing practical techniques for training more general non-Markovian policies for online exploration would further improve the online sample efficiency of offline-to-online RL algorithms.
 
 
