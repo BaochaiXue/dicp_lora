@@ -2,6 +2,8 @@
 
 This repository provides the official implementation of our ICLR 2025 paper, [Distilling Reinforcement Learning Algorithms for In-Context Model-Based Planning](https://openreview.net/forum?id=BfUugGfBE5&noteId=BfUugGfBE5).
 
+See [implementation_overview.md](doc/implementation_overview.md) for details on how the code maps observations, actions and rewards to transformer tokens.
+
 ## Requirements
 
 To set up the required environment, run:
