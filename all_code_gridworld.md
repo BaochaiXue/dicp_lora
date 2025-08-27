@@ -7,7 +7,8 @@ from .utils import HistoryLoggerCallback
 
 ALGORITHM = {
     'PPO': PPOWrapper,
-}```
+}
+```
 
 ## gridworld/alg/ppo.py
 ```python
@@ -34,7 +35,8 @@ class PPOWrapper(PPO):
                                          verbose=0,
                                          seed=seed,
                                          device=device,
-                                         tensorboard_log=log_dir)```
+                                         tensorboard_log=log_dir)
+```
 
 ## gridworld/alg/utils.py
 ```python
@@ -85,6 +87,7 @@ class HistoryLoggerCallback(BaseCallback):
             'next_states': np.array(self.next_states, dtype=np.int32),
             'dones': np.array(self.dones, dtype=np.bool_)
         }
+
 ```
 
 ## gridworld/collect_data.py
@@ -267,7 +270,8 @@ if __name__ == '__main__':
     end_time = datetime.now()
     print()
     print(f'Annotating ended at {end_time}')
-    print(f'Elapsed time: {end_time - start_time}')```
+    print(f'Elapsed time: {end_time - start_time}')
+```
 
 ## gridworld/dataset.py
 ```python
@@ -537,7 +541,8 @@ class IDTDataset(Dataset):
         episode_offset = max_episode_rtg - episode_rtg[:, :, 0]
         offset = repeat(episode_offset, 'traj epi -> traj epi time', time=self.config['horizon'])
         
-        return (episode_rtg + offset).reshape(-1, rtg.shape[1])```
+        return (episode_rtg + offset).reshape(-1, rtg.shape[1])
+```
 
 ## gridworld/env/__init__.py
 ```python
@@ -562,7 +567,8 @@ SAMPLE_ENVIRONMENT = {
 def make_env(config, **kwargs):
     def _init():
             return ENVIRONMENT[config['env']](config, **kwargs)
-    return _init```
+    return _init
+```
 
 ## gridworld/env/dark_key_to_door.py
 ```python
@@ -696,7 +702,8 @@ class DarkKeyToDoor(gym.Env):
         return a
     
     def get_max_return(self):
-        return 2```
+        return 2
+```
 
 ## gridworld/env/darkroom.py
 ```python
@@ -710,6 +717,17 @@ import torch
 from typing import Any, Tuple
 import random
 import itertools
+
+
+######################
+np.random.seed(0)
+random.seed(0)
+torch.manual_seed(0)
+torch.cuda.manual_seed(0)
+torch.cuda.manual_seed_all(0)
+
+noise_prob = 0.3
+######################
 
 
 def map_dark_states(states, grid_size):
@@ -762,6 +780,7 @@ class Darkroom(gym.Env):
         self.num_action = 5
         self.observation_space = spaces.Box(low=0, high=self.grid_size-1, shape=(self.dim_obs,), dtype=np.int32)
         self.action_space = spaces.Discrete(self.num_action)
+
         
     def reset(
             self,
@@ -781,7 +800,14 @@ class Darkroom(gym.Env):
             raise ValueError("Episode has already ended")
 
         s = np.array(self.state)
-        a = action
+
+        ########### with noise ###########
+        if random.uniform(0, 1) < noise_prob:
+            a = random.choice([0, 1, 2, 3, 4])
+            print("\033[31m Using [random policy] now! \033[0m")
+        else:
+            a = action
+            print("\033[34m Using [PPO policy] now! \033[0m")
 
         # Action handling
         if a == 0:
@@ -880,7 +906,9 @@ class DarkroomPermuted(Darkroom):
         return self.perm.index(action)
     
     def get_max_return(self):
-        return (self.horizon + 1 - np.sum(np.absolute(self.goal - np.array([0, 0]))))```
+        return (self.horizon + 1 - np.sum(np.absolute(self.goal - np.array([0, 0]))))
+
+```
 
 ## gridworld/evaluate.py
 ```python
@@ -973,7 +1001,8 @@ if __name__ == '__main__':
     envs.close()
     
     with open(path, 'wb') as f:
-        np.save(f, test_rewards)```
+        np.save(f, test_rewards)
+```
 
 ## gridworld/model/__init__.py
 ```python
@@ -985,7 +1014,8 @@ MODEL = {
     "AD": AD,
     "DPT": DPT,
     "IDT": IDT,
-}```
+}
+```
 
 ## gridworld/model/ad.py
 ```python
@@ -1268,7 +1298,8 @@ class AD(torch.nn.Module):
             position += 1
             beam_step += 1
             
-        return beam[:, 0, 0]```
+        return beam[:, 0, 0]
+```
 
 ## gridworld/model/dpt.py
 ```python
@@ -1566,7 +1597,8 @@ class DPT(nn.Module):
             position += 1
             beam_step += 1
             
-        return beam[:, 0, 0]```
+        return beam[:, 0, 0]
+```
 
 ## gridworld/model/idt.py
 ```python
@@ -2005,10 +2037,12 @@ class DecisionsToGo(nn.Module):
             
             beam_step += 1
             
-        return beam[:, 0, 0]```
+        return beam[:, 0, 0]
+```
 
 ## gridworld/model/tiny_llama/__init__.py
 ```python
+
 ```
 
 ## gridworld/model/tiny_llama/config.py
@@ -2064,6 +2098,7 @@ class Config:
 
             return FusedRMSNorm
         return getattr(torch.nn, self._norm_class)
+
 ```
 
 ## gridworld/model/tiny_llama/fused_rotary_embedding.py
@@ -2153,6 +2188,64 @@ class ApplyRotaryEmb(torch.autograd.Function):
 
 
 apply_rotary_emb_func = ApplyRotaryEmb.apply
+
+```
+
+## gridworld/model/tiny_llama/lora.py
+```python
+import math
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+
+class LoRALinear(nn.Module):
+    """LoRA injected linear module."""
+
+    def __init__(self, in_features: int, out_features: int, bias: bool = True,
+                 r: int = 0, lora_alpha: int = 1, lora_dropout: float = 0.0):
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.r = r
+        self.lora_alpha = lora_alpha
+        self.scaling = lora_alpha / r if r > 0 else 1.0
+        self.weight = nn.Parameter(torch.empty(out_features, in_features))
+        if bias:
+            self.bias = nn.Parameter(torch.empty(out_features))
+        else:
+            self.register_parameter("bias", None)
+        self.reset_parameters()
+
+        if r > 0:
+            self.lora_A = nn.Parameter(torch.zeros(r, in_features))
+            self.lora_B = nn.Parameter(torch.zeros(out_features, r))
+            nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
+            nn.init.zeros_(self.lora_B)
+            self.lora_dropout = nn.Dropout(p=lora_dropout) if lora_dropout > 0.0 else nn.Identity()
+            # freeze base weights
+            self.weight.requires_grad = False
+            if bias:
+                self.bias.requires_grad = False
+        else:
+            self.lora_A = None
+            self.lora_B = None
+            self.lora_dropout = nn.Identity()
+
+    def reset_parameters(self):
+        nn.init.kaiming_uniform_(self.weight, a=math.sqrt(5))
+        if self.bias is not None:
+            bound = 1 / math.sqrt(self.weight.size(1))
+            nn.init.uniform_(self.bias, -bound, bound)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        result = F.linear(x, self.weight, self.bias)
+        if self.r > 0:
+            lora_out = F.linear(self.lora_dropout(x), self.lora_A)
+            lora_out = F.linear(lora_out, self.lora_B) * self.scaling
+            result = result + lora_out
+        return result
+
 ```
 
 ## gridworld/model/tiny_llama/model.py
@@ -2166,6 +2259,9 @@ import torch.nn as nn
 # from flash_attn import flash_attn_func
 from lightning_utilities.core.imports import RequirementCache
 from xformers.ops import SwiGLU
+import peft  # noqa: F401
+
+from .lora import LoRALinear
 
 from .config import Config
 from .fused_rotary_embedding import apply_rotary_emb_func
@@ -2196,6 +2292,11 @@ class Transformer(nn.Module):
             intermediate_size=config['tf_n_inner'],
             flash_attn=config['flash_attn'],
         )
+        # LoRA parameters
+        self.config.use_lora = config.get('use_lora', False)
+        self.config.lora_r = config.get('lora_r', 0)
+        self.config.lora_alpha = config.get('lora_alpha', 1)
+        self.config.lora_dropout = config.get('lora_dropout', 0.0)
         self.device = config['device']
         self.blocks = nn.ModuleList(Block(self.config) for _ in range(config['tf_n_layer']))
         self.rope_cache_fp16 = self.build_rope_cache(device=self.device, dtype=torch.float16)
@@ -2281,8 +2382,26 @@ class CausalSelfAttention(nn.Module):
     def __init__(self, config: Config) -> None:
         super().__init__()
         shape = (config.n_head + 2 * config.n_query_groups) * config.head_size
-        self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
-        self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        if config.use_lora and config.lora_r > 0:
+            self.attn = LoRALinear(
+                config.n_embd,
+                shape,
+                bias=config.bias,
+                r=config.lora_r,
+                lora_alpha=config.lora_alpha,
+                lora_dropout=config.lora_dropout,
+            )
+            self.proj = LoRALinear(
+                config.n_embd,
+                config.n_embd,
+                bias=config.bias,
+                r=config.lora_r,
+                lora_alpha=config.lora_alpha,
+                lora_dropout=config.lora_dropout,
+            )
+        else:
+            self.attn = nn.Linear(config.n_embd, shape, bias=config.bias)
+            self.proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
 
         self.config = config
 
@@ -2431,6 +2550,7 @@ def apply_rope(x: torch.Tensor, cos: torch.Tensor, sin: torch.Tensor) -> torch.T
     rotated = torch.cat((-x2, x1), dim=-1)  # (B, nh, T, hs)
     roped = (x * cos) + (rotated * sin)
     return roped.type_as(x)
+
 ```
 
 ## gridworld/model/tiny_llama/rmsnorm.py
@@ -3292,6 +3412,7 @@ class RMSNorm(torch.nn.Module):
 
     def reset_parameters(self):
         torch.nn.init.ones_(self.weight)
+
 ```
 
 ## gridworld/model/tiny_llama/utils.py
@@ -3755,7 +3876,559 @@ def get_default_supported_precision(training: bool, tpu: bool = False) -> str:
         return "32-true"
     if not torch.cuda.is_available() or torch.cuda.is_bf16_supported():
         return "bf16-mixed" if training else "bf16-true"
-    return "16-mixed" if training else "16-true"```
+    return "16-mixed" if training else "16-true"
+```
+
+## gridworld/plot_returns.py
+```python
+import argparse, h5py, numpy as np, matplotlib.pyplot as plt
+from pathlib import Path
+import math
+
+def smooth_same(y, win=1):
+    if win <= 1 or len(y) < 2: return y
+    k = np.ones(win, dtype=float) / win
+    return np.convolve(y, k, mode="same")
+
+def accumulate_returns_one_group(rewards, dones, cap=None):
+    """
+    rewards/dones: 形状 (T, N_stream)
+    返回 list[stream] -> list[episode return]
+    """
+    T, N = rewards.shape
+    acc = np.zeros(N, dtype=float)
+    returns = [[] for _ in range(N)]
+    for t in range(T):
+        acc += rewards[t]
+        done_idx = np.nonzero(dones[t])[0]
+        for s in done_idx:
+            returns[s].append(acc[s])
+            acc[s] = 0.0
+    if cap is not None:
+        returns = [r[:cap] for r in returns]
+    return returns
+
+def grid_dims(n):
+    cols = int(math.ceil(math.sqrt(n)))
+    rows = int(math.ceil(n / cols))
+    return rows, cols
+
+def plot_grid(returns, env_id, out_path, smooth=1, title_prefix=""):
+    n_stream = len(returns)
+    rows, cols = grid_dims(n_stream)
+    fig_w, fig_h = cols * 2.2, rows * 1.9
+    fig, axes = plt.subplots(rows, cols, figsize=(fig_w, fig_h), sharex=True, sharey=True)
+    axes = np.atleast_2d(axes).reshape(rows, cols)
+
+    for s in range(n_stream):
+        ax = axes[s // cols, s % cols]
+        y = np.asarray(returns[s], dtype=float)
+        x = np.arange(1, len(y) + 1)
+        ax.plot(x, smooth_same(y, smooth), linewidth=1.0)
+        ax.set_title(f"S{s}", fontsize=8)
+        ax.grid(True, linestyle=":", linewidth=0.4)
+
+    # 去掉多余子图
+    for k in range(n_stream, rows * cols):
+        axes[k // cols, k % cols].axis("off")
+
+    fig.supxlabel("episode")
+    fig.supylabel("return")
+    fig.suptitle(f"{title_prefix}Returns per Stream (env {env_id})", fontsize=12, y=0.995)
+    fig.tight_layout(rect=[0.02, 0.02, 0.98, 0.97])
+    fig.savefig(out_path, dpi=220)
+    plt.close(fig)
+    print(f"✅ 网格总览已保存: {out_path}")
+
+def save_each_stream(returns, out_dir, smooth=1):
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for s, r in enumerate(returns):
+        y = np.asarray(r, dtype=float)
+        x = np.arange(1, len(y) + 1)
+        fig, ax = plt.subplots(figsize=(4, 3))
+        ax.plot(x, smooth_same(y, smooth), linewidth=1.2)
+        ax.set_xlabel("episode"); ax.set_ylabel("return"); ax.set_title(f"stream {s}")
+        ax.grid(True, linestyle=":", linewidth=0.6)
+        fig.tight_layout()
+        fp = out_dir / f"stream_{s:03d}.png"
+        fig.savefig(fp, dpi=200)
+        plt.close(fig)
+    print(f"✅ 单流图已保存到目录: {out_dir}")
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--h5", required=True, help="HDF5 数据文件")
+    p.add_argument("--env-id", type=int, default=0, help="只画该分组（group）的流")
+    p.add_argument("--num", type=int, default=None, help="每条 stream 取前多少个 episode（默认取完）")
+    p.add_argument("--smooth", type=int, default=1, help="滑动平均窗口，>1 可平滑曲线")
+    p.add_argument("--outgrid", default=None, help="网格总览图输出路径（缺省自动生成）")
+    p.add_argument("--outdir", default="", help="如提供，则逐流输出到该目录（每个 stream 一张图）")
+    args = p.parse_args()
+
+    h5_path = Path(args.h5)
+    assert h5_path.exists(), f"找不到文件：{h5_path}"
+
+    with h5py.File(h5_path, "r") as f:
+        assert str(args.env_id) in f.keys(), f"env-id {args.env_id} 不在 HDF5 分组中"
+        g = f[str(args.env_id)]
+        rewards = g["rewards"][()]  # (T, N_stream)
+        dones = g["dones"][()]      # (T, N_stream) bool
+        returns = accumulate_returns_one_group(rewards, dones, cap=args.num)
+        per_stream_eps = dones.sum(axis=0)
+        print(f"[env {args.env_id}] n_stream={rewards.shape[1]}, episodes/stream 平均={per_stream_eps.mean():.0f} (min={per_stream_eps.min()}, max={per_stream_eps.max()})")
+
+    outgrid = args.outgrid or (h5_path.parent / f"returns_env{args.env_id}_grid.png")
+    plot_grid(returns, args.env_id, outgrid, smooth=args.smooth)
+
+    if args.outdir:
+        save_each_stream(returns, args.outdir, smooth=args.smooth)
+
+if __name__ == "__main__":
+    main()
+
+```
+
+## gridworld/plot_sampled_streams.py
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import os, argparse, random
+import numpy as np
+import h5py
+import matplotlib.pyplot as plt
+
+from utils import get_config, get_traj_file_name  # 同目录 utils.py
+
+
+# ---------- 与 dataset_linear_all.py 一致的 returns/metric/采样 ----------
+
+
+def compute_use_T_like_dataset(T, horizon, source_timesteps):
+    if source_timesteps is None:
+        raise ValueError("source_timesteps 不能为空；请显式设置。")
+    if source_timesteps < 0:
+        use_T = (T // horizon) * horizon
+        print(
+            f"[WARN] dataset 风格通常要求 source_timesteps>0 且可被 horizon 整除；"
+            f"收到 {source_timesteps}，这里退回到 use_T={use_T}（与 horizon 对齐）。"
+        )
+        return use_T
+    use_T = min(int(source_timesteps), T)
+    if use_T % horizon != 0:
+        raise ValueError(
+            f"dataset 风格要求 source_timesteps 可被 horizon 整除；"
+            f"当前 source_timesteps={source_timesteps}, horizon={horizon}."
+        )
+    return use_T
+
+
+def returns_first_n_streams_dataset_style(
+    rewards_TS, horizon, source_timesteps, n_stream
+):
+    T, S = rewards_TS.shape
+    S0 = min(int(n_stream), S)
+    use_T = compute_use_T_like_dataset(T, horizon, source_timesteps)
+    E = use_T // horizon
+    ret_SE = rewards_TS[:use_T, :S0].reshape(E, horizon, S0).sum(axis=1).T
+    return ret_SE, E, use_T, S0
+
+
+def select_streams_like_dataset(
+    returns_SE, max_reward, n_select, stability_coeff=1.0, dataset_type="ad"
+):
+    S0, E = returns_SE.shape
+    metric_lst = []
+
+    for j in range(S0):
+        all_return_per_stream = returns_SE[j]  # (E,)
+        return_diff = np.diff(all_return_per_stream)
+        negative_diff = return_diff[return_diff <= 0]
+        stability = 1 + np.mean(negative_diff) / max_reward  # 可能为 NaN
+
+        mean_all = float(np.mean(all_return_per_stream))
+        gap_all = float(np.max(all_return_per_stream) - np.min(all_return_per_stream))
+        improvement = (mean_all + gap_all) / 2.0 / max_reward
+
+        metric = stability_coeff * stability + 1.0 * improvement
+        metric_lst.append(float(metric))
+
+    sorted_metric_lst = sorted(metric_lst)
+    metric_array = np.array(sorted_metric_lst, dtype=float)
+
+    if dataset_type.lower() == "dpt":
+        scale_a, scale_b = 0.0, 1.0
+        if (np.max(metric_array) - np.min(metric_array)) == 0:
+            probabilities_lst = np.zeros(S0, dtype=float)
+        else:
+            new_linear_vals = (metric_array - np.min(metric_array)) / (
+                np.max(metric_array) - np.min(metric_array)
+            )
+            probabilities_lst = new_linear_vals * (scale_b - scale_a) + scale_a
+    else:
+        new_linear_vals = metric_array - np.min(metric_array)
+        if np.max(new_linear_vals) == 0:
+            probabilities_lst = np.zeros(S0, dtype=float)
+        else:
+            probabilities_lst = new_linear_vals / np.max(new_linear_vals)
+
+    print(
+        f"Scaled softmax probability (sorted from small to large) = {probabilities_lst}"
+    )
+
+    sorted_index_lst = sorted(range(len(metric_lst)), key=lambda i: metric_lst[i])
+
+    temp_slice = []
+    if np.max(probabilities_lst) > 0:
+        while len(temp_slice) < n_select:
+            for potato in reversed(range(S0)):  # 从高到低扫描
+                selected_stream = sorted_index_lst[potato]
+                selected_stream_prob = probabilities_lst[potato]
+                if random.uniform(0, 1) <= selected_stream_prob:
+                    temp_slice.append(selected_stream)
+                if len(temp_slice) >= n_select:
+                    break
+
+    sel_idx = np.array(temp_slice[:n_select], dtype=np.int32)
+    return (
+        sel_idx,
+        np.array(metric_lst, dtype=float),
+        probabilities_lst,
+        sorted_index_lst,
+    )
+
+
+# ---------- 绘图 ----------
+
+
+def plot_grid(returns_SE, selected_idx, out_path, title, cols=10):
+    if len(selected_idx) == 0:
+        print("[WARN] 没有可绘制的 stream，输出占位图：", title)
+        fig, ax = plt.subplots(figsize=(6.2, 4.2))
+        ax.axis("off")
+        ax.text(0.5, 0.5, "No streams in this group", ha="center", va="center")
+        fig.suptitle(title, fontsize=12)
+        fig.tight_layout()
+        fig.savefig(out_path, dpi=240)
+        plt.close(fig)
+        return
+
+    selR = returns_SE[selected_idx]
+    rows = int(np.ceil(len(selected_idx) / cols))
+    fig, axes = plt.subplots(
+        rows, cols, figsize=(cols * 2.1, rows * 1.7), sharex=True, sharey=True
+    )
+    axes = np.ravel(axes)
+    for k, ax in enumerate(axes):
+        if k < len(selected_idx):
+            ax.plot(selR[k])
+            ax.set_title(f"s{selected_idx[k]}", fontsize=8)
+        else:
+            ax.axis("off")
+        ax.tick_params(labelsize=6)
+    fig.suptitle(title, fontsize=12)
+    fig.text(0.5, 0.02, "episode", ha="center")
+    fig.text(0.02, 0.5, "return", va="center", rotation="vertical")
+    fig.tight_layout(rect=[0.03, 0.04, 1, 0.96])
+    fig.savefig(out_path, dpi=240)
+    plt.close(fig)
+
+
+def plot_mean_three_groups(returns_SE, selected_idx, out_path, title):
+    all_mean = returns_SE.mean(axis=0)
+    S0 = returns_SE.shape[0]
+    sel_unique = (
+        np.unique(selected_idx) if len(selected_idx) > 0 else np.array([], dtype=int)
+    )
+    not_sel = np.setdiff1d(np.arange(S0), sel_unique, assume_unique=True)
+
+    fig, ax = plt.subplots(figsize=(6.6, 4.4))
+    ax.plot(all_mean, label=f"all candidates (n={S0})", linewidth=2)
+
+    if sel_unique.size > 0:
+        ax.plot(
+            returns_SE[sel_unique].mean(axis=0),
+            label=f"selected (n={sel_unique.size})",
+            linewidth=2,
+        )
+    else:
+        ax.plot(np.zeros_like(all_mean), label="selected (n=0)", linewidth=2)
+
+    if not_sel.size > 0:
+        ax.plot(
+            returns_SE[not_sel].mean(axis=0),
+            label=f"not selected (n={not_sel.size})",
+            linewidth=2,
+            linestyle="--",
+        )
+    else:
+        ax.plot(
+            np.zeros_like(all_mean),
+            label="not selected (n=0)",
+            linewidth=2,
+            linestyle="--",
+        )
+
+    ax.set_xlabel("episode")
+    ax.set_ylabel("return")
+    ax.set_title(title)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=240)
+    plt.close(fig)
+
+
+# ---------- env 选择：与数据集一致（先打乱再切分） ----------
+
+
+def resolve_env_indices_dataset_style(cfg, which):
+    if which in ("train", "test", "all"):
+        if cfg["env"] == "darkroom":
+            n_total = cfg["grid_size"] ** 2
+        elif cfg["env"] == "darkroompermuted":
+            n_total = 120
+        elif cfg["env"] == "darkkeytodoor":
+            n_total = round((cfg["grid_size"] ** 4) / 4)
+        else:
+            raise ValueError("Unsupported env")
+
+        idx = list(range(n_total))
+        rng = random.Random(int(cfg.get("env_split_seed", 0)))
+        rng.shuffle(idx)
+
+        n_train = round(n_total * cfg["train_env_ratio"])
+        if which == "train":
+            return idx[:n_train]
+        elif which == "test":
+            return idx[n_train:]
+        else:
+            return idx
+    return [int(x) for x in which.split(",") if x != ""]
+
+
+# ---------- 工作目录自适应：为 include 相对路径兜底 ----------
+
+
+def _maybe_chdir_for_includes(env_cfg_abs, alg_cfg_abs):
+    candidates = []
+    for p in (env_cfg_abs, alg_cfg_abs):
+        if p:
+            d = os.path.abspath(os.path.join(os.path.dirname(p), "..", ".."))
+            candidates.append(d)
+    for root in candidates:
+        if os.path.isdir(os.path.join(root, "cfg")) and os.path.isfile(
+            os.path.join(root, "utils.py")
+        ):
+            try:
+                os.chdir(root)
+                print(f"[INFO] 工作目录已切换到 {root} 以适配 include 相对路径。")
+            except Exception as e:
+                print(f"[WARN] 切换工作目录到 {root} 失败：{e}")
+            break
+
+
+# ---------- 根据数据集目录名生成子目录标签 ----------
+
+
+def compute_dataset_tag(traj_dir_abs, cfg):
+    """
+    取 traj_dir 的最后一层目录名作为数据集标签；若过于通用或为空，则回退为 HDF5 基名。
+    """
+    tag = os.path.basename(os.path.normpath(traj_dir_abs))
+    if tag.lower() in {"", ".", "datasets", "dataset", "data", "trajectories", "traj"}:
+        tag = get_traj_file_name(cfg)
+    return tag
+
+
+def sanitize_tag(tag: str) -> str:
+    """
+    将不适合文件名的字符替换为下划线，仅保留字母/数字/._-。
+    """
+    safe_chars = []
+    for c in tag:
+        if c.isalnum() or c in "._-":
+            safe_chars.append(c)
+        else:
+            safe_chars.append("_")
+    return "".join(safe_chars)
+
+
+# ---------- 主流程 ----------
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument(
+        "--env-config",
+        "-ec",
+        required=True,
+        help="eg. cfg/env/darkroom.yaml 或 gridworld/cfg/env/darkroom.yaml",
+    )
+    ap.add_argument(
+        "--alg-config",
+        "-ac",
+        required=True,
+        help="eg. cfg/alg/ppo_dr.yaml 或 gridworld/cfg/alg/ppo_dr.yaml",
+    )
+    ap.add_argument("--traj-dir", "-t", default="./datasets")
+    ap.add_argument("--out", "-o", default="./plots")
+    ap.add_argument(
+        "--env-index",
+        "-g",
+        default="train",
+        help='绘制的 env 组索引："0" 或 "0,1,2" 或 "train"/"test"/"all"（与数据集一致，train/test 会先打乱再切分）',
+    )
+    ap.add_argument(
+        "--max-envs",
+        type=int,
+        default=1,
+        help="最多绘制多少个 env（在 --env-index 选出的列表里取前K个；0 表示不限制）。默认 1。",
+    )
+    ap.add_argument(
+        "--n-stream",
+        type=int,
+        default=100,
+        help="每个 env 参与候选与采样的 stream 数（只看前 n_stream 条）",
+    )
+    ap.add_argument(
+        "--source-timesteps",
+        type=int,
+        default=-1,
+        help="用于统计的时间步数；dataset 风格要求 >0 且能被 horizon 整除；为兼容，<0 将回退到不超过 T 的最大整倍数",
+    )
+    ap.add_argument(
+        "--stability-coeff", type=float, default=1.0, help="与数据集一致，默认 1.0"
+    )
+    ap.add_argument(
+        "--dataset-type",
+        choices=["ad", "dpt", "idt"],
+        default="ad",
+        help="影响线性归一化细节：AD/IDT 与 DPT 写法略有不同",
+    )
+    ap.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="可选：随机种子。默认使用 config['env_split_seed']，以与数据集实现复现一致。",
+    )
+    args = ap.parse_args()
+
+    # 绝对路径
+    env_cfg_abs = os.path.abspath(args.env_config)
+    alg_cfg_abs = os.path.abspath(args.alg_config)
+    traj_dir_abs = os.path.abspath(args.traj_dir)
+    out_root_abs = os.path.abspath(args.out)
+
+    # 适配 include 相对路径
+    _maybe_chdir_for_includes(env_cfg_abs, alg_cfg_abs)
+
+    # 读取配置
+    cfg = get_config(env_cfg_abs)
+    cfg.update(get_config(alg_cfg_abs))
+
+    # 随机性
+    seed_to_use = (
+        args.seed if args.seed is not None else int(cfg.get("env_split_seed", 0))
+    )
+    random.seed(seed_to_use)
+    np.random.seed(seed_to_use % (2**32 - 1))
+
+    # 数据 & 输出路径
+    h5_path = os.path.join(traj_dir_abs, get_traj_file_name(cfg) + ".hdf5")
+    dataset_tag = compute_dataset_tag(traj_dir_abs, cfg)
+    dataset_tag_safe = sanitize_tag(dataset_tag)  # <---- 用于拼到文件名
+    out_dir_by_dataset = os.path.join(out_root_abs, dataset_tag)
+    os.makedirs(out_dir_by_dataset, exist_ok=True)
+    print(
+        f"[INFO] 输出目录：{out_dir_by_dataset}  （dataset_tag='{dataset_tag}', filename_tag='{dataset_tag_safe}'）"
+    )
+
+    env_indices = resolve_env_indices_dataset_style(cfg, args.env_index)
+    if args.max_envs and args.max_envs > 0:
+        env_indices = env_indices[: args.max_envs]
+    print(f"[INFO] 将绘制的 env 实例索引：{env_indices}")
+
+    with h5py.File(h5_path, "r") as f:
+        for i in env_indices:
+            rewards_TS = f[str(i)]["rewards"][()]  # (T, S)
+            T, S = rewards_TS.shape
+            horizon = cfg["horizon"]
+
+            returns_SE, E, use_T, S0 = returns_first_n_streams_dataset_style(
+                rewards_TS, horizon, args.source_timesteps, args.n_stream
+            )
+
+            sel_idx, metric, probs_sorted, sorted_index_lst = (
+                select_streams_like_dataset(
+                    returns_SE=returns_SE,
+                    max_reward=cfg["max_reward"],
+                    n_select=min(args.n_stream, S0),
+                    stability_coeff=args.stability_coeff,
+                    dataset_type=args.dataset_type,
+                )
+            )
+
+            sel_unique = np.unique(sel_idx)
+            all_idx = np.arange(S0, dtype=int)
+            not_sel_idx = np.setdiff1d(all_idx, sel_unique, assume_unique=True)
+
+            print(
+                f"Env {i}: selected={len(sel_idx)} (unique={sel_unique.size}), "
+                f"not_selected={not_sel_idx.size}, candidates={S0}"
+            )
+            print(f"The selected streams (with duplicates) are {list(sel_idx)}")
+            print(f"The unique selected streams are {list(sel_unique)}")
+            print("----------------------------------------------")
+
+            # 1) All candidates
+            title_all = f"Env {i} — {cfg['env']} — All candidates (n={S0}, T={use_T}, episodes={E})"
+            out_grid_all = os.path.join(
+                out_dir_by_dataset,
+                f"returns_all_candidates_{dataset_tag_safe}_env{i}.png",
+            )
+            plot_grid(returns_SE, all_idx, out_grid_all, title_all)
+
+            # 2) Selected (with duplicates)
+            title_sel = (
+                f"Env {i} — {cfg['env']} — Selected "
+                f"(selections={len(sel_idx)}, unique={sel_unique.size}, from {S0} candidates)"
+            )
+            out_grid_sel = os.path.join(
+                out_dir_by_dataset, f"returns_selected_{dataset_tag_safe}_env{i}.png"
+            )
+            plot_grid(returns_SE, sel_idx, out_grid_sel, title_sel)
+
+            # 3) Not selected
+            title_not = f"Env {i} — {cfg['env']} — Not selected (n={not_sel_idx.size}, from {S0} candidates)"
+            out_grid_not = os.path.join(
+                out_dir_by_dataset,
+                f"returns_not_selected_{dataset_tag_safe}_env{i}.png",
+            )
+            plot_grid(returns_SE, not_sel_idx, out_grid_not, title_not)
+
+            # 4) Mean curves
+            title_mean = (
+                f"Env {i} — {cfg['env']} — Mean return: all vs selected vs not-selected"
+            )
+            out_mean3 = os.path.join(
+                out_dir_by_dataset,
+                f"mean_all_selected_not_{dataset_tag_safe}_env{i}.png",
+            )
+            plot_mean_three_groups(returns_SE, sel_idx, out_mean3, title_mean)
+
+            print(
+                f"[OK] env {i}: 保存：\n"
+                f"  - {out_grid_all}\n"
+                f"  - {out_grid_sel}\n"
+                f"  - {out_grid_not}\n"
+                f"  - {out_mean3}"
+            )
+
+
+if __name__ == "__main__":
+    main()
+
+```
 
 ## gridworld/train.py
 ```python
@@ -3941,6 +4614,10 @@ if __name__ == "__main__":
     # Define model
     model_name = config["model"]
     model = MODEL[model_name](config)
+    if config.get("use_lora", False):
+        trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+        total = sum(p.numel() for p in model.parameters())
+        print(f"LoRA enabled: trainable params {trainable}/{total}")
 
     # Get datasets and dataloaders
     load_start_time = datetime.now()
@@ -4244,6 +4921,7 @@ if __name__ == "__main__":
     print()
     print(f"Training ended at {end_time}")
     print(f"Elapsed time: {end_time - start_time}")
+
 ```
 
 ## gridworld/utils.py
@@ -4366,5 +5044,6 @@ def next_dataloader(dataloader: DataLoader):
     """
     while True:
         for batch in dataloader:
-            yield batch```
+            yield batch
+```
 
