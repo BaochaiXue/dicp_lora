@@ -10,3 +10,5 @@ env_split_seed: 0
 train_env_ratio: 0.9
 
 max_reward: 20
+
+noise_prob: 0

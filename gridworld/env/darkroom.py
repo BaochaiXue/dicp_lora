@@ -11,18 +11,23 @@ import itertools
 
 
 ######################
+# 说明：
+# - 下面这些固定种子会让环境内部的随机过程（包括默认的噪声 RNG）可复现。
+# - 如果你更希望每次生成的数据集噪声模式都不一样，可按需修改/移除这些全局 seed。
 np.random.seed(0)
 random.seed(0)
 torch.manual_seed(0)
 torch.cuda.manual_seed(0)
 torch.cuda.manual_seed_all(0)
-
-noise_prob = 0.3
 ######################
 
 
 def map_dark_states(states, grid_size):
-    return torch.sum(states * torch.tensor((grid_size, 1), device=states.device, requires_grad=False), dim=-1)
+    return torch.sum(
+        states
+        * torch.tensor((grid_size, 1), device=states.device, requires_grad=False),
+        dim=-1,
+    )
 
 
 def map_dark_states_inverse(index, grid_size):
@@ -30,13 +35,17 @@ def map_dark_states_inverse(index, grid_size):
 
 
 def sample_darkroom(config, shuffle=True):
-    goals = [np.array([i, j]) for i in range(config['grid_size']) for j in range(config['grid_size'])]
+    goals = [
+        np.array([i, j])
+        for i in range(config["grid_size"])
+        for j in range(config["grid_size"])
+    ]
 
     if shuffle:
-        random.seed(config['env_split_seed'])
+        random.seed(config["env_split_seed"])
         random.shuffle(goals)
 
-    n_train_envs = round(config['grid_size'] ** 2 * config['train_env_ratio'])
+    n_train_envs = round(config["grid_size"] ** 2 * config["train_env_ratio"])
 
     train_goals = goals[:n_train_envs]
     test_goals = goals[n_train_envs:]
@@ -48,10 +57,10 @@ def sample_darkroom_permuted(config, shuffle=True):
     perms = list(range(120))
 
     if shuffle:
-        random.seed(config['env_split_seed'])
+        random.seed(config["env_split_seed"])
         random.shuffle(perms)
 
-    n_train_envs = round(120 * config['train_env_ratio'])
+    n_train_envs = round(120 * config["train_env_ratio"])
 
     train_perms = perms[:n_train_envs]
     test_perms = perms[n_train_envs:]
@@ -60,24 +69,37 @@ def sample_darkroom_permuted(config, shuffle=True):
 
 
 class Darkroom(gym.Env):
+    metadata = {"render.modes": ["human"]}
+
     def __init__(self, config, **kwargs):
         super(Darkroom, self).__init__()
-        self.grid_size = config['grid_size']
-        if 'goal' in kwargs:
-            self.goal = kwargs['goal']
-        self.horizon = config['horizon']
+        self.grid_size = config["grid_size"]
+        if "goal" in kwargs:
+            self.goal = kwargs["goal"]  # 训练/评估时由外部传入
+        self.horizon = config["horizon"]
         self.dim_obs = 2
         self.dim_action = 1
         self.num_action = 5
-        self.observation_space = spaces.Box(low=0, high=self.grid_size-1, shape=(self.dim_obs,), dtype=np.int32)
+        self.observation_space = spaces.Box(
+            low=0, high=self.grid_size - 1, shape=(self.dim_obs,), dtype=np.int32
+        )
         self.action_space = spaces.Discrete(self.num_action)
 
-        
+        # ===== 噪声配置（可通过 YAML 或 --override 设置）=====
+        # 噪声概率（0/0.5/0.7 等），默认 0 表示无噪声
+        self.noise_prob: float = float(config.get("noise_prob", 0.0))
+        # 是否打印每一步是否使用了随机动作（默认 False，避免刷屏）
+        self.noise_verbose: bool = bool(config.get("noise_verbose", False))
+        # 为噪声单独设置随机种子（独立于全局 random），便于精确复现；None 则使用全局 random
+        noise_seed = config.get("noise_seed", None)
+        self._noise_rng = random.Random(noise_seed) if noise_seed is not None else None
+        # =====================================================
+
     def reset(
-            self,
-            *,
-            seed: int | None = None,
-            options: dict[str, Any] | None = None,
+        self,
+        *,
+        seed: int | None = None,
+        options: dict[str, Any] | None = None,
     ) -> Tuple[ObsType, dict[str, Any]]:
         self.current_step = 0
 
@@ -86,19 +108,35 @@ class Darkroom(gym.Env):
 
         return self.state, {}
 
+    def _rng_random(self) -> float:
+        """在有独立噪声 RNG 时使用它，否则用全局 random。"""
+        if self._noise_rng is not None:
+            return self._noise_rng.random()
+        return random.random()
+
+    def _rng_randrange(self, n: int) -> int:
+        """在有独立噪声 RNG 时使用它，否则用全局 random。"""
+        if self._noise_rng is not None:
+            return self._noise_rng.randrange(n)
+        return random.randrange(n)
+
     def step(self, action):
         if self.current_step >= self.horizon:
             raise ValueError("Episode has already ended")
 
         s = np.array(self.state)
 
-        ########### with noise ###########
-        if random.uniform(0, 1) < noise_prob:
-            a = random.choice([0, 1, 2, 3, 4])
-            print("\033[31m Using [random policy] now! \033[0m")
+        # ---------- 带噪声的执行策略 ----------
+        # 以 noise_prob 的概率覆盖为随机动作（均匀从 0..num_action-1 采样）
+        if self.noise_prob > 0.0 and self._rng_random() < self.noise_prob:
+            a = self._rng_randrange(self.num_action)
+            if self.noise_verbose:
+                print("\033[31m Using [random policy] now! \033[0m")
         else:
             a = action
-            print("\033[34m Using [PPO policy] now! \033[0m")
+            if self.noise_verbose:
+                print("\033[34m Using [PPO policy] now! \033[0m")
+        # ------------------------------------
 
         # Action handling
         if a == 0:
@@ -109,6 +147,7 @@ class Darkroom(gym.Env):
             s[1] += 1
         elif a == 3:
             s[1] -= 1
+        # a == 4 表示原地不动
 
         s = np.clip(s, 0, self.grid_size - 1)
         self.state = s
@@ -118,7 +157,7 @@ class Darkroom(gym.Env):
         done = self.current_step >= self.horizon
         info = {}
         return s.copy(), reward, done, done, info
-    
+
     def get_optimal_action(self, state):
         if state[0] < self.goal[0]:
             a = 0
@@ -130,9 +169,8 @@ class Darkroom(gym.Env):
             a = 3
         else:
             a = 4
-            
         return a
-    
+
     def transit(self, s, a):
         if a == 0:
             s[0] += 1
@@ -145,56 +183,59 @@ class Darkroom(gym.Env):
         elif a == 4:
             pass
         else:
-            raise ValueError('Invalid action')
-        
+            raise ValueError("Invalid action")
+
         s = np.clip(s, 0, self.grid_size - 1)
 
         if np.all(s == self.goal):
             r = 1
         else:
             r = 0
-            
+
         return s, r
-    
+
     def get_max_return(self):
         center = self.grid_size // 2
-        return (self.horizon + 1 - np.sum(np.absolute(self.goal - np.array([center, center])))).clip(0, self.horizon)
-    
-    
+        return (
+            self.horizon
+            + 1
+            - np.sum(np.absolute(self.goal - np.array([center, center])))
+        ).clip(0, self.horizon)
+
+
 class DarkroomPermuted(Darkroom):
     def __init__(self, config, **kwargs):
         super().__init__(config, **kwargs)
-        
-        self.perm_idx = kwargs['perm_idx']
-        self.goal = np.array([self.grid_size-1, self.grid_size-1])
-        
-        assert self.perm_idx < 120     # 5! permutations in darkroom
-        
+
+        self.perm_idx = kwargs["perm_idx"]
+        self.goal = np.array([self.grid_size - 1, self.grid_size - 1])
+
+        assert self.perm_idx < 120  # 5! permutations in darkroom
+
         actions = np.arange(self.action_space.n)
         permutations = list(itertools.permutations(actions))
         self.perm = permutations[self.perm_idx]
 
     def reset(
-            self,
-            *,
-            seed: int | None = None,
-            options: dict[str, Any] | None = None,
+        self,
+        *,
+        seed: int | None = None,
+        options: dict[str, Any] | None = None,
     ) -> Tuple[ObsType, dict[str, Any]]:
         self.current_step = 0
-
         self.state = np.array([0, 0])
-
         return self.state, {}
-    
+
     def step(self, action):
+        # 这里仍然会走父类的带噪声逻辑（在 super().step 内）
         return super().step(self.perm[action])
-    
+
     def transit(self, s, a):
         return super().transit(s, self.perm[a])
 
     def get_optimal_action(self, state):
         action = super().get_optimal_action(state)
         return self.perm.index(action)
-    
+
     def get_max_return(self):
-        return (self.horizon + 1 - np.sum(np.absolute(self.goal - np.array([0, 0]))))
+        return self.horizon + 1 - np.sum(np.absolute(self.goal - np.array([0, 0])))
