@@ -10,6 +10,17 @@ import random
 import itertools
 
 
+######################
+np.random.seed(0)
+random.seed(0)
+torch.manual_seed(0)
+torch.cuda.manual_seed(0)
+torch.cuda.manual_seed_all(0)
+
+noise_prob = 0.3
+######################
+
+
 def map_dark_states(states, grid_size):
     return torch.sum(states * torch.tensor((grid_size, 1), device=states.device, requires_grad=False), dim=-1)
 
@@ -60,6 +71,7 @@ class Darkroom(gym.Env):
         self.num_action = 5
         self.observation_space = spaces.Box(low=0, high=self.grid_size-1, shape=(self.dim_obs,), dtype=np.int32)
         self.action_space = spaces.Discrete(self.num_action)
+
         
     def reset(
             self,
@@ -79,7 +91,14 @@ class Darkroom(gym.Env):
             raise ValueError("Episode has already ended")
 
         s = np.array(self.state)
-        a = action
+
+        ########### with noise ###########
+        if random.uniform(0, 1) < noise_prob:
+            a = random.choice([0, 1, 2, 3, 4])
+            print("\033[31m Using [random policy] now! \033[0m")
+        else:
+            a = action
+            print("\033[34m Using [PPO policy] now! \033[0m")
 
         # Action handling
         if a == 0:
